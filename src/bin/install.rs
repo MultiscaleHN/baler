@@ -64,8 +64,8 @@ Build and install options:
     -v, --verbose ...         Use verbose output (-vv very verbose/build.rs output)
     -q, --quiet               Less output printed to stdout
     --color WHEN              Coloring: auto, always, never
-    --frozen                  Require Cargo.lock and cache are up to date
-    --locked                  Require Cargo.lock is up to date
+    --frozen                  Require Baler.lock and cache are up to date
+    --locked                  Require Baler.lock is up to date
 
 This command manages Cargo's local set of installed binary crates. Only packages
 which have [[bin]] targets can be installed, and all binaries are installed into

@@ -9,7 +9,7 @@ use hamcrest::assert_that;
 #[test]
 fn check_success() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -25,7 +25,7 @@ fn check_success() {
             }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -43,7 +43,7 @@ fn check_success() {
 #[test]
 fn check_fail() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -59,7 +59,7 @@ fn check_fail() {
             }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -80,7 +80,7 @@ fn custom_derive() {
         return
     }
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -108,7 +108,7 @@ fn main() {
 }
 "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -138,7 +138,7 @@ pub fn derive(_input: TokenStream) -> TokenStream {
 #[test]
 fn check_build() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -156,7 +156,7 @@ fn check_build() {
     foo.build();
 
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -176,7 +176,7 @@ fn check_build() {
 #[test]
 fn build_check() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -194,7 +194,7 @@ fn build_check() {
     foo.build();
 
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -216,7 +216,7 @@ fn build_check() {
 #[test]
 fn issue_3418() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -237,7 +237,7 @@ fn issue_3418() {
 #[test]
 fn issue_3419() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -286,7 +286,7 @@ fn issue_3419() {
 #[test]
 fn rustc_check() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -302,7 +302,7 @@ fn rustc_check() {
             }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -324,7 +324,7 @@ fn rustc_check() {
 #[test]
 fn rustc_check_err() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -340,7 +340,7 @@ fn rustc_check_err() {
             }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -362,7 +362,7 @@ fn rustc_check_err() {
 #[test]
 fn check_all() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -376,7 +376,7 @@ fn check_all() {
         .file("examples/a.rs", "fn main() {}")
         .file("tests/a.rs", "")
         .file("src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"

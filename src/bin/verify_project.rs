@@ -32,8 +32,8 @@ Options:
     -v, --verbose ...       Use verbose output (-vv very verbose/build.rs output)
     -q, --quiet             No output printed to stdout
     --color WHEN            Coloring: auto, always, never
-    --frozen                Require Cargo.lock and cache are up to date
-    --locked                Require Cargo.lock is up to date
+    --frozen                Require Baler.lock and cache are up to date
+    --locked                Require Baler.lock is up to date
 ";
 
 pub fn execute(args: Flags, config: &Config) -> CliResult {
@@ -44,7 +44,7 @@ pub fn execute(args: Flags, config: &Config) -> CliResult {
                      args.flag_locked)?;
 
     let mut contents = String::new();
-    let filename = args.flag_manifest_path.unwrap_or("Cargo.toml".into());
+    let filename = args.flag_manifest_path.unwrap_or("Baler.toml".into());
     let filename = match find_root_manifest_for_wd(Some(filename), config.cwd()) {
         Ok(manifest_path) => manifest_path,
         Err(e) => fail("invalid", &e.to_string()),

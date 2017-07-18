@@ -26,7 +26,7 @@ fn simple_lib() {
 [CREATED] library project
 "));
 
-    assert_that(&paths::root().join("Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("Baler.toml"), existing_file());
     assert_that(&paths::root().join("src/lib.rs"), existing_file());
     assert_that(&paths::root().join(".gitignore"), is_not(existing_file()));
 
@@ -44,7 +44,7 @@ fn simple_bin() {
 [CREATED] binary (application) project
 "));
 
-    assert_that(&paths::root().join("foo/Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("foo/Baler.toml"), existing_file());
     assert_that(&paths::root().join("foo/src/main.rs"), existing_file());
 
     assert_that(baler_process("build").cwd(&path),
@@ -87,7 +87,7 @@ fn bin_already_exists(explicit: bool, rellocation: &str) {
                     execs().with_status(0));
     }
 
-    assert_that(&paths::root().join("foo/Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("foo/Baler.toml"), existing_file());
     assert_that(&paths::root().join("foo/src/lib.rs"), is_not(existing_file()));
 
     // Check that our file is not overwritten
@@ -153,7 +153,7 @@ fn confused_by_multiple_lib_files() {
 [ERROR] cannot have a project with multiple libraries, found both `src/lib.rs` and `lib.rs`
 "));
 
-    assert_that(&paths::root().join("foo/Cargo.toml"), is_not(existing_file()));
+    assert_that(&paths::root().join("foo/Baler.toml"), is_not(existing_file()));
 }
 
 
@@ -184,10 +184,10 @@ fn multibin_project_name_clash() {
 [ERROR] multiple possible binary sources found:
   main.rs
   foo.rs
-cannot automatically generate Cargo.toml as the main target would be ambiguous
+cannot automatically generate Baler.toml as the main target would be ambiguous
 "));
 
-    assert_that(&paths::root().join("foo/Cargo.toml"), is_not(existing_file()));
+    assert_that(&paths::root().join("foo/Baler.toml"), is_not(existing_file()));
 }
 
 fn lib_already_exists(rellocation: &str) {
@@ -206,7 +206,7 @@ fn lib_already_exists(rellocation: &str) {
                                     .env("USER", "foo").cwd(&path),
                 execs().with_status(0));
 
-    assert_that(&paths::root().join("foo/Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("foo/Baler.toml"), existing_file());
     assert_that(&paths::root().join("foo/src/main.rs"), is_not(existing_file()));
 
     // Check that our file is not overwritten
@@ -233,7 +233,7 @@ fn simple_git() {
                                      .env("USER", "foo"),
                 execs().with_status(0));
 
-    assert_that(&paths::root().join("Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("Baler.toml"), existing_file());
     assert_that(&paths::root().join("src/lib.rs"), existing_file());
     assert_that(&paths::root().join(".git"), existing_dir());
     assert_that(&paths::root().join(".gitignore"), existing_file());
@@ -249,7 +249,7 @@ fn auto_git() {
                                      .env("USER", "foo"),
                 execs().with_status(0));
 
-    assert_that(&foo.join("Cargo.toml"), existing_file());
+    assert_that(&foo.join("Baler.toml"), existing_file());
     assert_that(&foo.join("src/lib.rs"), existing_file());
     assert_that(&foo.join(".git"), existing_dir());
     assert_that(&foo.join(".gitignore"), existing_file());
@@ -266,7 +266,7 @@ fn invalid_dir_name() {
 use --name to override crate name
 "));
 
-    assert_that(&foo.join("Cargo.toml"), is_not(existing_file()));
+    assert_that(&foo.join("Baler.toml"), is_not(existing_file()));
 }
 
 #[test]
@@ -280,7 +280,7 @@ fn reserved_name() {
 use --name to override crate name
 "));
 
-    assert_that(&test.join("Cargo.toml"), is_not(existing_file()));
+    assert_that(&test.join("Baler.toml"), is_not(existing_file()));
 }
 
 #[test]
@@ -292,7 +292,7 @@ fn git_autodetect() {
                 execs().with_status(0));
 
 
-    assert_that(&paths::root().join("Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("Baler.toml"), existing_file());
     assert_that(&paths::root().join("src/lib.rs"), existing_file());
     assert_that(&paths::root().join(".git"), existing_dir());
     assert_that(&paths::root().join(".gitignore"), existing_file());
@@ -308,7 +308,7 @@ fn mercurial_autodetect() {
                 execs().with_status(0));
 
 
-    assert_that(&paths::root().join("Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("Baler.toml"), existing_file());
     assert_that(&paths::root().join("src/lib.rs"), existing_file());
     assert_that(&paths::root().join(".git"), is_not(existing_dir()));
     assert_that(&paths::root().join(".hgignore"), existing_file());
@@ -325,7 +325,7 @@ fn gitignore_appended_not_replaced() {
                 execs().with_status(0));
 
 
-    assert_that(&paths::root().join("Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("Baler.toml"), existing_file());
     assert_that(&paths::root().join("src/lib.rs"), existing_file());
     assert_that(&paths::root().join(".git"), existing_dir());
     assert_that(&paths::root().join(".gitignore"), existing_file());
@@ -347,7 +347,7 @@ fn baler_lock_gitignored_if_lib1() {
 
     let mut contents = String::new();
     File::open(&paths::root().join(".gitignore")).unwrap().read_to_string(&mut contents).unwrap();
-    assert!(contents.contains(r#"Cargo.lock"#));
+    assert!(contents.contains(r#"Baler.lock"#));
 }
 
 #[test]
@@ -364,7 +364,7 @@ fn baler_lock_gitignored_if_lib2() {
 
     let mut contents = String::new();
     File::open(&paths::root().join(".gitignore")).unwrap().read_to_string(&mut contents).unwrap();
-    assert!(contents.contains(r#"Cargo.lock"#));
+    assert!(contents.contains(r#"Baler.lock"#));
 }
 
 #[test]
@@ -380,7 +380,7 @@ fn baler_lock_not_gitignored_if_bin1() {
 
     let mut contents = String::new();
     File::open(&paths::root().join(".gitignore")).unwrap().read_to_string(&mut contents).unwrap();
-    assert!(!contents.contains(r#"Cargo.lock"#));
+    assert!(!contents.contains(r#"Baler.lock"#));
 }
 
 #[test]
@@ -397,7 +397,7 @@ fn baler_lock_not_gitignored_if_bin2() {
 
     let mut contents = String::new();
     File::open(&paths::root().join(".gitignore")).unwrap().read_to_string(&mut contents).unwrap();
-    assert!(!contents.contains(r#"Cargo.lock"#));
+    assert!(!contents.contains(r#"Baler.lock"#));
 }
 
 #[test]
@@ -405,7 +405,7 @@ fn with_argument() {
     assert_that(baler_process("init").arg("foo").arg("--vcs").arg("none")
                                      .env("USER", "foo"),
                 execs().with_status(0));
-    assert_that(&paths::root().join("foo/Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("foo/Baler.toml"), existing_file());
 }
 
 

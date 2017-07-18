@@ -13,7 +13,7 @@ use hamcrest::{assert_that, existing_file, existing_dir, is_not};
 #[test]
 fn simple_explicit() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -23,7 +23,7 @@ fn simple_explicit() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -42,14 +42,14 @@ fn simple_explicit() {
     assert_that(&p.bin("foo"), existing_file());
     assert_that(&p.bin("bar"), existing_file());
 
-    assert_that(&p.root().join("Cargo.lock"), existing_file());
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("Baler.lock"), existing_file());
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
 }
 
 #[test]
 fn inferred_root() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -59,7 +59,7 @@ fn inferred_root() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -77,14 +77,14 @@ fn inferred_root() {
     assert_that(&p.bin("foo"), existing_file());
     assert_that(&p.bin("bar"), existing_file());
 
-    assert_that(&p.root().join("Cargo.lock"), existing_file());
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("Baler.lock"), existing_file());
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
 }
 
 #[test]
 fn inferred_path_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -96,7 +96,7 @@ fn inferred_path_dep() {
             [workspace]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -115,14 +115,14 @@ fn inferred_path_dep() {
     assert_that(&p.bin("foo"), existing_file());
     assert_that(&p.bin("bar"), existing_file());
 
-    assert_that(&p.root().join("Cargo.lock"), existing_file());
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("Baler.lock"), existing_file());
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
 }
 
 #[test]
 fn transitive_path_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -134,7 +134,7 @@ fn transitive_path_dep() {
             [workspace]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -145,7 +145,7 @@ fn transitive_path_dep() {
         "#)
         .file("bar/src/main.rs", "fn main() {}")
         .file("bar/src/lib.rs", "")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.1.0"
@@ -172,15 +172,15 @@ fn transitive_path_dep() {
     assert_that(&p.bin("bar"), existing_file());
     assert_that(&p.bin("baz"), existing_file());
 
-    assert_that(&p.root().join("Cargo.lock"), existing_file());
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
-    assert_that(&p.root().join("baz/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("Baler.lock"), existing_file());
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("baz/Baler.lock"), is_not(existing_file()));
 }
 
 #[test]
 fn parent_pointer_works() {
     let p = project("foo")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -192,7 +192,7 @@ fn parent_pointer_works() {
             [workspace]
         "#)
         .file("foo/src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -207,14 +207,14 @@ fn parent_pointer_works() {
                 execs().with_status(0));
     assert_that(p.baler("build").cwd(p.root().join("bar")),
                 execs().with_status(0));
-    assert_that(&p.root().join("foo/Cargo.lock"), existing_file());
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("foo/Baler.lock"), existing_file());
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
 }
 
 #[test]
 fn same_names_in_workspace() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -224,7 +224,7 @@ fn same_names_in_workspace() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -238,15 +238,15 @@ fn same_names_in_workspace() {
                 execs().with_status(101)
                        .with_stderr("\
 error: two packages named `foo` in this workspace:
-- [..]Cargo.toml
-- [..]Cargo.toml
+- [..]Baler.toml
+- [..]Baler.toml
 "));
 }
 
 #[test]
 fn parent_doesnt_point_to_child() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -255,7 +255,7 @@ fn parent_doesnt_point_to_child() {
             [workspace]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -268,8 +268,8 @@ fn parent_doesnt_point_to_child() {
                 execs().with_status(101)
                        .with_stderr("\
 error: current package believes it's in a workspace when it's not:
-current: [..]Cargo.toml
-workspace: [..]Cargo.toml
+current: [..]Baler.toml
+workspace: [..]Baler.toml
 
 this may be fixable [..]
 "));
@@ -278,7 +278,7 @@ this may be fixable [..]
 #[test]
 fn invalid_parent_pointer() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -291,7 +291,7 @@ fn invalid_parent_pointer() {
     assert_that(p.baler("build"),
                 execs().with_status(101)
                        .with_stderr("\
-error: failed to read `[..]Cargo.toml`
+error: failed to read `[..]Baler.toml`
 
 Caused by:
   [..]
@@ -301,7 +301,7 @@ Caused by:
 #[test]
 fn invalid_members() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -316,7 +316,7 @@ fn invalid_members() {
     assert_that(p.baler("build"),
                 execs().with_status(101)
                        .with_stderr("\
-error: failed to read `[..]Cargo.toml`
+error: failed to read `[..]Baler.toml`
 
 Caused by:
   [..]
@@ -326,7 +326,7 @@ Caused by:
 #[test]
 fn bare_workspace_ok() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -343,7 +343,7 @@ fn bare_workspace_ok() {
 #[test]
 fn two_roots() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -353,7 +353,7 @@ fn two_roots() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -377,7 +377,7 @@ error: multiple workspace roots found in the same workspace:
 #[test]
 fn workspace_isnt_root() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -385,7 +385,7 @@ fn workspace_isnt_root() {
             workspace = "bar"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -404,7 +404,7 @@ error: root of a workspace inferred but wasn't a root: [..]
 #[test]
 fn dangling_member() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -414,7 +414,7 @@ fn dangling_member() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -422,7 +422,7 @@ fn dangling_member() {
             workspace = "../baz"
         "#)
         .file("bar/src/main.rs", "fn main() {}")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.1.0"
@@ -444,7 +444,7 @@ actual: [..]
 #[test]
 fn cycle() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -452,7 +452,7 @@ fn cycle() {
             workspace = "bar"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -469,7 +469,7 @@ fn cycle() {
 #[test]
 fn share_dependencies() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -482,7 +482,7 @@ fn share_dependencies() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -511,7 +511,7 @@ fn share_dependencies() {
 #[test]
 fn fetch_fetches_all() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -521,7 +521,7 @@ fn fetch_fetches_all() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -546,7 +546,7 @@ fn fetch_fetches_all() {
 #[test]
 fn lock_works_for_everyone() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -559,7 +559,7 @@ fn lock_works_for_everyone() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -605,11 +605,11 @@ fn lock_works_for_everyone() {
 #[test]
 fn virtual_works() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["bar"]
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -619,19 +619,19 @@ fn virtual_works() {
     p.build();
     assert_that(p.baler("build").cwd(p.root().join("bar")),
                 execs().with_status(0));
-    assert_that(&p.root().join("Cargo.lock"), existing_file());
+    assert_that(&p.root().join("Baler.lock"), existing_file());
     assert_that(&p.bin("bar"), existing_file());
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
 }
 
 #[test]
 fn explicit_package_argument_works_with_virtual_manifest() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["bar"]
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -641,18 +641,18 @@ fn explicit_package_argument_works_with_virtual_manifest() {
     p.build();
     assert_that(p.baler("build").cwd(p.root()).args(&["--package", "bar"]),
                 execs().with_status(0));
-    assert_that(&p.root().join("Cargo.lock"), existing_file());
+    assert_that(&p.root().join("Baler.lock"), existing_file());
     assert_that(&p.bin("bar"), existing_file());
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
 }
 
 #[test]
 fn virtual_misconfigure() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -664,8 +664,8 @@ fn virtual_misconfigure() {
                 execs().with_status(101)
                        .with_stderr("\
 error: current package believes it's in a workspace when it's not:
-current: [..]bar[..]Cargo.toml
-workspace: [..]Cargo.toml
+current: [..]bar[..]Baler.toml
+workspace: [..]Baler.toml
 
 this may be fixable by adding `bar` to the `workspace.members` array of the \
 manifest located at: [..]
@@ -675,11 +675,11 @@ manifest located at: [..]
 #[test]
 fn virtual_build() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["bar"]
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -698,10 +698,10 @@ requires running against an actual package in this workspace
 #[test]
 fn virtual_build_no_members() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -720,7 +720,7 @@ requires running against an actual package in this workspace
 #[test]
 fn include_virtual() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -729,7 +729,7 @@ fn include_virtual() {
             members = ["bar"]
         "#)
         .file("src/main.rs", "")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [workspace]
         "#);
     p.build();
@@ -745,7 +745,7 @@ error: multiple workspace roots found in the same workspace:
 #[test]
 fn members_include_path_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -758,7 +758,7 @@ fn members_include_path_deps() {
             p3 = { path = "p3" }
         "#)
         .file("src/lib.rs", "")
-        .file("p1/Cargo.toml", r#"
+        .file("p1/Baler.toml", r#"
             [project]
             name = "p1"
             version = "0.1.0"
@@ -768,14 +768,14 @@ fn members_include_path_deps() {
             p2 = { path = "../p2" }
         "#)
         .file("p1/src/lib.rs", "")
-        .file("p2/Cargo.toml", r#"
+        .file("p2/Baler.toml", r#"
             [project]
             name = "p2"
             version = "0.1.0"
             authors = []
         "#)
         .file("p2/src/lib.rs", "")
-        .file("p3/Cargo.toml", r#"
+        .file("p3/Baler.toml", r#"
             [project]
             name = "p3"
             version = "0.1.0"
@@ -802,7 +802,7 @@ fn members_include_path_deps() {
 #[test]
 fn new_warns_you_this_will_not_work() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -832,7 +832,7 @@ root: [..]
 #[test]
 fn lock_doesnt_change_depending_on_crate() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -845,7 +845,7 @@ fn lock_doesnt_change_depending_on_crate() {
             foo = "*"
         "#)
         .file("src/lib.rs", "")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.1.0"
@@ -864,13 +864,13 @@ fn lock_doesnt_change_depending_on_crate() {
                 execs().with_status(0));
 
     let mut lockfile = String::new();
-    t!(t!(File::open(p.root().join("Cargo.lock"))).read_to_string(&mut lockfile));
+    t!(t!(File::open(p.root().join("Baler.lock"))).read_to_string(&mut lockfile));
 
     assert_that(p.baler("build").cwd(p.root().join("baz")),
                 execs().with_status(0));
 
     let mut lockfile2 = String::new();
-    t!(t!(File::open(p.root().join("Cargo.lock"))).read_to_string(&mut lockfile2));
+    t!(t!(File::open(p.root().join("Baler.lock"))).read_to_string(&mut lockfile2));
 
     assert_eq!(lockfile, lockfile2);
 }
@@ -878,11 +878,11 @@ fn lock_doesnt_change_depending_on_crate() {
 #[test]
 fn rebuild_please() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ['lib', 'bin']
         "#)
-        .file("lib/Cargo.toml", r#"
+        .file("lib/Baler.toml", r#"
             [package]
             name = "lib"
             version = "0.1.0"
@@ -890,7 +890,7 @@ fn rebuild_please() {
         .file("lib/src/lib.rs", r#"
             pub fn foo() -> u32 { 0 }
         "#)
-        .file("bin/Cargo.toml", r#"
+        .file("bin/Baler.toml", r#"
             [package]
             name = "bin"
             version = "0.1.0"
@@ -927,11 +927,11 @@ fn rebuild_please() {
 fn workspace_in_git() {
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [workspace]
                 members = ["foo"]
             "#)
-            .file("foo/Cargo.toml", r#"
+            .file("foo/Baler.toml", r#"
                 [package]
                 name = "foo"
                 version = "0.1.0"
@@ -939,7 +939,7 @@ fn workspace_in_git() {
             .file("foo/src/lib.rs", "")
     }).unwrap();
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "lib"
             version = "0.1.0"
@@ -960,18 +960,18 @@ fn workspace_in_git() {
 #[test]
 fn lockfile_can_specify_nonexistant_members() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["a"]
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.1.0"
             authors = []
         "#)
         .file("a/src/main.rs", "fn main() {}")
-        .file("Cargo.lock", r#"
+        .file("Baler.lock", r#"
             [root]
             name = "a"
             version = "0.1.0"
@@ -989,10 +989,10 @@ fn lockfile_can_specify_nonexistant_members() {
 #[test]
 fn you_cannot_generate_lockfile_for_empty_workspaces() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1011,7 +1011,7 @@ error: you can't generate a lockfile for an empty workspace.
 #[test]
 fn workspace_with_transitive_dev_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1023,7 +1023,7 @@ fn workspace_with_transitive_dev_deps() {
             [workspace]
         "#)
         .file("src/main.rs", r#"fn main() {}"#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1043,7 +1043,7 @@ fn workspace_with_transitive_dev_deps() {
                 baz::do_stuff();
             }
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.5.0"
@@ -1059,8 +1059,8 @@ fn workspace_with_transitive_dev_deps() {
 #[test]
 fn error_if_parent_baler_toml_is_invalid() {
     let p = project("foo")
-        .file("Cargo.toml", "Totally not a TOML file")
-        .file("bar/Cargo.toml", r#"
+        .file("Baler.toml", "Totally not a TOML file")
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1078,7 +1078,7 @@ fn error_if_parent_baler_toml_is_invalid() {
 #[test]
 fn relative_path_for_member_works() {
     let p = project("foo")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
         [project]
         name = "foo"
         version = "0.1.0"
@@ -1088,7 +1088,7 @@ fn relative_path_for_member_works() {
         members = ["../bar"]
     "#)
         .file("foo/src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
         [project]
         name = "bar"
         version = "0.1.0"
@@ -1105,7 +1105,7 @@ fn relative_path_for_member_works() {
 #[test]
 fn relative_path_for_root_works() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
         [project]
         name = "foo"
         version = "0.1.0"
@@ -1117,7 +1117,7 @@ fn relative_path_for_root_works() {
         subproj = { path = "./subproj" }
     "#)
         .file("src/main.rs", "fn main() {}")
-        .file("subproj/Cargo.toml", r#"
+        .file("subproj/Baler.toml", r#"
         [project]
         name = "subproj"
         version = "0.1.0"
@@ -1127,18 +1127,18 @@ fn relative_path_for_root_works() {
     p.build();
 
     assert_that(p.baler("build").cwd(p.root())
-                    .arg("--manifest-path").arg("./Cargo.toml"),
+                    .arg("--manifest-path").arg("./Baler.toml"),
                 execs().with_status(0));
 
     assert_that(p.baler("build").cwd(p.root().join("subproj"))
-                    .arg("--manifest-path").arg("../Cargo.toml"),
+                    .arg("--manifest-path").arg("../Baler.toml"),
                 execs().with_status(0));
 }
 
 #[test]
 fn path_dep_outside_workspace_is_not_member() {
     let p = project("foo")
-        .file("ws/Cargo.toml", r#"
+        .file("ws/Baler.toml", r#"
             [project]
             name = "ws"
             version = "0.1.0"
@@ -1150,7 +1150,7 @@ fn path_dep_outside_workspace_is_not_member() {
             [workspace]
         "#)
         .file("ws/src/lib.rs", r"extern crate foo;")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1166,7 +1166,7 @@ fn path_dep_outside_workspace_is_not_member() {
 #[test]
 fn test_in_and_out_of_workspace() {
     let p = project("foo")
-        .file("ws/Cargo.toml", r#"
+        .file("ws/Baler.toml", r#"
             [project]
             name = "ws"
             version = "0.1.0"
@@ -1179,7 +1179,7 @@ fn test_in_and_out_of_workspace() {
             members = [ "../bar" ]
         "#)
         .file("ws/src/lib.rs", r"extern crate foo; pub fn f() { foo::f() }")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1189,7 +1189,7 @@ fn test_in_and_out_of_workspace() {
             bar = { path = "../bar" }
         "#)
         .file("foo/src/lib.rs", "extern crate bar; pub fn f() { bar::f() }")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             workspace = "../ws"
             name = "bar"
@@ -1202,25 +1202,25 @@ fn test_in_and_out_of_workspace() {
     assert_that(p.baler("build").cwd(p.root().join("ws")),
                 execs().with_status(0));
 
-    assert_that(&p.root().join("ws/Cargo.lock"), existing_file());
+    assert_that(&p.root().join("ws/Baler.lock"), existing_file());
     assert_that(&p.root().join("ws/target"), existing_dir());
-    assert_that(&p.root().join("foo/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("foo/Baler.lock"), is_not(existing_file()));
     assert_that(&p.root().join("foo/target"), is_not(existing_dir()));
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
     assert_that(&p.root().join("bar/target"), is_not(existing_dir()));
 
     assert_that(p.baler("build").cwd(p.root().join("foo")),
                 execs().with_status(0));
-    assert_that(&p.root().join("foo/Cargo.lock"), existing_file());
+    assert_that(&p.root().join("foo/Baler.lock"), existing_file());
     assert_that(&p.root().join("foo/target"), existing_dir());
-    assert_that(&p.root().join("bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("bar/Baler.lock"), is_not(existing_file()));
     assert_that(&p.root().join("bar/target"), is_not(existing_dir()));
 }
 
 #[test]
 fn test_path_dependency_under_member() {
     let p = project("foo")
-        .file("ws/Cargo.toml", r#"
+        .file("ws/Baler.toml", r#"
             [project]
             name = "ws"
             version = "0.1.0"
@@ -1232,7 +1232,7 @@ fn test_path_dependency_under_member() {
             [workspace]
         "#)
         .file("ws/src/lib.rs", r"extern crate foo; pub fn f() { foo::f() }")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             workspace = "../ws"
             name = "foo"
@@ -1243,7 +1243,7 @@ fn test_path_dependency_under_member() {
             bar = { path = "./bar" }
         "#)
         .file("foo/src/lib.rs", "extern crate bar; pub fn f() { bar::f() }")
-        .file("foo/bar/Cargo.toml", r#"
+        .file("foo/bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1255,20 +1255,20 @@ fn test_path_dependency_under_member() {
     assert_that(p.baler("build").cwd(p.root().join("ws")),
                 execs().with_status(0));
 
-    assert_that(&p.root().join("foo/bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("foo/bar/Baler.lock"), is_not(existing_file()));
     assert_that(&p.root().join("foo/bar/target"), is_not(existing_dir()));
 
     assert_that(p.baler("build").cwd(p.root().join("foo/bar")),
                 execs().with_status(0));
 
-    assert_that(&p.root().join("foo/bar/Cargo.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("foo/bar/Baler.lock"), is_not(existing_file()));
     assert_that(&p.root().join("foo/bar/target"), is_not(existing_dir()));
 }
 
 #[test]
 fn excluded_simple() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "ws"
             version = "0.1.0"
@@ -1278,7 +1278,7 @@ fn excluded_simple() {
             exclude = ["foo"]
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1298,7 +1298,7 @@ fn excluded_simple() {
 #[test]
 fn exclude_members_preferred() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "ws"
             version = "0.1.0"
@@ -1309,14 +1309,14 @@ fn exclude_members_preferred() {
             exclude = ["foo"]
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
             authors = []
         "#)
         .file("foo/src/lib.rs", "")
-        .file("foo/bar/Cargo.toml", r#"
+        .file("foo/bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1339,7 +1339,7 @@ fn exclude_members_preferred() {
 #[test]
 fn exclude_but_also_depend() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "ws"
             version = "0.1.0"
@@ -1352,14 +1352,14 @@ fn exclude_but_also_depend() {
             exclude = ["foo"]
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
             authors = []
         "#)
         .file("foo/src/lib.rs", "")
-        .file("foo/bar/Cargo.toml", r#"
+        .file("foo/bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1382,7 +1382,7 @@ fn exclude_but_also_depend() {
 #[test]
 fn glob_syntax() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1393,7 +1393,7 @@ fn glob_syntax() {
             exclude = ["crates/qux"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("crates/bar/Cargo.toml", r#"
+        .file("crates/bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1401,7 +1401,7 @@ fn glob_syntax() {
             workspace = "../.."
         "#)
         .file("crates/bar/src/main.rs", "fn main() {}")
-        .file("crates/baz/Cargo.toml", r#"
+        .file("crates/baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.1.0"
@@ -1409,7 +1409,7 @@ fn glob_syntax() {
             workspace = "../.."
         "#)
         .file("crates/baz/src/main.rs", "fn main() {}")
-        .file("crates/qux/Cargo.toml", r#"
+        .file("crates/qux/Baler.toml", r#"
             [project]
             name = "qux"
             version = "0.1.0"
@@ -1437,16 +1437,16 @@ fn glob_syntax() {
                 execs().with_status(0));
     assert_that(&p.bin("qux"), is_not(existing_file()));
 
-    assert_that(&p.root().join("Cargo.lock"), existing_file());
-    assert_that(&p.root().join("crates/bar/Cargo.lock"), is_not(existing_file()));
-    assert_that(&p.root().join("crates/baz/Cargo.lock"), is_not(existing_file()));
-    assert_that(&p.root().join("crates/qux/Cargo.lock"), existing_file());
+    assert_that(&p.root().join("Baler.lock"), existing_file());
+    assert_that(&p.root().join("crates/bar/Baler.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("crates/baz/Baler.lock"), is_not(existing_file()));
+    assert_that(&p.root().join("crates/qux/Baler.lock"), existing_file());
 }
 
 #[test]
 fn glob_syntax_invalid_members() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1462,7 +1462,7 @@ fn glob_syntax_invalid_members() {
     assert_that(p.baler("build"),
                 execs().with_status(101)
                        .with_stderr("\
-error: failed to read `[..]Cargo.toml`
+error: failed to read `[..]Baler.toml`
 
 Caused by:
   [..]

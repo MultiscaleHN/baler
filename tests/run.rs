@@ -9,7 +9,7 @@ use hamcrest::{assert_that, existing_file};
 #[test]
 fn simple() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -35,7 +35,7 @@ hello
 #[ignore]
 fn simple_implicit_main() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -60,7 +60,7 @@ hello
 #[test]
 fn simple_quiet() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -80,7 +80,7 @@ hello
 #[test]
 fn simple_quiet_and_verbose() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -99,7 +99,7 @@ fn simple_quiet_and_verbose() {
 #[test]
 fn quiet_and_verbose_config() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -120,7 +120,7 @@ fn quiet_and_verbose_config() {
 #[test]
 fn simple_with_args() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -140,7 +140,7 @@ fn simple_with_args() {
 #[test]
 fn exit_code() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -167,7 +167,7 @@ fn exit_code() {
 #[test]
 fn exit_code_verbose() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -196,7 +196,7 @@ fn exit_code_verbose() {
 #[test]
 fn no_main_file() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -214,7 +214,7 @@ fn no_main_file() {
 #[ignore]
 fn no_main_file_implicit() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -231,7 +231,7 @@ fn no_main_file_implicit() {
 #[test]
 fn too_many_bins() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -252,7 +252,7 @@ fn too_many_bins() {
 #[ignore]
 fn too_many_bins_implicit() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -272,7 +272,7 @@ fn too_many_bins_implicit() {
 #[test]
 fn specify_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -315,7 +315,7 @@ hello b.rs
 #[test]
 fn run_example() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -344,7 +344,7 @@ example
 #[ignore]
 fn run_bin_implicit() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -373,7 +373,7 @@ bin
 #[ignore]
 fn run_example_implicit() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -401,7 +401,7 @@ example
 #[test]
 fn run_with_filename() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -441,7 +441,7 @@ Did you mean `a`?"));
 #[test]
 fn either_name_or_example() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -464,7 +464,7 @@ fn either_name_or_example() {
 #[test]
 fn one_bin_multiple_examples() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -495,7 +495,7 @@ hello main.rs
 #[test]
 fn example_with_release_flag() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -517,7 +517,7 @@ fn example_with_release_flag() {
                 bar::baz();
             }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -596,7 +596,7 @@ slow2"));
 #[test]
 fn run_dylib_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -609,7 +609,7 @@ fn run_dylib_dep() {
             extern crate bar;
             fn main() { bar::bar(); }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -628,7 +628,7 @@ fn run_dylib_dep() {
 #[test]
 fn release_works() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -652,7 +652,7 @@ fn release_works() {
 #[test]
 fn run_bin_different_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -671,7 +671,7 @@ fn run_bin_different_name() {
 #[test]
 fn dashes_are_forwarded() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -696,7 +696,7 @@ fn dashes_are_forwarded() {
 #[test]
 fn run_from_executable_folder() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -731,7 +731,7 @@ fn run_with_library_paths() {
     let mut dir2 = p.target_debug_dir();
     dir2.push("dir=containing=equal=signs");
 
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -759,7 +759,7 @@ fn run_with_library_paths() {
 #[test]
 fn fail_no_extra_verbose() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -780,7 +780,7 @@ fn fail_no_extra_verbose() {
 #[test]
 fn run_multiple_packages() {
     let p = project("foo")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -797,7 +797,7 @@ fn run_multiple_packages() {
             name = "foo"
         "#)
         .file("foo/src/foo.rs", "fn main() { println!(\"foo\"); }")
-        .file("foo/d1/Cargo.toml", r#"
+        .file("foo/d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -808,7 +808,7 @@ fn run_multiple_packages() {
         "#)
         .file("foo/d1/src/lib.rs", "")
         .file("foo/d1/src/main.rs", "fn main() { println!(\"d1\"); }")
-        .file("foo/d2/Cargo.toml", r#"
+        .file("foo/d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.1"
@@ -818,7 +818,7 @@ fn run_multiple_packages() {
             name = "d2"
         "#)
         .file("foo/d2/src/main.rs", "fn main() { println!(\"d2\"); }")
-        .file("d3/Cargo.toml", r#"
+        .file("d3/Baler.toml", r#"
             [package]
             name = "d3"
             version = "0.0.1"

@@ -12,7 +12,7 @@ fn noop() {
     }
 
     let client = project("client")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "client"
             version = "0.0.1"
@@ -33,7 +33,7 @@ fn noop() {
             fn main() {}
         "#);
     let noop = project("noop")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "noop"
             version = "0.0.1"
@@ -68,7 +68,7 @@ fn impl_and_derive() {
     }
 
     let client = project("client")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "client"
             version = "0.0.1"
@@ -97,7 +97,7 @@ fn impl_and_derive() {
             }
         "#);
     let transmogrify = project("transmogrify")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "transmogrify"
             version = "0.0.1"
@@ -145,7 +145,7 @@ fn plugin_and_proc_macro() {
     }
 
     let questionable = project("questionable")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "questionable"
             version = "0.0.1"
@@ -185,7 +185,7 @@ fn proc_macro_doctest() {
         return
     }
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"

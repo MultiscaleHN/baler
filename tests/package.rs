@@ -20,7 +20,7 @@ use tar::Archive;
 #[test]
 fn simple() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -47,7 +47,7 @@ See [..]
     assert_that(&p.root().join("target/package/foo-0.0.1.crate"), existing_file());
     assert_that(p.baler("package").arg("-l"),
                 execs().with_status(0).with_stdout("\
-Cargo.toml
+Baler.toml
 src[/]main.rs
 "));
     assert_that(p.baler("package"),
@@ -62,8 +62,8 @@ src[/]main.rs
         let f = f.unwrap();
         let fname = f.header().path_bytes();
         let fname = &*fname;
-        assert!(fname == b"foo-0.0.1/Cargo.toml" ||
-                fname == b"foo-0.0.1/Cargo.toml.orig" ||
+        assert!(fname == b"foo-0.0.1/Baler.toml" ||
+                fname == b"foo-0.0.1/Baler.toml.orig" ||
                 fname == b"foo-0.0.1/src/main.rs",
                 "unexpected filename: {:?}", f.header().path())
     }
@@ -72,7 +72,7 @@ src[/]main.rs
 #[test]
 fn metadata_warning() {
     let p = project("all")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -94,7 +94,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
         dir = p.url())));
 
     let p = project("one")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -116,7 +116,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
         dir = p.url())));
 
     let p = project("all")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -142,7 +142,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
 fn package_verbose() {
     let root = paths::root().join("all");
     let p = git::repo(&root)
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -151,7 +151,7 @@ fn package_verbose() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.0.1"
@@ -188,7 +188,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
 #[test]
 fn package_verification() {
     let p = project("all")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -214,7 +214,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
 #[test]
 fn path_dependency_no_version() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -226,7 +226,7 @@ fn path_dependency_no_version() {
             path = "bar"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -246,7 +246,7 @@ dependency `bar` does not specify a version.
 #[test]
 fn exclude() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -358,7 +358,7 @@ See [..]
 
     assert_that(p.baler("package").arg("-l"),
                 execs().with_status(0).with_stdout("\
-Cargo.toml
+Baler.toml
 dir_root_1[/]some_dir[/]file
 dir_root_2[/]some_dir[/]file
 dir_root_3[/]some_dir[/]file
@@ -383,13 +383,13 @@ src[/]main.rs
 #[test]
 fn include() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
             authors = []
             exclude = ["*.txt"]
-            include = ["foo.txt", "**/*.rs", "Cargo.toml"]
+            include = ["foo.txt", "**/*.rs", "Baler.toml"]
         "#)
         .file("foo.txt", "")
         .file("src/main.rs", r#"
@@ -411,7 +411,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
 #[test]
 fn package_lib_with_bin() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -430,7 +430,7 @@ fn package_lib_with_bin() {
 #[test]
 fn package_git_submodule() {
     let project = git::new("foo", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
                     [project]
                     name = "foo"
                     version = "0.0.1"
@@ -463,7 +463,7 @@ fn package_git_submodule() {
 fn no_duplicates_from_modified_tracked_files() {
     let root = paths::root().join("all");
     let p = git::repo(&root)
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -481,7 +481,7 @@ fn no_duplicates_from_modified_tracked_files() {
     assert_that(baler.clone().arg("build"), execs().with_status(0));
     assert_that(baler.arg("package").arg("--list"),
                 execs().with_status(0).with_stdout("\
-Cargo.toml
+Baler.toml
 src/main.rs
 "));
 }
@@ -500,11 +500,11 @@ fn ignore_nested() {
             fn main() { println!("hello"); }
         "#;
     let p = project("nested")
-        .file("Cargo.toml", baler_toml)
+        .file("Baler.toml", baler_toml)
         .file("src/main.rs", main_rs)
         // If a project happens to contain a copy of itself, we should
         // ignore it.
-        .file("a_dir/nested/Cargo.toml", baler_toml)
+        .file("a_dir/nested/Baler.toml", baler_toml)
         .file("a_dir/nested/src/main.rs", main_rs);
 
     assert_that(p.baler_process("package"),
@@ -520,7 +520,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
     assert_that(&p.root().join("target/package/nested-0.0.1.crate"), existing_file());
     assert_that(p.baler("package").arg("-l"),
                 execs().with_status(0).with_stdout("\
-Cargo.toml
+Baler.toml
 src[..]main.rs
 "));
     assert_that(p.baler("package"),
@@ -535,8 +535,8 @@ src[..]main.rs
         let f = f.unwrap();
         let fname = f.header().path_bytes();
         let fname = &*fname;
-        assert!(fname == b"nested-0.0.1/Cargo.toml" ||
-                fname == b"nested-0.0.1/Cargo.toml.orig" ||
+        assert!(fname == b"nested-0.0.1/Baler.toml" ||
+                fname == b"nested-0.0.1/Baler.toml.orig" ||
                 fname == b"nested-0.0.1/src/main.rs",
                 "unexpected filename: {:?}", f.header().path())
     }
@@ -546,7 +546,7 @@ src[..]main.rs
 #[test]
 fn package_weird_characters() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -572,7 +572,7 @@ Caused by:
 #[test]
 fn repackage_on_source_change() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -628,7 +628,7 @@ fn broken_symlink() {
     use std::os::unix::fs;
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -665,7 +665,7 @@ fn do_not_package_if_repository_is_dirty() {
 
     // Create a Git repository containing a minimal Rust project.
     git::repo(&paths::root().join("foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -678,8 +678,8 @@ fn do_not_package_if_repository_is_dirty() {
         .file("src/main.rs", "fn main() {}")
         .build();
 
-    // Modify Cargo.toml without committing the change.
-    p.change_file("Cargo.toml", r#"
+    // Modify Baler.toml without committing the change.
+    p.change_file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -697,7 +697,7 @@ fn do_not_package_if_repository_is_dirty() {
 error: 1 files in the working directory contain changes that were not yet \
 committed into git:
 
-Cargo.toml
+Baler.toml
 
 to proceed despite this, pass the `--allow-dirty` flag
 "));
@@ -706,7 +706,7 @@ to proceed despite this, pass the `--allow-dirty` flag
 #[test]
 fn generated_manifest() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -724,7 +724,7 @@ fn generated_manifest() {
             bar = { path = "bar", version = "0.1" }
         "#)
         .file("src/main.rs", "")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -742,7 +742,7 @@ fn generated_manifest() {
     let mut ar = Archive::new(&contents[..]);
     let mut entry = ar.entries().unwrap()
                         .map(|f| f.unwrap())
-                        .find(|e| e.path().unwrap().ends_with("Cargo.toml"))
+                        .find(|e| e.path().unwrap().ends_with("Baler.toml"))
                         .unwrap();
     let mut contents = String::new();
     entry.read_to_string(&mut contents).unwrap();
@@ -750,13 +750,13 @@ fn generated_manifest() {
 r#"# THIS FILE IS AUTOMATICALLY GENERATED BY CARGO
 #
 # When uploading crates to the registry Cargo will automatically
-# "normalize" Cargo.toml files for maximal compatibility
+# "normalize" Baler.toml files for maximal compatibility
 # with all versions of Cargo and also rewrite `path` dependencies
 # to registry (e.g. crates.io) dependencies
 #
 # If you believe there's an error in this file please file an
 # issue against the rust-lang/baler repository. If you're
-# editing this file be aware that the upstream Cargo.toml
+# editing this file be aware that the upstream Baler.toml
 # will likely look very different (and much more reasonable)
 
 [package]
@@ -777,7 +777,7 @@ version = "0.1"
 #[test]
 fn ignore_workspace_specifier() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -790,7 +790,7 @@ fn ignore_workspace_specifier() {
             bar = { path = "bar", version = "0.1" }
         "#)
         .file("src/main.rs", "")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -810,7 +810,7 @@ fn ignore_workspace_specifier() {
     let mut ar = Archive::new(&contents[..]);
     let mut entry = ar.entries().unwrap()
                         .map(|f| f.unwrap())
-                        .find(|e| e.path().unwrap().ends_with("Cargo.toml"))
+                        .find(|e| e.path().unwrap().ends_with("Baler.toml"))
                         .unwrap();
     let mut contents = String::new();
     entry.read_to_string(&mut contents).unwrap();
@@ -818,13 +818,13 @@ fn ignore_workspace_specifier() {
 r#"# THIS FILE IS AUTOMATICALLY GENERATED BY CARGO
 #
 # When uploading crates to the registry Cargo will automatically
-# "normalize" Cargo.toml files for maximal compatibility
+# "normalize" Baler.toml files for maximal compatibility
 # with all versions of Cargo and also rewrite `path` dependencies
 # to registry (e.g. crates.io) dependencies
 #
 # If you believe there's an error in this file please file an
 # issue against the rust-lang/baler repository. If you're
-# editing this file be aware that the upstream Cargo.toml
+# editing this file be aware that the upstream Baler.toml
 # will likely look very different (and much more reasonable)
 
 [package]
@@ -839,7 +839,7 @@ fn package_two_kinds_of_deps() {
     Package::new("other", "1.0.0").publish();
     Package::new("other1", "1.0.0").publish();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"

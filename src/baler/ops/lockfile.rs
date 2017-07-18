@@ -9,12 +9,12 @@ use util::errors::{CargoResult, CargoResultExt};
 use util::toml as baler_toml;
 
 pub fn load_pkg_lockfile(ws: &Workspace) -> CargoResult<Option<Resolve>> {
-    if !ws.root().join("Cargo.lock").exists() {
+    if !ws.root().join("Baler.lock").exists() {
         return Ok(None)
     }
 
     let root = Filesystem::new(ws.root().to_path_buf());
-    let mut f = root.open_ro("Cargo.lock", ws.config(), "Cargo.lock file")?;
+    let mut f = root.open_ro("Baler.lock", ws.config(), "Baler.lock file")?;
 
     let mut s = String::new();
     f.read_to_string(&mut s).chain_err(|| {
@@ -33,7 +33,7 @@ pub fn load_pkg_lockfile(ws: &Workspace) -> CargoResult<Option<Resolve>> {
 pub fn write_pkg_lockfile(ws: &Workspace, resolve: &Resolve) -> CargoResult<()> {
     // Load the original lockfile if it exists.
     let ws_root = Filesystem::new(ws.root().to_path_buf());
-    let orig = ws_root.open_ro("Cargo.lock", ws.config(), "Cargo.lock file");
+    let orig = ws_root.open_ro("Baler.lock", ws.config(), "Baler.lock file");
     let orig = orig.and_then(|mut f| {
         let mut s = String::new();
         f.read_to_string(&mut s)?;
@@ -95,13 +95,13 @@ pub fn write_pkg_lockfile(ws: &Workspace, resolve: &Resolve) -> CargoResult<()> 
     }
 
     // Ok, if that didn't work just write it out
-    ws_root.open_rw("Cargo.lock", ws.config(), "Cargo.lock file").and_then(|mut f| {
+    ws_root.open_rw("Baler.lock", ws.config(), "Baler.lock file").and_then(|mut f| {
         f.file().set_len(0)?;
         f.write_all(out.as_bytes())?;
         Ok(())
     }).chain_err(|| {
         format!("failed to write {}",
-                ws.root().join("Cargo.lock").display())
+                ws.root().join("Baler.lock").display())
     })
 }
 

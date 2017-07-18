@@ -13,7 +13,7 @@ fn plugin_to_the_max() {
     if !is_nightly() { return }
 
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -39,7 +39,7 @@ fn plugin_to_the_max() {
             pub fn foo() {}
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -66,7 +66,7 @@ fn plugin_to_the_max() {
             }
         "#);
     let baz = project("baz")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -91,14 +91,14 @@ fn plugin_with_dynamic_native_dependency() {
     if !is_nightly() { return }
 
     let workspace = project("ws")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["builder", "foo"]
         "#);
     workspace.build();
 
     let build = project("ws/builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -115,7 +115,7 @@ fn plugin_with_dynamic_native_dependency() {
     build.build();
 
     let foo = project("ws/foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -130,7 +130,7 @@ fn plugin_with_dynamic_native_dependency() {
 
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -184,7 +184,7 @@ fn plugin_with_dynamic_native_dependency() {
 #[test]
 fn plugin_integration() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -207,7 +207,7 @@ fn plugin_integration() {
 #[test]
 fn doctest_a_plugin() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -220,7 +220,7 @@ fn doctest_a_plugin() {
             #[macro_use]
             extern crate bar;
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -244,7 +244,7 @@ fn native_plugin_dependency_with_custom_ar_linker() {
     let target = rustc_host();
 
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -256,7 +256,7 @@ fn native_plugin_dependency_with_custom_ar_linker() {
         .file("src/lib.rs", "");
 
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -288,7 +288,7 @@ fn panic_abort_plugins() {
     }
 
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -301,7 +301,7 @@ fn panic_abort_plugins() {
             foo = { path = "foo" }
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -326,7 +326,7 @@ fn shared_panic_abort_plugins() {
     }
 
     let bar = project("top")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "top"
             version = "0.0.1"
@@ -342,7 +342,7 @@ fn shared_panic_abort_plugins() {
         .file("src/lib.rs", "
             extern crate bar;
         ")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -359,7 +359,7 @@ fn shared_panic_abort_plugins() {
             extern crate syntax;
             extern crate bar;
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"

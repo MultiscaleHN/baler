@@ -146,7 +146,7 @@ fn check_not_dirty(p: &Package, src: &PathSource) -> CargoResult<()> {
             let path = path.strip_prefix(workdir).unwrap_or(path);
             if let Ok(status) = repo.status_file(path) {
                 if (status & git2::STATUS_IGNORED).is_empty() {
-                    debug!("Cargo.toml found in repo, checking if dirty");
+                    debug!("Baler.toml found in repo, checking if dirty");
                     return git(p, src, &repo)
                 }
             }
@@ -239,8 +239,8 @@ fn tar(ws: &Workspace,
         })?;
         header.set_metadata(&metadata);
 
-        if relative == "Cargo.toml" {
-            let orig = Path::new(&path).with_file_name("Cargo.toml.orig");
+        if relative == "Baler.toml" {
+            let orig = Path::new(&path).with_file_name("Baler.toml.orig");
             header.set_path(&orig)?;
             header.set_cksum();
             ar.append(&header, &mut file).chain_err(|| {

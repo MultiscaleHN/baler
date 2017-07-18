@@ -25,8 +25,8 @@ Options:
     -v, --verbose ...        Use verbose output (-vv very verbose/build.rs output)
     -q, --quiet              No output printed to stdout
     --color WHEN             Coloring: auto, always, never
-    --frozen                 Require Cargo.lock and cache are up to date
-    --locked                 Require Cargo.lock is up to date
+    --frozen                 Require Baler.lock and cache are up to date
+    --locked                 Require Baler.lock is up to date
 
 If a lockfile is available, this command will ensure that all of the git
 dependencies and/or registries dependencies are downloaded and locally

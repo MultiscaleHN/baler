@@ -387,9 +387,9 @@ impl<'cfg> Source for RegistrySource<'cfg> {
         src.update()?;
         let pkg = src.download(package)?;
 
-        // Unfortunately the index and the actual Cargo.toml in the index can
+        // Unfortunately the index and the actual Baler.toml in the index can
         // differ due to historical Cargo bugs. To paper over these we trash the
-        // *summary* loaded from the Cargo.toml we just downloaded with the one
+        // *summary* loaded from the Baler.toml we just downloaded with the one
         // we loaded from the index.
         let summaries = self.index.summaries(package.name(), &mut *self.ops)?;
         let summary = summaries.iter().map(|s| &s.0).find(|s| {

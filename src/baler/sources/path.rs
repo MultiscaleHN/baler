@@ -23,7 +23,7 @@ pub struct PathSource<'cfg> {
 }
 
 impl<'cfg> PathSource<'cfg> {
-    /// Invoked with an absolute path to a directory that contains a Cargo.toml.
+    /// Invoked with an absolute path to a directory that contains a Baler.toml.
     ///
     /// This source will only return the package at precisely the `path`
     /// specified, and it will be an error if there's not a package at `path`.
@@ -72,7 +72,7 @@ impl<'cfg> PathSource<'cfg> {
         } else if self.recursive {
             ops::read_packages(&self.path, &self.source_id, self.config)
         } else {
-            let path = self.path.join("Cargo.toml");
+            let path = self.path.join("Baler.toml");
             let (pkg, _) = ops::read_package(&path, &self.source_id, self.config)?;
             Ok(vec![pkg])
         }
@@ -247,7 +247,7 @@ impl<'cfg> PathSource<'cfg> {
         self.list_files_walk(pkg, &mut filter)
     }
 
-    // Returns Some(_) if found sibling Cargo.toml and .git folder;
+    // Returns Some(_) if found sibling Baler.toml and .git folder;
     // otherwise caller should fall back on full file list.
     fn discover_git_and_list_files(&self,
                                    pkg: &Package,
@@ -260,12 +260,12 @@ impl<'cfg> PathSource<'cfg> {
         // however, so we do a bit of a probe.
         //
         // We walk this package's path upwards and look for a sibling
-        // Cargo.toml and .git folder. If we find one then we assume that we're
+        // Baler.toml and .git folder. If we find one then we assume that we're
         // part of that repository.
         let mut cur = root;
         loop {
-            if cur.join("Cargo.toml").is_file() {
-                // If we find a git repository next to this Cargo.toml, we still
+            if cur.join("Baler.toml").is_file() {
+                // If we find a git repository next to this Baler.toml, we still
                 // check to see if we are indeed part of the index. If not, then
                 // this is likely an unrelated git repo, so keep going.
                 if let Ok(repo) = git2::Repository::open(cur) {
@@ -274,7 +274,7 @@ impl<'cfg> PathSource<'cfg> {
                         Err(err) => return Some(Err(err.into())),
                     };
                     let path = util::without_prefix(root, cur)
-                                    .unwrap().join("Cargo.toml");
+                                    .unwrap().join("Baler.toml");
                     if index.get_path(&path, 0).is_some() {
                         return Some(self.list_files_git(pkg, repo, filter));
                     }
@@ -342,16 +342,16 @@ impl<'cfg> PathSource<'cfg> {
             }
 
             match file_path.file_name().and_then(|s| s.to_str()) {
-                // Filter out Cargo.lock and target always, we don't want to
+                // Filter out Baler.lock and target always, we don't want to
                 // package a lock file no one will ever read and we also avoid
                 // build artifacts
-                Some("Cargo.lock") |
+                Some("Baler.lock") |
                 Some("target") => continue,
 
                 // Keep track of all sub-packages found and also strip out all
                 // matches we've found so far. Note, though, that if we find
-                // our own `Cargo.toml` we keep going.
-                Some("Cargo.toml") => {
+                // our own `Baler.toml` we keep going.
+                Some("Baler.toml") => {
                     let path = file_path.parent().unwrap();
                     if path != pkg_path {
                         warn!("subpackage found: {}", path.display());
@@ -431,7 +431,7 @@ impl<'cfg> PathSource<'cfg> {
             return Ok(())
         }
         // Don't recurse into any sub-packages that we have
-        if !is_root && fs::metadata(&path.join("Cargo.toml")).is_ok() {
+        if !is_root && fs::metadata(&path.join("Baler.toml")).is_ok() {
             return Ok(())
         }
 
@@ -452,7 +452,7 @@ impl<'cfg> PathSource<'cfg> {
             } else if is_root {
                 // Skip baler artifacts
                 match name {
-                    Some("target") | Some("Cargo.lock") => continue,
+                    Some("target") | Some("Baler.lock") => continue,
                     _ => {}
                 }
             }

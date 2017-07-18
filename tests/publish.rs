@@ -45,7 +45,7 @@ fn simple() {
     setup();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -87,8 +87,8 @@ See [..]
         let file = file.unwrap();
         let fname = file.header().path_bytes();
         let fname = &*fname;
-        assert!(fname == b"foo-0.0.1/Cargo.toml" ||
-                fname == b"foo-0.0.1/Cargo.toml.orig" ||
+        assert!(fname == b"foo-0.0.1/Baler.toml" ||
+                fname == b"foo-0.0.1/Baler.toml.orig" ||
                 fname == b"foo-0.0.1/src/main.rs",
                 "unexpected filename: {:?}", file.header().path());
     }
@@ -101,7 +101,7 @@ fn simple_with_host() {
     setup();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -153,8 +153,8 @@ See [..]
         let file = file.unwrap();
         let fname = file.header().path_bytes();
         let fname = &*fname;
-        assert!(fname == b"foo-0.0.1/Cargo.toml" ||
-                fname == b"foo-0.0.1/Cargo.toml.orig" ||
+        assert!(fname == b"foo-0.0.1/Baler.toml" ||
+                fname == b"foo-0.0.1/Baler.toml.orig" ||
                 fname == b"foo-0.0.1/src/main.rs",
                 "unexpected filename: {:?}", file.header().path());
     }
@@ -167,7 +167,7 @@ fn simple_with_index_and_host() {
     setup();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -220,8 +220,8 @@ See [..]
         let file = file.unwrap();
         let fname = file.header().path_bytes();
         let fname = &*fname;
-        assert!(fname == b"foo-0.0.1/Cargo.toml" ||
-                fname == b"foo-0.0.1/Cargo.toml.orig" ||
+        assert!(fname == b"foo-0.0.1/Baler.toml" ||
+                fname == b"foo-0.0.1/Baler.toml.orig" ||
                 fname == b"foo-0.0.1/src/main.rs",
                 "unexpected filename: {:?}", file.header().path());
     }
@@ -232,7 +232,7 @@ fn git_deps() {
     setup();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -262,7 +262,7 @@ fn path_dependency_no_version() {
     setup();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -274,7 +274,7 @@ fn path_dependency_no_version() {
             path = "bar"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -296,7 +296,7 @@ fn unpublishable_crate() {
     setup();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -323,7 +323,7 @@ fn dont_publish_dirty() {
     p.build();
 
     repo(&paths::root().join("foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -358,7 +358,7 @@ fn publish_clean() {
     p.build();
 
     repo(&paths::root().join("foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -386,7 +386,7 @@ fn publish_in_sub_repo() {
     p.build();
 
     repo(&paths::root().join("foo"))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -414,7 +414,7 @@ fn publish_when_ignored() {
     p.build();
 
     repo(&paths::root().join("foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -444,7 +444,7 @@ fn ignore_when_crate_ignored() {
 
     repo(&paths::root().join("foo"))
         .file(".gitignore", "bar")
-        .nocommit_file("bar/Cargo.toml", r#"
+        .nocommit_file("bar/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -470,7 +470,7 @@ fn new_crate_rejected() {
     p.build();
 
     repo(&paths::root().join("foo"))
-        .nocommit_file("Cargo.toml", r#"
+        .nocommit_file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -492,7 +492,7 @@ fn dry_run() {
     setup();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"

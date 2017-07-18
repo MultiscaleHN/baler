@@ -8,7 +8,7 @@ use hamcrest::assert_that;
 #[test]
 fn bad1() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -30,7 +30,7 @@ but found string in [..]config
 #[test]
 fn bad2() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -62,7 +62,7 @@ Caused by:
 #[test]
 fn bad3() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -136,7 +136,7 @@ Caused by:
 #[test]
 fn bad_baler_config_jobs() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -156,7 +156,7 @@ fn bad_baler_config_jobs() {
 #[test]
 fn default_baler_config_jobs() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -174,7 +174,7 @@ fn default_baler_config_jobs() {
 #[test]
 fn good_baler_config_jobs() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -192,7 +192,7 @@ fn good_baler_config_jobs() {
 #[test]
 fn invalid_global_config() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -222,18 +222,18 @@ Caused by:
 #[test]
 fn bad_baler_lock() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
         authors = []
     "#)
-    .file("Cargo.lock", "[[package]]\nfoo = 92")
+    .file("Baler.lock", "[[package]]\nfoo = 92")
     .file("src/lib.rs", "");
 
     assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(101).with_stderr("\
-[ERROR] failed to parse lock file at: [..]Cargo.lock
+[ERROR] failed to parse lock file at: [..]Baler.lock
 
 Caused by:
   missing field `name` for key `package`
@@ -245,7 +245,7 @@ fn duplicate_packages_in_baler_lock() {
     Package::new("foo", "0.1.0").publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -255,7 +255,7 @@ fn duplicate_packages_in_baler_lock() {
             foo = "0.1.0"
         "#)
         .file("src/lib.rs", "")
-        .file("Cargo.lock", r#"
+        .file("Baler.lock", r#"
             [root]
             name = "bar"
             version = "0.0.1"
@@ -289,7 +289,7 @@ fn bad_source_in_baler_lock() {
     Package::new("foo", "0.1.0").publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -299,7 +299,7 @@ fn bad_source_in_baler_lock() {
             foo = "0.1.0"
         "#)
         .file("src/lib.rs", "")
-        .file("Cargo.lock", r#"
+        .file("Baler.lock", r#"
             [root]
             name = "bar"
             version = "0.0.1"
@@ -326,14 +326,14 @@ Caused by:
 #[test]
 fn bad_dependency_in_lockfile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
             authors = []
         "#)
         .file("src/lib.rs", "")
-        .file("Cargo.lock", r#"
+        .file("Baler.lock", r#"
             [root]
             name = "foo"
             version = "0.0.1"
@@ -356,7 +356,7 @@ Caused by:
 #[test]
 fn bad_git_dependency() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -386,7 +386,7 @@ Caused by:
 #[test]
 fn bad_crate_type() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -406,7 +406,7 @@ error: failed to run `rustc` to learn about target-specific information
 #[test]
 fn malformed_override() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -434,7 +434,7 @@ Caused by:
 #[test]
 fn duplicate_binary_names() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
        [package]
        name = "qqq"
        version = "0.1.0"
@@ -463,7 +463,7 @@ Caused by:
 #[test]
 fn duplicate_example_names() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
        [package]
        name = "qqq"
        version = "0.1.0"
@@ -492,7 +492,7 @@ Caused by:
 #[test]
 fn duplicate_bench_names() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
        [package]
        name = "qqq"
        version = "0.1.0"
@@ -521,7 +521,7 @@ Caused by:
 #[test]
 fn duplicate_deps() {
     let foo = project("foo")
-    .file("shim-bar/Cargo.toml", r#"
+    .file("shim-bar/Baler.toml", r#"
        [package]
        name = "bar"
        version = "0.0.1"
@@ -530,7 +530,7 @@ fn duplicate_deps() {
     .file("shim-bar/src/lib.rs", r#"
             pub fn a() {}
     "#)
-    .file("linux-bar/Cargo.toml", r#"
+    .file("linux-bar/Baler.toml", r#"
        [package]
        name = "bar"
        version = "0.0.1"
@@ -539,7 +539,7 @@ fn duplicate_deps() {
     .file("linux-bar/src/lib.rs", r#"
             pub fn a() {}
     "#)
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
        [package]
        name = "qqq"
        version = "0.0.1"
@@ -566,7 +566,7 @@ have a single canonical source path irrespective of build target.
 #[test]
 fn duplicate_deps_diff_sources() {
     let foo = project("foo")
-    .file("shim-bar/Cargo.toml", r#"
+    .file("shim-bar/Baler.toml", r#"
        [package]
        name = "bar"
        version = "0.0.1"
@@ -575,7 +575,7 @@ fn duplicate_deps_diff_sources() {
     .file("shim-bar/src/lib.rs", r#"
             pub fn a() {}
     "#)
-    .file("linux-bar/Cargo.toml", r#"
+    .file("linux-bar/Baler.toml", r#"
        [package]
        name = "bar"
        version = "0.0.1"
@@ -584,7 +584,7 @@ fn duplicate_deps_diff_sources() {
     .file("linux-bar/src/lib.rs", r#"
             pub fn a() {}
     "#)
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
        [package]
        name = "qqq"
        version = "0.0.1"
@@ -611,7 +611,7 @@ have a single canonical source path irrespective of build target.
 #[test]
 fn unused_keys() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
            [package]
            name = "foo"
            version = "0.1.0"
@@ -631,7 +631,7 @@ warning: unused manifest key: target.foo.bar
 
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -652,7 +652,7 @@ warning: unused manifest key: project.bulid
 
     let mut p = project("bar");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -678,7 +678,7 @@ warning: unused manifest key: lib.build
 #[test]
 fn empty_dependencies() {
     let p = project("empty_deps")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "empty_deps"
         version = "0.0.0"
@@ -701,7 +701,7 @@ to use. This will be considered an error in future versions
 #[test]
 fn invalid_toml_historically_allowed_is_warned() {
     let p = project("empty_deps")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "empty_deps"
         version = "0.0.0"
@@ -729,7 +729,7 @@ in the future.
 #[test]
 fn ambiguous_git_reference() {
     let foo = project("foo")
-    .file("Cargo.toml", r#"
+    .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -753,7 +753,7 @@ This will be considered an error in future versions
 #[test]
 fn bad_source_config1() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -773,7 +773,7 @@ error: no source URL specified for `source.foo`, need [..]
 #[test]
 fn bad_source_config2() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -805,7 +805,7 @@ Caused by:
 #[test]
 fn bad_source_config3() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -836,7 +836,7 @@ Caused by:
 #[test]
 fn bad_source_config4() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -872,7 +872,7 @@ Caused by:
 #[test]
 fn bad_source_config5() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -903,7 +903,7 @@ Caused by:
 #[test]
 fn both_git_and_path_specified() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -926,7 +926,7 @@ This will be considered an error in future versions
 #[test]
 fn bad_source_config6() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -951,7 +951,7 @@ error: expected a string, but found a array for `source.crates-io.replace-with` 
 #[test]
 fn ignored_git_revision() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.0"
@@ -972,7 +972,7 @@ This will be considered an error in future versions"));
 #[test]
 fn bad_source_config7() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -999,7 +999,7 @@ error: more than one source URL specified for `source.foo`
 #[test]
 fn bad_dependency() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1022,7 +1022,7 @@ Caused by:
 #[test]
 fn bad_debuginfo() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1045,7 +1045,7 @@ Caused by:
 #[test]
 fn bad_opt_level() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"

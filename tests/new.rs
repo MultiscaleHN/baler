@@ -28,7 +28,7 @@ fn simple_lib() {
 "));
 
     assert_that(&paths::root().join("foo"), existing_dir());
-    assert_that(&paths::root().join("foo/Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("foo/Baler.toml"), existing_file());
     assert_that(&paths::root().join("foo/src/lib.rs"), existing_file());
     assert_that(&paths::root().join("foo/.gitignore"), is_not(existing_file()));
 
@@ -56,7 +56,7 @@ fn simple_bin() {
 "));
 
     assert_that(&paths::root().join("foo"), existing_dir());
-    assert_that(&paths::root().join("foo/Cargo.toml"), existing_file());
+    assert_that(&paths::root().join("foo/Baler.toml"), existing_file());
     assert_that(&paths::root().join("foo/src/main.rs"), existing_file());
 
     assert_that(baler_process("build").cwd(&paths::root().join("foo")),
@@ -83,7 +83,7 @@ fn simple_git() {
                 execs().with_status(0));
 
     assert_that(td.path(), existing_dir());
-    assert_that(&td.path().join("foo/Cargo.toml"), existing_file());
+    assert_that(&td.path().join("foo/Baler.toml"), existing_file());
     assert_that(&td.path().join("foo/src/lib.rs"), existing_file());
     assert_that(&td.path().join("foo/.git"), existing_dir());
     assert_that(&td.path().join("foo/.gitignore"), existing_file());
@@ -156,7 +156,7 @@ fn rust_prefix_stripped() {
     assert_that(baler_process("new").arg("--lib").arg("rust-foo").env("USER", "foo"),
                 execs().with_status(0)
                        .with_stderr_contains("note: package will be named `foo`; use --name to override"));
-    let toml = paths::root().join("rust-foo/Cargo.toml");
+    let toml = paths::root().join("rust-foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"name = "foo""#));
@@ -166,7 +166,7 @@ fn rust_prefix_stripped() {
 fn bin_disables_stripping() {
     assert_that(baler_process("new").arg("rust-foo").arg("--bin").env("USER", "foo"),
                 execs().with_status(0));
-    let toml = paths::root().join("rust-foo/Cargo.toml");
+    let toml = paths::root().join("rust-foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"name = "rust-foo""#));
@@ -176,7 +176,7 @@ fn bin_disables_stripping() {
 fn explicit_name_not_stripped() {
     assert_that(baler_process("new").arg("foo").arg("--name").arg("rust-bar").env("USER", "foo"),
                 execs().with_status(0));
-    let toml = paths::root().join("foo/Cargo.toml");
+    let toml = paths::root().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"name = "rust-bar""#));
@@ -191,7 +191,7 @@ fn finds_author_user() {
                                     .cwd(td.path()),
                 execs().with_status(0));
 
-    let toml = td.path().join("foo/Cargo.toml");
+    let toml = td.path().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["foo"]"#));
@@ -206,7 +206,7 @@ fn finds_author_user_escaped() {
                                     .cwd(td.path()),
                 execs().with_status(0));
 
-    let toml = td.path().join("foo/Cargo.toml");
+    let toml = td.path().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["foo \"bar\""]"#));
@@ -223,7 +223,7 @@ fn finds_author_username() {
                                     .cwd(td.path()),
                 execs().with_status(0));
 
-    let toml = td.path().join("foo/Cargo.toml");
+    let toml = td.path().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["foo"]"#));
@@ -242,7 +242,7 @@ fn finds_author_priority() {
                                     .cwd(td.path()),
                 execs().with_status(0));
 
-    let toml = td.path().join("foo/Cargo.toml");
+    let toml = td.path().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["bar <baz>"]"#));
@@ -259,7 +259,7 @@ fn finds_author_email() {
                                     .cwd(td.path()),
                 execs().with_status(0));
 
-    let toml = td.path().join("foo/Cargo.toml");
+    let toml = td.path().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["bar <baz>"]"#));
@@ -274,7 +274,7 @@ fn finds_author_git() {
     assert_that(baler_process("new").arg("foo").env("USER", "foo"),
                 execs().with_status(0));
 
-    let toml = paths::root().join("foo/Cargo.toml");
+    let toml = paths::root().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["bar <baz>"]"#));
@@ -297,7 +297,7 @@ fn finds_local_author_git() {
     assert_that(baler_process("init").env("USER", "foo"),
                 execs().with_status(0));
 
-    let toml = paths::root().join("Cargo.toml");
+    let toml = paths::root().join("Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["bar <baz>"]"#));
@@ -312,7 +312,7 @@ fn finds_git_email() {
                                     .cwd(td.path()),
                 execs().with_status(0));
 
-    let toml = td.path().join("foo/Cargo.toml");
+    let toml = td.path().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["foo <gitfoo>"]"#), contents);
@@ -330,7 +330,7 @@ fn finds_git_author() {
                                     .cwd(td.path()),
                 execs().with_status(0));
 
-    let toml = td.path().join("foo/Cargo.toml");
+    let toml = td.path().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["gitfoo"]"#));
@@ -354,7 +354,7 @@ fn author_prefers_baler() {
     assert_that(baler_process("new").arg("foo").env("USER", "foo"),
                 execs().with_status(0));
 
-    let toml = paths::root().join("foo/Cargo.toml");
+    let toml = paths::root().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["new-foo <new-bar>"]"#));

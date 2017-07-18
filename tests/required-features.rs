@@ -9,7 +9,7 @@ use hamcrest::{assert_that, existing_file, not};
 #[test]
 fn build_bin_default_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -60,7 +60,7 @@ Consider enabling them by passing e.g. `--features=\"a\"`
 #[test]
 fn build_bin_arg_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -84,7 +84,7 @@ fn build_bin_arg_features() {
 #[test]
 fn build_bin_multiple_required_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -129,7 +129,7 @@ fn build_bin_multiple_required_features() {
 #[test]
 fn build_example_default_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -160,7 +160,7 @@ Consider enabling them by passing e.g. `--features=\"a\"`
 #[test]
 fn build_example_arg_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -184,7 +184,7 @@ fn build_example_arg_features() {
 #[test]
 fn build_example_multiple_required_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -246,7 +246,7 @@ Consider enabling them by passing e.g. `--features=\"a\"`
 #[test]
 fn test_default_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -291,7 +291,7 @@ Consider enabling them by passing e.g. `--features=\"a\"`
 #[test]
 fn test_arg_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -318,7 +318,7 @@ fn test_arg_features() {
 #[test]
 fn test_multiple_required_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -370,7 +370,7 @@ fn bench_default_features() {
     }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -425,7 +425,7 @@ fn bench_arg_features() {
     }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -462,7 +462,7 @@ fn bench_multiple_required_features() {
     }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -522,7 +522,7 @@ fn bench_multiple_required_features() {
 #[test]
 fn install_default_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -598,7 +598,7 @@ Consider enabling them by passing e.g. `--features=\"a\"`
 #[test]
 fn install_arg_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -624,7 +624,7 @@ fn install_arg_features() {
 #[test]
 fn install_multiple_required_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -677,7 +677,7 @@ fn install_multiple_required_features() {
 #[test]
 fn dep_feature_in_toml() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -712,7 +712,7 @@ fn dep_feature_in_toml() {
             #[bench]
             fn bench(_: &mut test::Bencher) {
             }"#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -767,7 +767,7 @@ fn dep_feature_in_toml() {
 #[test]
 fn dep_feature_in_cmd_line() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -802,7 +802,7 @@ fn dep_feature_in_cmd_line() {
             #[bench]
             fn bench(_: &mut test::Bencher) {
             }"#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -887,7 +887,7 @@ Consider enabling them by passing e.g. `--features=\"bar/a\"`
 #[test]
 fn test_skips_compiling_bin_with_missing_required_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -936,7 +936,7 @@ error[E0463]: can't find crate for `bar`", p.url())));
 #[test]
 fn run_default() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -967,7 +967,7 @@ Consider enabling them by passing e.g. `--features=\"a\"`
 #[test]
 fn run_default_multiple_required_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"

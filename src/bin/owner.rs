@@ -32,8 +32,8 @@ Options:
     -v, --verbose ...        Use verbose output (-vv very verbose/build.rs output)
     -q, --quiet              No output printed to stdout
     --color WHEN             Coloring: auto, always, never
-    --frozen                 Require Cargo.lock and cache are up to date
-    --locked                 Require Cargo.lock is up to date
+    --frozen                 Require Baler.lock and cache are up to date
+    --locked                 Require Baler.lock is up to date
 
 This command will modify the owners for a package on the specified registry (or
 default). Note that owners of a package can upload new versions, yank old

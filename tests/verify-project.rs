@@ -11,11 +11,11 @@ fn verify_project_success_output() -> String {
 #[test]
 fn baler_verify_project_path_to_baler_toml_relative() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("verify-project")
-                 .arg("--manifest-path").arg("foo/Cargo.toml")
+                 .arg("--manifest-path").arg("foo/Baler.toml")
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(0)
                        .with_stdout(verify_project_success_output()));
@@ -24,11 +24,11 @@ fn baler_verify_project_path_to_baler_toml_relative() {
 #[test]
 fn baler_verify_project_path_to_baler_toml_absolute() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("verify-project")
-                 .arg("--manifest-path").arg(p.root().join("Cargo.toml"))
+                 .arg("--manifest-path").arg(p.root().join("Baler.toml"))
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(0)
                        .with_stdout(verify_project_success_output()));
@@ -37,7 +37,7 @@ fn baler_verify_project_path_to_baler_toml_absolute() {
 #[test]
 fn baler_verify_project_cwd() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("verify-project")

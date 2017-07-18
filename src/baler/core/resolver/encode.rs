@@ -197,7 +197,7 @@ fn build_path_deps(ws: &Workspace) -> HashMap<String, SourceId> {
                       .map(|d| d.source_id())
                       .filter(|id| !visited.contains(id) && id.is_path())
                       .filter_map(|id| id.url().to_file_path().ok())
-                      .map(|path| path.join("Cargo.toml"))
+                      .map(|path| path.join("Baler.toml"))
                       .filter_map(|path| Package::for_path(&path, config).ok())
                       .collect::<Vec<_>>();
         for pkg in deps {

@@ -21,7 +21,7 @@ fn verbose_output_for_lib(p: &ProjectBuilder) -> String {
 #[test]
 fn build_lib_only() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "foo"
@@ -43,7 +43,7 @@ fn build_lib_only() {
 #[test]
 fn build_with_no_lib() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn main() {}
         "#);
@@ -56,7 +56,7 @@ fn build_with_no_lib() {
 #[test]
 fn build_with_relative_baler_home_path() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "foo"
@@ -71,7 +71,7 @@ fn build_with_relative_baler_home_path() {
             fn main() {}
         "#)
         .file("src/test_dependency/src/lib.rs", r#" "#)
-        .file("src/test_dependency/Cargo.toml", r#"
+        .file("src/test_dependency/Baler.toml", r#"
             [package]
 
             name = "test-dependency"

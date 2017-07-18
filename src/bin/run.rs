@@ -48,8 +48,8 @@ Options:
     -q, --quiet                  No output printed to stdout
     --color WHEN                 Coloring: auto, always, never
     --message-format FMT         Error format: human, json [default: human]
-    --frozen                     Require Cargo.lock and cache are up to date
-    --locked                     Require Cargo.lock is up to date
+    --frozen                     Require Baler.lock and cache are up to date
+    --locked                     Require Baler.lock is up to date
 
 If neither `--bin` nor `--example` are given, then if the project only has one
 bin target it will be run. Otherwise `--bin` specifies the bin target to run,

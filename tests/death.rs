@@ -60,7 +60,7 @@ fn ctrl_c_kills_everyone() {
     let addr = listener.local_addr().unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"

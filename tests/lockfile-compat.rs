@@ -25,7 +25,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "#;
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -35,7 +35,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
             foo = "0.1.0"
         "#)
         .file("src/lib.rs", "")
-        .file("Cargo.lock", lockfile);
+        .file("Baler.lock", lockfile);
     p.build();
 
     assert_that(p.baler("build"),
@@ -50,7 +50,7 @@ fn totally_wild_checksums_works() {
     Package::new("foo", "0.1.0").publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -60,7 +60,7 @@ fn totally_wild_checksums_works() {
             foo = "0.1.0"
         "#)
         .file("src/lib.rs", "")
-        .file("Cargo.lock", r#"
+        .file("Baler.lock", r#"
 [root]
 name = "bar"
 version = "0.0.1"
@@ -106,7 +106,7 @@ fn wrong_checksum_is_an_error() {
     Package::new("foo", "0.1.0").publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -116,7 +116,7 @@ fn wrong_checksum_is_an_error() {
             foo = "0.1.0"
         "#)
         .file("src/lib.rs", "")
-        .file("Cargo.lock", r#"
+        .file("Baler.lock", r#"
 [root]
 name = "bar"
 version = "0.0.1"
@@ -159,7 +159,7 @@ fn unlisted_checksum_is_bad_if_we_calculate() {
     Package::new("foo", "0.1.0").publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -169,7 +169,7 @@ fn unlisted_checksum_is_bad_if_we_calculate() {
             foo = "0.1.0"
         "#)
         .file("src/lib.rs", "")
-        .file("Cargo.lock", r#"
+        .file("Baler.lock", r#"
 [root]
 name = "bar"
 version = "0.0.1"
@@ -209,7 +209,7 @@ this could be indicative of a few possible situations:
 #[test]
 fn listed_checksum_bad_if_we_cannot_compute() {
     let git = git::new("foo", |p| {
-        p.file("Cargo.toml", r#"
+        p.file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -219,7 +219,7 @@ fn listed_checksum_bad_if_we_cannot_compute() {
     }).unwrap();
 
     let p = project("bar")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -229,7 +229,7 @@ fn listed_checksum_bad_if_we_cannot_compute() {
             foo = {{ git = '{}' }}
         "#, git.url()))
         .file("src/lib.rs", "")
-        .file("Cargo.lock", &format!(r#"
+        .file("Baler.lock", &format!(r#"
 [root]
 name = "bar"
 version = "0.0.1"
@@ -270,7 +270,7 @@ fn current_lockfile_format() {
     Package::new("foo", "0.1.0").publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -327,7 +327,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "#;
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -337,7 +337,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
             foo = "0.1.0"
         "#)
         .file("src/lib.rs", "")
-        .file("Cargo.lock", lockfile);
+        .file("Baler.lock", lockfile);
 
     p.build();
 

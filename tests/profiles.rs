@@ -11,7 +11,7 @@ use hamcrest::assert_that;
 fn profile_overrides() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -46,7 +46,7 @@ url = p.url(),
 fn opt_level_override_0() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -78,7 +78,7 @@ fn debug_override_1() {
     let mut p = project("foo");
 
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "test"
             version = "0.0.0"
@@ -107,7 +107,7 @@ url = p.url()
 fn check_opt_level_override(profile_level: &str, rustc_level: &str) {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
 
             name = "test"
@@ -156,7 +156,7 @@ fn opt_level_overrides() {
 fn top_level_overrides_deps() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -171,7 +171,7 @@ fn top_level_overrides_deps() {
             path = "foo"
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [package]
 
             name = "foo"
@@ -221,7 +221,7 @@ fn top_level_overrides_deps() {
 #[test]
 fn profile_in_non_root_manifest_triggers_a_warning() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -234,7 +234,7 @@ fn profile_in_non_root_manifest_triggers_a_warning() {
             debug = false
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -259,7 +259,7 @@ workspace: [..]
 #[test]
 fn profile_in_virtual_manifest_works() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["bar"]
 
@@ -268,7 +268,7 @@ fn profile_in_virtual_manifest_works() {
             debug = false
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"

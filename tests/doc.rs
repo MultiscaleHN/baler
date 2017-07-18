@@ -14,7 +14,7 @@ use baler::util::{CargoError, CargoErrorKind};
 #[test]
 fn simple() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -40,7 +40,7 @@ fn simple() {
 #[test]
 fn doc_no_libs() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -61,7 +61,7 @@ fn doc_no_libs() {
 #[test]
 fn doc_twice() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -85,7 +85,7 @@ fn doc_twice() {
 #[test]
 fn doc_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -98,7 +98,7 @@ fn doc_deps() {
             extern crate bar;
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -133,7 +133,7 @@ fn doc_deps() {
 #[test]
 fn doc_no_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -146,7 +146,7 @@ fn doc_no_deps() {
             extern crate bar;
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -172,7 +172,7 @@ fn doc_no_deps() {
 #[test]
 fn doc_only_bin() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -185,7 +185,7 @@ fn doc_only_bin() {
             extern crate bar;
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -206,7 +206,7 @@ fn doc_only_bin() {
 #[test]
 fn doc_lib_bin_same_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -226,7 +226,7 @@ Consider renaming one or marking the target as `doc = false`
 #[test]
 fn doc_dash_p() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -236,7 +236,7 @@ fn doc_dash_p() {
             path = "a"
         "#)
         .file("src/lib.rs", "extern crate a;")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -246,7 +246,7 @@ fn doc_dash_p() {
             path = "../b"
         "#)
         .file("a/src/lib.rs", "extern crate b;")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -267,7 +267,7 @@ fn doc_dash_p() {
 #[test]
 fn doc_same_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -287,7 +287,7 @@ fn doc_target() {
     const TARGET: &'static str = "arm-unknown-linux-gnueabihf";
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -311,7 +311,7 @@ fn doc_target() {
 #[test]
 fn target_specific_not_documented() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -321,7 +321,7 @@ fn target_specific_not_documented() {
             a = { path = "a" }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -336,7 +336,7 @@ fn target_specific_not_documented() {
 #[test]
 fn output_not_captured() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -346,7 +346,7 @@ fn output_not_captured() {
             a = { path = "a" }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -374,7 +374,7 @@ fn output_not_captured() {
 #[test]
 fn target_specific_documented() {
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -391,7 +391,7 @@ fn target_specific_documented() {
             /// test
             pub fn foo() {}
         ")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -409,7 +409,7 @@ fn target_specific_documented() {
 #[test]
 fn no_document_build_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -421,7 +421,7 @@ fn no_document_build_deps() {
         .file("src/lib.rs", "
             pub fn foo() {}
         ")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -441,7 +441,7 @@ fn no_document_build_deps() {
 #[test]
 fn doc_release() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -463,7 +463,7 @@ fn doc_release() {
 #[test]
 fn doc_multiple_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -479,7 +479,7 @@ fn doc_multiple_deps() {
             extern crate bar;
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -488,7 +488,7 @@ fn doc_multiple_deps() {
         .file("bar/src/lib.rs", r#"
             pub fn bar() {}
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -512,7 +512,7 @@ fn doc_multiple_deps() {
 #[test]
 fn features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -528,7 +528,7 @@ fn features() {
             #[cfg(feature = "foo")]
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -556,7 +556,7 @@ fn features() {
 #[test]
 fn rerun_when_dir_removed() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -582,7 +582,7 @@ fn rerun_when_dir_removed() {
 #[test]
 fn document_only_lib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -610,7 +610,7 @@ fn plugins_no_use_target() {
         return
     }
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -629,7 +629,7 @@ fn plugins_no_use_target() {
 #[test]
 fn doc_all_workspace() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -642,7 +642,7 @@ fn doc_all_workspace() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -663,11 +663,11 @@ fn doc_all_workspace() {
 #[test]
 fn doc_all_virtual_manifest() {
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["foo", "bar"]
         "#)
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -675,7 +675,7 @@ fn doc_all_virtual_manifest() {
         .file("foo/src/lib.rs", r#"
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -695,11 +695,11 @@ fn doc_all_virtual_manifest() {
 #[test]
 fn doc_all_member_dependency_same_name() {
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["a"]
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.1.0"

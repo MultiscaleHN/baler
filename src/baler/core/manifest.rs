@@ -15,7 +15,7 @@ pub enum EitherManifest {
     Virtual(VirtualManifest),
 }
 
-/// Contains all the information about a package, as loaded from a Cargo.toml.
+/// Contains all the information about a package, as loaded from a Baler.toml.
 #[derive(Clone)]
 pub struct Manifest {
     summary: Summary,

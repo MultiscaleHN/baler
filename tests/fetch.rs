@@ -7,7 +7,7 @@ use hamcrest::assert_that;
 #[test]
 fn no_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []

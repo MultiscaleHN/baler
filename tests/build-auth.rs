@@ -66,7 +66,7 @@ fn http_auth_offered() {
     });
 
     let script = project("script")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "script"
             version = "0.0.1"
@@ -89,7 +89,7 @@ fn http_auth_offered() {
                    &script.display().to_string()).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -139,7 +139,7 @@ fn https_something_happens() {
     });
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -186,7 +186,7 @@ fn ssh_something_happens() {
     });
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.0.1"

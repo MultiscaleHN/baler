@@ -70,8 +70,8 @@ Options:
     --color WHEN                 Coloring: auto, always, never
     --message-format FMT         Error format: human, json [default: human]
     --no-fail-fast               Run all tests regardless of failure
-    --frozen                     Require Cargo.lock and cache are up to date
-    --locked                     Require Cargo.lock is up to date
+    --frozen                     Require Baler.lock and cache are up to date
+    --locked                     Require Baler.lock is up to date
 
 All of the trailing arguments are passed to the test binaries generated for
 filtering tests and generally providing options configuring how they run. For

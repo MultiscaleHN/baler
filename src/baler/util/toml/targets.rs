@@ -6,7 +6,7 @@
 //!  * `examples/*.rs` are examples
 //!  * `tests/*.rs` are integration tests
 //!
-//! It is a bit tricky because we need match explicit information from `Cargo.toml`
+//! It is a bit tricky because we need match explicit information from `Baler.toml`
 //! with implicit info in directory layout.
 
 use std::path::{Path, PathBuf};
@@ -106,7 +106,7 @@ fn clean_lib(toml_lib: Option<&TomlLibTarget>,
             if legacy_path.exists() {
                 warnings.push(format!(
                     "path `{}` was erroneously implicitly accepted for library `{}`,\n\
-                     please rename the file to `src/lib.rs` or set lib.path in Cargo.toml",
+                     please rename the file to `src/lib.rs` or set lib.path in Baler.toml",
                     legacy_path.display(), lib.name()
                 ));
                 legacy_path
@@ -173,7 +173,7 @@ fn clean_bins(toml_bins: Option<&Vec<TomlBinTarget>>,
             if let Some(legacy_path) = legacy_bin_path(package_root, &bin.name(), has_lib) {
                 warnings.push(format!(
                     "path `{}` was erroneously implicitly accepted for binary `{}`,\n\
-                     please set bin.path in Cargo.toml",
+                     please set bin.path in Baler.toml",
                     legacy_path.display(), bin.name()
                 ));
                 Some(legacy_path)
@@ -258,7 +258,7 @@ fn clean_benches(toml_benches: Option<&Vec<TomlBenchTarget>>,
         }
         warnings.push(format!(
             "path `{}` was erroneously implicitly accepted for benchmark `{}`,\n\
-             please set bench.path in Cargo.toml",
+             please set bench.path in Baler.toml",
             legacy_path.display(), bench.name()
         ));
         Some(legacy_path)

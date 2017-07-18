@@ -156,7 +156,7 @@ fn override_baler_home() {
                     .env("CARGO_HOME", &my_home),
                 execs().with_status(0));
 
-    let toml = paths::root().join("foo/Cargo.toml");
+    let toml = paths::root().join("foo/Baler.toml");
     let mut contents = String::new();
     File::open(&toml).unwrap().read_to_string(&mut contents).unwrap();
     assert!(contents.contains(r#"authors = ["foo <bar>"]"#));
@@ -175,7 +175,7 @@ fn baler_subcommand_env() {
         "#, baler::CARGO_ENV);
 
     let p = project("baler-envtest")
-        .file("Cargo.toml", &basic_bin_manifest("baler-envtest"))
+        .file("Baler.toml", &basic_bin_manifest("baler-envtest"))
         .file("src/main.rs", &src);
 
     let target_dir = p.target_debug_dir();

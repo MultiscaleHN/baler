@@ -31,7 +31,7 @@ pub struct Workspace<'cfg> {
 
     // If this workspace includes more than one crate, this points to the root
     // of the workspace. This is `None` in the case that `[workspace]` is
-    // missing, `package.workspace` is missing, and no `Cargo.toml` above
+    // missing, `package.workspace` is missing, and no `Baler.toml` above
     // `current_manifest` was found on the filesystem with `[workspace]`.
     root_manifest: Option<PathBuf>,
 
@@ -161,7 +161,7 @@ impl<'cfg> Workspace<'cfg> {
     /// Returns the current package of this workspace.
     ///
     /// Note that this can return an error if it the current manifest is
-    /// actually a "virtual Cargo.toml", in which case an error is returned
+    /// actually a "virtual Baler.toml", in which case an error is returned
     /// indicating that something else should be passed.
     pub fn current(&self) -> CargoResult<&Package> {
         self.current_opt().ok_or_else(||
@@ -194,7 +194,7 @@ impl<'cfg> Workspace<'cfg> {
     /// Returns the root path of this workspace.
     ///
     /// That is, this returns the path of the directory containing the
-    /// `Cargo.toml` which is the root of this workspace.
+    /// `Baler.toml` which is the root of this workspace.
     pub fn root(&self) -> &Path {
         match self.root_manifest {
             Some(ref p) => p,
@@ -241,7 +241,7 @@ impl<'cfg> Workspace<'cfg> {
     /// Finds the root of a workspace for the crate whose manifest is located
     /// at `manifest_path`.
     ///
-    /// This will parse the `Cargo.toml` at `manifest_path` and then interpret
+    /// This will parse the `Baler.toml` at `manifest_path` and then interpret
     /// the workspace configuration, optionally walking up the filesystem
     /// looking for other workspace roots.
     ///
@@ -252,7 +252,7 @@ impl<'cfg> Workspace<'cfg> {
         fn read_root_pointer(member_manifest: &Path, root_link: &str) -> CargoResult<PathBuf> {
             let path = member_manifest.parent().unwrap()
                 .join(root_link)
-                .join("Cargo.toml");
+                .join("Baler.toml");
             debug!("find_root - pointer {}", path.display());
             return Ok(paths::normalize_path(&path))
         };
@@ -272,7 +272,7 @@ impl<'cfg> Workspace<'cfg> {
         }
 
         for path in paths::ancestors(manifest_path).skip(2) {
-            let manifest = path.join("Cargo.toml");
+            let manifest = path.join("Baler.toml");
             debug!("find_root - trying {}", manifest.display());
             if manifest.exists() {
                 match *self.packages.load(&manifest)?.workspace_config() {
@@ -338,7 +338,7 @@ impl<'cfg> Workspace<'cfg> {
             }
 
             for path in expanded_list {
-                let manifest_path = path.join("Cargo.toml");
+                let manifest_path = path.join("Baler.toml");
                 self.find_path_deps(&manifest_path, &root_manifest, false)?;
             }
         }
@@ -385,7 +385,7 @@ impl<'cfg> Workspace<'cfg> {
                .map(|d| d.source_id())
                .filter(|d| d.is_path())
                .filter_map(|d| d.url().to_file_path().ok())
-               .map(|p| p.join("Cargo.toml"))
+               .map(|p| p.join("Baler.toml"))
                .collect::<Vec<_>>()
         };
         for candidate in candidates {

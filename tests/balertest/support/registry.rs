@@ -227,7 +227,7 @@ impl Package {
         t!(fs::create_dir_all(dst.parent().unwrap()));
         let f = t!(File::create(&dst));
         let mut a = Builder::new(GzEncoder::new(f, Default));
-        self.append(&mut a, "Cargo.toml", &manifest);
+        self.append(&mut a, "Baler.toml", &manifest);
         if self.files.is_empty() {
             self.append(&mut a, "src/lib.rs", "");
         } else {

@@ -38,7 +38,7 @@ fn disabled() -> bool {
 
     CHECK.call_once(|| {
         let p = project("cross_test")
-            .file("Cargo.toml", &basic_bin_manifest("cross_test"))
+            .file("Baler.toml", &basic_bin_manifest("cross_test"))
             .file("src/cross_test.rs", &main_file(r#""testing!""#, &[]));
 
         let result = p.baler_process("build")
@@ -141,7 +141,7 @@ fn simple_cross() {
     if disabled() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -178,7 +178,7 @@ fn simple_cross_config() {
             [build]
             target = "{}"
         "#, alternate()))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -211,7 +211,7 @@ fn simple_deps() {
     if disabled() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -225,7 +225,7 @@ fn simple_deps() {
             fn main() { bar::bar(); }
         "#);
     let p2 = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -249,7 +249,7 @@ fn plugin_deps() {
     if !is_nightly() { return }
 
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -270,7 +270,7 @@ fn plugin_deps() {
             }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -302,7 +302,7 @@ fn plugin_deps() {
             }
         "#);
     let baz = project("baz")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -327,7 +327,7 @@ fn plugin_to_the_max() {
     if !is_nightly() { return }
 
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -348,7 +348,7 @@ fn plugin_to_the_max() {
             }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -384,7 +384,7 @@ fn plugin_to_the_max() {
             }
         "#);
     let baz = project("baz")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -418,7 +418,7 @@ fn linker_and_ar() {
             ar = "my-ar-tool"
             linker = "my-linker-tool"
         "#, target))
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &format!(r#"
             use std::env;
             fn main() {{
@@ -452,7 +452,7 @@ fn plugin_with_extra_dylib_dep() {
     if !is_nightly() { return }
 
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -468,7 +468,7 @@ fn plugin_with_extra_dylib_dep() {
             fn main() {}
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -495,7 +495,7 @@ fn plugin_with_extra_dylib_dep() {
             }
         "#);
     let baz = project("baz")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -519,7 +519,7 @@ fn cross_tests() {
     if disabled() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             authors = []
@@ -559,7 +559,7 @@ fn no_cross_doctests() {
     if disabled() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             authors = []
@@ -612,7 +612,7 @@ fn simple_baler_run() {
     if disabled() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -636,7 +636,7 @@ fn cross_with_a_build_script() {
 
     let target = alternate();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -684,7 +684,7 @@ fn build_script_needed_for_host_and_target() {
     let target = alternate();
     let host = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -705,7 +705,7 @@ fn build_script_needed_for_host_and_target() {
             extern crate d1;
             fn main() { d1::d1(); }
         ")
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.0"
@@ -722,7 +722,7 @@ fn build_script_needed_for_host_and_target() {
                 println!("baler:rustc-flags=-L /path/to/{}", target);
             }
         "#)
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.0"
@@ -768,7 +768,7 @@ fn build_deps_for_the_right_arch() {
     if disabled() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -778,7 +778,7 @@ fn build_deps_for_the_right_arch() {
             path = "d2"
         "#)
         .file("src/main.rs", "extern crate d2; fn main() {}")
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.0"
@@ -787,7 +787,7 @@ fn build_deps_for_the_right_arch() {
         .file("d1/src/lib.rs", "
             pub fn d1() {}
         ")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.0"
@@ -810,7 +810,7 @@ fn build_script_only_host() {
     if disabled() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -822,7 +822,7 @@ fn build_script_only_host() {
         "#)
         .file("src/main.rs", "fn main() {}")
         .file("build.rs", "extern crate d1; fn main() {}")
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.0"
@@ -851,7 +851,7 @@ fn build_script_only_host() {
 fn plugin_build_script_right_arch() {
     if disabled() { return }
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -883,7 +883,7 @@ fn build_script_with_platform_specific_dependencies() {
     let target = alternate();
     let host = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -895,7 +895,7 @@ fn build_script_with_platform_specific_dependencies() {
         "#)
         .file("build.rs", "extern crate d1; fn main() {}")
         .file("src/lib.rs", "")
-        .file("d1/Cargo.toml", &format!(r#"
+        .file("d1/Baler.toml", &format!(r#"
             [package]
             name = "d1"
             version = "0.0.0"
@@ -905,7 +905,7 @@ fn build_script_with_platform_specific_dependencies() {
             d2 = {{ path = "../d2" }}
         "#, host))
         .file("d1/src/lib.rs", "extern crate d2;")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.0"
@@ -935,7 +935,7 @@ fn platform_specific_dependencies_do_not_leak() {
     let target = alternate();
     let host = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -950,7 +950,7 @@ fn platform_specific_dependencies_do_not_leak() {
         "#)
         .file("build.rs", "extern crate d1; fn main() {}")
         .file("src/lib.rs", "")
-        .file("d1/Cargo.toml", &format!(r#"
+        .file("d1/Baler.toml", &format!(r#"
             [package]
             name = "d1"
             version = "0.0.0"
@@ -960,7 +960,7 @@ fn platform_specific_dependencies_do_not_leak() {
             d2 = {{ path = "../d2" }}
         "#, host))
         .file("d1/src/lib.rs", "extern crate d2;")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.0"
@@ -981,7 +981,7 @@ fn platform_specific_variables_reflected_in_build_scripts() {
     let target = alternate();
     let host = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1012,7 +1012,7 @@ fn platform_specific_variables_reflected_in_build_scripts() {
             }}
         "#, host = host, target = target))
         .file("src/lib.rs", "")
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.0"
@@ -1024,7 +1024,7 @@ fn platform_specific_variables_reflected_in_build_scripts() {
             fn main() { println!("baler:val=1") }
         "#)
         .file("d1/src/lib.rs", "")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.0"
@@ -1050,7 +1050,7 @@ fn cross_test_dylib() {
     let target = alternate();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1077,7 +1077,7 @@ fn cross_test_dylib() {
             #[test]
             fn foo() { the_foo::bar(); }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"

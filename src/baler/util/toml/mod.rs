@@ -761,7 +761,7 @@ impl TomlManifest {
             Some(StringOrBool::String(ref s)) => Some(PathBuf::from(s)),
             None => {
                 match fs::metadata(&build_rs) {
-                    // If there is a build.rs file next to the Cargo.toml, assume it is
+                    // If there is a build.rs file next to the Baler.toml, assume it is
                     // a build script
                     Ok(ref e) if e.is_file() => Some(build_rs.into()),
                     Ok(_) | Err(_) => None,

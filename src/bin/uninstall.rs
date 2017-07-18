@@ -28,8 +28,8 @@ Options:
     -v, --verbose ...         Use verbose output (-vv very verbose/build.rs output)
     -q, --quiet               Less output printed to stdout
     --color WHEN              Coloring: auto, always, never
-    --frozen                  Require Cargo.lock and cache are up to date
-    --locked                  Require Cargo.lock is up to date
+    --frozen                  Require Baler.lock and cache are up to date
+    --locked                  Require Baler.lock is up to date
 
 The argument SPEC is a package id specification (see `baler help pkgid`) to
 specify which crate should be uninstalled. By default all binaries are

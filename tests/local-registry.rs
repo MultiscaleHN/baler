@@ -32,7 +32,7 @@ fn simple() {
             .publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -72,7 +72,7 @@ fn multiple_versions() {
             .publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -121,7 +121,7 @@ fn multiple_names() {
             .publish();
 
     let p = project("local")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "local"
             version = "0.0.1"
@@ -166,7 +166,7 @@ fn interdependent() {
             .publish();
 
     let p = project("local")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "local"
             version = "0.0.1"
@@ -207,7 +207,7 @@ fn path_dep_rewritten() {
     Package::new("bar", "0.1.0")
             .local(true)
             .dep("foo", "*")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "bar"
                 version = "0.1.0"
@@ -217,7 +217,7 @@ fn path_dep_rewritten() {
                 foo = { path = "foo", version = "*" }
             "#)
             .file("src/lib.rs", "extern crate foo; pub fn bar() {}")
-            .file("foo/Cargo.toml", r#"
+            .file("foo/Baler.toml", r#"
                 [project]
                 name = "foo"
                 version = "0.0.1"
@@ -227,7 +227,7 @@ fn path_dep_rewritten() {
             .publish();
 
     let p = project("local")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "local"
             version = "0.0.1"
@@ -262,7 +262,7 @@ fn path_dep_rewritten() {
 fn invalid_dir_bad() {
     setup();
     let p = project("local")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "local"
             version = "0.0.1"
@@ -308,7 +308,7 @@ fn different_directory_replacing_the_registry_is_bad() {
     t!(fs::rename(&config, &config_tmp));
 
     let p = project("local")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "local"
             version = "0.0.1"
@@ -367,7 +367,7 @@ fn crates_io_registry_url_is_optional() {
             .publish();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"

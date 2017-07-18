@@ -48,8 +48,8 @@ Options:
     -v, --verbose ...   Use verbose output (-vv very verbose/build.rs output)
     -q, --quiet         No output printed to stdout
     --color WHEN        Coloring: auto, always, never
-    --frozen            Require Cargo.lock and cache are up to date
-    --locked            Require Cargo.lock is up to date
+    --frozen            Require Baler.lock and cache are up to date
+    --locked            Require Baler.lock is up to date
 
 Some common baler commands are (see all commands with --list):
     build       Compile the current project
@@ -61,7 +61,7 @@ Some common baler commands are (see all commands with --list):
     run         Build and execute src/main.rs
     test        Run the tests
     bench       Run the benchmarks
-    update      Update dependencies listed in Cargo.lock
+    update      Update dependencies listed in Baler.lock
     search      Search registry for crates
     publish     Package and upload this project to the registry
     install     Install a Rust binary

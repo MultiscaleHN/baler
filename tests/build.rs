@@ -20,7 +20,7 @@ use tempdir::TempDir;
 #[test]
 fn baler_compile_simple() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("build"), execs().with_status(0));
@@ -33,7 +33,7 @@ fn baler_compile_simple() {
 #[test]
 fn baler_fail_with_no_stderr() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &String::from("refusal"));
     let p = p.build();
     assert_that(p.baler("build").arg("--message-format=json"), execs().with_status(101)
@@ -49,7 +49,7 @@ fn baler_compile_incremental() {
     }
 
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
     p.build();
 
@@ -69,11 +69,11 @@ fn baler_compile_incremental() {
 #[test]
 fn baler_compile_manifest_path() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("build")
-                 .arg("--manifest-path").arg("foo/Cargo.toml")
+                 .arg("--manifest-path").arg("foo/Baler.toml")
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(0));
     assert_that(&p.bin("foo"), existing_file());
@@ -82,7 +82,7 @@ fn baler_compile_manifest_path() {
 #[test]
 fn baler_compile_with_invalid_manifest() {
     let p = project("foo")
-        .file("Cargo.toml", "");
+        .file("Baler.toml", "");
 
     assert_that(p.baler_process("build"),
         execs()
@@ -98,7 +98,7 @@ Caused by:
 #[test]
 fn baler_compile_with_invalid_manifest2() {
     let p = project("foo")
-        .file("Cargo.toml", r"
+        .file("Baler.toml", r"
             [project]
             foo = bar
         ");
@@ -120,16 +120,16 @@ Caused by:
 #[test]
 fn baler_compile_with_invalid_manifest3() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
             authors = []
         "#)
-        .file("src/Cargo.toml", "a = bar");
+        .file("src/Baler.toml", "a = bar");
 
     assert_that(p.baler_process("build").arg("--manifest-path")
-                 .arg("src/Cargo.toml"),
+                 .arg("src/Baler.toml"),
         execs()
         .with_status(101)
         .with_stderr("\
@@ -146,7 +146,7 @@ Caused by:
 #[test]
 fn baler_compile_duplicate_build_targets() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -177,7 +177,7 @@ warning: file found to be present in multiple build targets: [..]main.rs
 #[test]
 fn baler_compile_with_invalid_version() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             authors = []
@@ -199,7 +199,7 @@ Caused by:
 #[test]
 fn baler_compile_with_invalid_package_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = ""
             authors = []
@@ -220,7 +220,7 @@ Caused by:
 #[test]
 fn baler_compile_with_invalid_bin_target_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -244,7 +244,7 @@ Caused by:
 #[test]
 fn baler_compile_with_forbidden_bin_target_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -268,7 +268,7 @@ Caused by:
 #[test]
 fn baler_compile_with_invalid_lib_target_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -297,14 +297,14 @@ fn baler_compile_without_manifest() {
     assert_that(p.baler_process("build"),
                 execs().with_status(101)
                        .with_stderr("\
-[ERROR] could not find `Cargo.toml` in `[..]` or any parent directory
+[ERROR] could not find `Baler.toml` in `[..]` or any parent directory
 "));
 }
 
 #[test]
 fn baler_compile_with_invalid_code() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", "invalid rust code!");
 
     assert_that(p.baler_process("build"),
@@ -314,13 +314,13 @@ fn baler_compile_with_invalid_code() {
 [ERROR] Could not compile `foo`.
 
 To learn more, run the command again with --verbose.\n"));
-    assert_that(&p.root().join("Cargo.lock"), existing_file());
+    assert_that(&p.root().join("Baler.lock"), existing_file());
 }
 
 #[test]
 fn baler_compile_with_invalid_code_in_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -333,10 +333,10 @@ fn baler_compile_with_invalid_code_in_deps() {
         "#)
         .file("src/main.rs", "invalid rust code!");
     let bar = project("bar")
-        .file("Cargo.toml", &basic_bin_manifest("bar"))
+        .file("Baler.toml", &basic_bin_manifest("bar"))
         .file("src/lib.rs", "invalid rust code!");
     let baz = project("baz")
-        .file("Cargo.toml", &basic_bin_manifest("baz"))
+        .file("Baler.toml", &basic_bin_manifest("baz"))
         .file("src/lib.rs", "invalid rust code!");
     bar.build();
     baz.build();
@@ -346,7 +346,7 @@ fn baler_compile_with_invalid_code_in_deps() {
 #[test]
 fn baler_compile_with_warnings_in_the_root_package() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", "fn main() {} fn dead() {}");
 
     assert_that(p.baler_process("build"),
@@ -360,7 +360,7 @@ fn baler_compile_with_warnings_in_a_dep_package() {
     let mut p = project("foo");
 
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -376,7 +376,7 @@ fn baler_compile_with_warnings_in_a_dep_package() {
         "#)
         .file("src/foo.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -410,7 +410,7 @@ fn baler_compile_with_warnings_in_a_dep_package() {
 #[test]
 fn baler_compile_with_nested_deps_inferred() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -425,7 +425,7 @@ fn baler_compile_with_nested_deps_inferred() {
         "#)
         .file("src/foo.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -442,7 +442,7 @@ fn baler_compile_with_nested_deps_inferred() {
                 baz::gimme()
             }
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
 
             name = "baz"
@@ -471,7 +471,7 @@ fn baler_compile_with_nested_deps_inferred() {
 #[test]
 fn baler_compile_with_nested_deps_correct_bin() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -486,7 +486,7 @@ fn baler_compile_with_nested_deps_correct_bin() {
         "#)
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -503,7 +503,7 @@ fn baler_compile_with_nested_deps_correct_bin() {
                 baz::gimme()
             }
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
 
             name = "baz"
@@ -532,7 +532,7 @@ fn baler_compile_with_nested_deps_correct_bin() {
 #[test]
 fn baler_compile_with_nested_deps_shorthand() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -544,7 +544,7 @@ fn baler_compile_with_nested_deps_shorthand() {
         "#)
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -565,7 +565,7 @@ fn baler_compile_with_nested_deps_shorthand() {
                 baz::gimme()
             }
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
 
             name = "baz"
@@ -598,7 +598,7 @@ fn baler_compile_with_nested_deps_shorthand() {
 #[test]
 fn baler_compile_with_nested_deps_longhand() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -615,7 +615,7 @@ fn baler_compile_with_nested_deps_longhand() {
         "#)
         .file("src/foo.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -637,7 +637,7 @@ fn baler_compile_with_nested_deps_longhand() {
                 baz::gimme()
             }
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
 
             name = "baz"
@@ -669,7 +669,7 @@ fn baler_compile_with_nested_deps_longhand() {
 #[test]
 fn baler_compile_with_dep_name_mismatch() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "foo"
@@ -685,7 +685,7 @@ fn baler_compile_with_dep_name_mismatch() {
             path = "bar"
         "#)
         .file("src/bin/foo.rs", &main_file(r#""i am foo""#, &["bar"]))
-        .file("bar/Cargo.toml", &basic_bin_manifest("bar"))
+        .file("bar/Baler.toml", &basic_bin_manifest("bar"))
         .file("bar/src/bar.rs", &main_file(r#""i am bar""#, &[]));
 
     assert_that(p.baler_process("build"),
@@ -699,7 +699,7 @@ version required: *
 #[test]
 fn baler_compile_with_filename() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -739,7 +739,7 @@ Did you mean `a`?"));
 #[test]
 fn compile_path_dep_then_change_version() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -749,7 +749,7 @@ fn compile_path_dep_then_change_version() {
             path = "bar"
         "#)
         .file("src/lib.rs", "")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -759,7 +759,7 @@ fn compile_path_dep_then_change_version() {
 
     assert_that(p.baler_process("build"), execs().with_status(0));
 
-    File::create(&p.root().join("bar/Cargo.toml")).unwrap().write_all(br#"
+    File::create(&p.root().join("bar/Baler.toml")).unwrap().write_all(br#"
         [package]
         name = "bar"
         version = "0.0.2"
@@ -778,7 +778,7 @@ consider running `baler update` to update a path dependency's locked version
 #[test]
 fn ignores_carriage_return_in_lockfile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -792,7 +792,7 @@ fn ignores_carriage_return_in_lockfile() {
     assert_that(p.baler_process("build"),
                 execs().with_status(0));
 
-    let lockfile = p.root().join("Cargo.lock");
+    let lockfile = p.root().join("Baler.lock");
     let mut lock = String::new();
     File::open(&lockfile).unwrap().read_to_string(&mut lock).unwrap();
     let lock = lock.replace("\n", "\r\n");
@@ -806,7 +806,7 @@ fn baler_default_env_metadata_env_var() {
     // Ensure that path dep + dylib + env_var get metadata
     // (even though path_dep + dylib should not)
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -816,7 +816,7 @@ fn baler_default_env_metadata_env_var() {
             path = "bar"
         "#)
         .file("src/lib.rs", "// hi")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -886,7 +886,7 @@ suffix = env::consts::DLL_SUFFIX,
 #[test]
 fn crate_env_vars() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
         [project]
         name = "foo"
         version = "0.5.1-alpha.1"
@@ -949,7 +949,7 @@ fn crate_env_vars() {
 #[test]
 fn crate_authors_env_vars() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.1-alpha.1"
@@ -990,7 +990,7 @@ fn crate_authors_env_vars() {
 fn crate_library_path_env_var() {
     let mut p = project("foo");
 
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -1011,7 +1011,7 @@ fn crate_library_path_env_var() {
 #[test]
 fn build_with_fake_libc_not_loading() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1031,7 +1031,7 @@ fn build_with_fake_libc_not_loading() {
 fn many_crate_types_old_style_lib_location() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -1048,7 +1048,7 @@ fn many_crate_types_old_style_lib_location() {
         "#);
     assert_that(p.baler_process("build"), execs().with_status(0).with_stderr_contains("\
 [WARNING] path `[..]src[/]foo.rs` was erroneously implicitly accepted for library `foo`,
-please rename the file to `src/lib.rs` or set lib.path in Cargo.toml"));
+please rename the file to `src/lib.rs` or set lib.path in Baler.toml"));
 
     assert_that(&p.root().join("target/debug/libfoo.rlib"), existing_file());
     let fname = format!("{}foo{}", env::consts::DLL_PREFIX,
@@ -1060,7 +1060,7 @@ please rename the file to `src/lib.rs` or set lib.path in Cargo.toml"));
 fn many_crate_types_correct() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -1088,7 +1088,7 @@ fn many_crate_types_correct() {
 fn self_dependency() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -1117,7 +1117,7 @@ fn ignore_broken_symlinks() {
     if cfg!(windows) { return }
 
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]))
         .symlink("Notafile", "bar");
 
@@ -1132,7 +1132,7 @@ fn ignore_broken_symlinks() {
 fn missing_lib_and_bin() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -1142,7 +1142,7 @@ fn missing_lib_and_bin() {
     assert_that(p.baler_process("build"),
                 execs().with_status(101)
                        .with_stderr("\
-[ERROR] failed to parse manifest at `[..]Cargo.toml`
+[ERROR] failed to parse manifest at `[..]Baler.toml`
 
 Caused by:
   no targets specified in the manifest
@@ -1158,7 +1158,7 @@ fn lto_build() {
 
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -1190,7 +1190,7 @@ url = p.url(),
 fn verbose_build() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -1217,7 +1217,7 @@ url = p.url(),
 fn verbose_release_build() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -1245,7 +1245,7 @@ url = p.url(),
 fn verbose_release_build_deps() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "test"
@@ -1256,7 +1256,7 @@ fn verbose_release_build_deps() {
             path = "foo"
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [package]
 
             name = "foo"
@@ -1299,7 +1299,7 @@ fn verbose_release_build_deps() {
 #[test]
 fn explicit_examples() {
     let mut p = project("world");
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [package]
             name = "world"
             version = "1.0.0"
@@ -1341,7 +1341,7 @@ fn explicit_examples() {
 #[test]
 fn non_existing_example() {
     let mut p = project("world");
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [package]
             name = "world"
             version = "1.0.0"
@@ -1367,7 +1367,7 @@ Caused by:
 #[test]
 fn non_existing_binary() {
     let mut p = project("world");
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [package]
             name = "world"
             version = "1.0.0"
@@ -1389,7 +1389,7 @@ Caused by:
 #[test]
 fn legacy_binary_paths_warinigs() {
     let mut p = project("world");
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "1.0.0"
@@ -1403,10 +1403,10 @@ fn legacy_binary_paths_warinigs() {
 
     assert_that(p.baler_process("build").arg("-v"), execs().with_status(0).with_stderr_contains("\
 [WARNING] path `[..]src[/]main.rs` was erroneously implicitly accepted for binary `bar`,
-please set bin.path in Cargo.toml"));
+please set bin.path in Baler.toml"));
 
     let mut p = project("world");
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "1.0.0"
@@ -1420,10 +1420,10 @@ please set bin.path in Cargo.toml"));
 
     assert_that(p.baler_process("build").arg("-v"), execs().with_status(0).with_stderr_contains("\
 [WARNING] path `[..]src[/]bin[/]main.rs` was erroneously implicitly accepted for binary `bar`,
-please set bin.path in Cargo.toml"));
+please set bin.path in Baler.toml"));
 
     let mut p = project("world");
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "1.0.0"
@@ -1436,13 +1436,13 @@ please set bin.path in Cargo.toml"));
 
     assert_that(p.baler_process("build").arg("-v"), execs().with_status(0).with_stderr_contains("\
 [WARNING] path `[..]src[/]bar.rs` was erroneously implicitly accepted for binary `bar`,
-please set bin.path in Cargo.toml"));
+please set bin.path in Baler.toml"));
 }
 
 #[test]
 fn implicit_examples() {
     let mut p = project("world");
-    p = p.file("Cargo.toml", r#"
+    p = p.file("Baler.toml", r#"
             [package]
             name = "world"
             version = "1.0.0"
@@ -1476,7 +1476,7 @@ fn implicit_examples() {
 #[test]
 fn standard_build_no_ndebug() {
     let p = project("world")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", r#"
             fn main() {
                 if cfg!(debug_assertions) {
@@ -1495,7 +1495,7 @@ fn standard_build_no_ndebug() {
 #[test]
 fn release_build_ndebug() {
     let p = project("world")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", r#"
             fn main() {
                 if cfg!(debug_assertions) {
@@ -1515,7 +1515,7 @@ fn release_build_ndebug() {
 #[test]
 fn inferred_main_bin() {
     let p = project("world")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -1532,7 +1532,7 @@ fn inferred_main_bin() {
 #[test]
 fn deletion_causes_failure() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1545,7 +1545,7 @@ fn deletion_causes_failure() {
             extern crate bar;
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -1555,7 +1555,7 @@ fn deletion_causes_failure() {
     p.build();
 
     assert_that(p.baler("build"), execs().with_status(0));
-    p.change_file("Cargo.toml", r#"
+    p.change_file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.0.1"
@@ -1567,7 +1567,7 @@ fn deletion_causes_failure() {
 #[test]
 fn bad_baler_toml_in_target_dir() {
     let p = project("world")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -1576,7 +1576,7 @@ fn bad_baler_toml_in_target_dir() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("target/Cargo.toml", "bad-toml");
+        .file("target/Baler.toml", "bad-toml");
 
     assert_that(p.baler_process("build"), execs().with_status(0));
     assert_that(process(&p.bin("foo")), execs().with_status(0));
@@ -1585,7 +1585,7 @@ fn bad_baler_toml_in_target_dir() {
 #[test]
 fn lib_with_standard_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -1611,7 +1611,7 @@ fn lib_with_standard_name() {
 #[test]
 fn simple_staticlib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
               [package]
               name = "foo"
               authors = []
@@ -1631,7 +1631,7 @@ fn simple_staticlib() {
 #[test]
 fn staticlib_rlib_and_bin() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
               [package]
               name = "foo"
               authors = []
@@ -1655,7 +1655,7 @@ fn staticlib_rlib_and_bin() {
 #[test]
 fn opt_out_of_bin() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
               bin = []
 
               [package]
@@ -1671,7 +1671,7 @@ fn opt_out_of_bin() {
 #[test]
 fn single_lib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
               [package]
               name = "foo"
               authors = []
@@ -1688,7 +1688,7 @@ fn single_lib() {
 #[test]
 fn freshness_ignores_excluded() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1725,7 +1725,7 @@ fn freshness_ignores_excluded() {
 #[test]
 fn rebuild_preserves_out_dir() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1769,7 +1769,7 @@ fn rebuild_preserves_out_dir() {
 #[test]
 fn dep_no_libs() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1779,7 +1779,7 @@ fn dep_no_libs() {
             path = "bar"
         "#)
         .file("src/lib.rs", "pub fn bar() -> i32 { 1 }")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.0"
@@ -1793,7 +1793,7 @@ fn dep_no_libs() {
 #[test]
 fn recompile_space_in_name() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1815,7 +1815,7 @@ fn recompile_space_in_name() {
 fn ignore_bad_directories() {
     use std::os::unix::prelude::*;
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1838,7 +1838,7 @@ fn ignore_bad_directories() {
 #[test]
 fn bad_baler_config() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1867,7 +1867,7 @@ Caused by:
 fn baler_platform_specific_dependency() {
     let host = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1894,21 +1894,21 @@ fn baler_platform_specific_dependency() {
             extern crate build;
             fn main() { build::build(); }
         "#)
-        .file("dep/Cargo.toml", r#"
+        .file("dep/Baler.toml", r#"
             [project]
             name = "dep"
             version = "0.5.0"
             authors = ["wycats@example.com"]
         "#)
         .file("dep/src/lib.rs", "pub fn dep() {}")
-        .file("build/Cargo.toml", r#"
+        .file("build/Baler.toml", r#"
             [project]
             name = "build"
             version = "0.5.0"
             authors = ["wycats@example.com"]
         "#)
         .file("build/src/lib.rs", "pub fn build() {}")
-        .file("dev/Cargo.toml", r#"
+        .file("dev/Baler.toml", r#"
             [project]
             name = "dev"
             version = "0.5.0"
@@ -1927,7 +1927,7 @@ fn baler_platform_specific_dependency() {
 #[test]
 fn bad_platform_specific_dependency() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -1939,7 +1939,7 @@ fn bad_platform_specific_dependency() {
         "#)
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -1961,7 +1961,7 @@ fn bad_platform_specific_dependency() {
 #[test]
 fn baler_platform_specific_dependency_wrong_platform() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -1974,7 +1974,7 @@ fn baler_platform_specific_dependency_wrong_platform() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -1991,7 +1991,7 @@ fn baler_platform_specific_dependency_wrong_platform() {
     assert_that(process(&p.bin("foo")),
                 execs().with_status(0));
 
-    let loc = p.root().join("Cargo.lock");
+    let loc = p.root().join("Baler.lock");
     let mut lockfile = String::new();
     File::open(&loc).unwrap().read_to_string(&mut lockfile).unwrap();
     assert!(lockfile.contains("bar"))
@@ -2000,7 +2000,7 @@ fn baler_platform_specific_dependency_wrong_platform() {
 #[test]
 fn example_as_lib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2020,7 +2020,7 @@ fn example_as_lib() {
 #[test]
 fn example_as_rlib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2040,7 +2040,7 @@ fn example_as_rlib() {
 #[test]
 fn example_as_dylib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2064,7 +2064,7 @@ fn example_as_proc_macro() {
     }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2084,7 +2084,7 @@ fn example_as_proc_macro() {
 #[test]
 fn example_bin_same_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2113,7 +2113,7 @@ fn example_bin_same_name() {
 #[test]
 fn compile_then_delete() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2135,7 +2135,7 @@ fn compile_then_delete() {
 #[test]
 fn transitive_dependencies_not_available() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2145,7 +2145,7 @@ fn transitive_dependencies_not_available() {
             path = "a"
         "#)
         .file("src/main.rs", "extern crate bbbbb; extern crate aaaaa; fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "aaaaa"
             version = "0.0.1"
@@ -2155,7 +2155,7 @@ fn transitive_dependencies_not_available() {
             path = "../b"
         "#)
         .file("a/src/lib.rs", "extern crate bbbbb;")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "bbbbb"
             version = "0.0.1"
@@ -2173,7 +2173,7 @@ fn transitive_dependencies_not_available() {
 #[test]
 fn cyclic_deps_rejected() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2183,7 +2183,7 @@ fn cyclic_deps_rejected() {
             path = "a"
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -2204,7 +2204,7 @@ fn cyclic_deps_rejected() {
 #[test]
 fn predictable_filenames() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2228,7 +2228,7 @@ fn predictable_filenames() {
 #[test]
 fn dashes_to_underscores() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo-bar"
             version = "0.0.1"
@@ -2245,7 +2245,7 @@ fn dashes_to_underscores() {
 #[test]
 fn dashes_in_crate_name_bad() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2264,7 +2264,7 @@ fn dashes_in_crate_name_bad() {
 #[test]
 fn rustc_env_var() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2288,7 +2288,7 @@ Caused by:
 #[test]
 fn filtering() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2316,7 +2316,7 @@ fn filtering() {
 #[test]
 fn filtering_implicit_bins() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2340,7 +2340,7 @@ fn filtering_implicit_bins() {
 #[test]
 fn filtering_implicit_examples() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2364,7 +2364,7 @@ fn filtering_implicit_examples() {
 #[test]
 fn ignore_dotfile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2381,15 +2381,15 @@ fn ignore_dotfile() {
 #[test]
 fn ignore_dotdirs() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
             authors = []
         "#)
         .file("src/bin/a.rs", "fn main() {}")
-        .file(".git/Cargo.toml", "")
-        .file(".pc/dummy-fix.patch/Cargo.toml", "");
+        .file(".git/Baler.toml", "")
+        .file(".pc/dummy-fix.patch/Baler.toml", "");
     p.build();
 
     assert_that(p.baler("build"),
@@ -2399,7 +2399,7 @@ fn ignore_dotdirs() {
 #[test]
 fn dotdir_root() {
     let p = ProjectBuilder::new("foo", root().join(".foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2415,7 +2415,7 @@ fn dotdir_root() {
 #[test]
 fn custom_target_dir() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2460,7 +2460,7 @@ fn rustc_no_trans() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2476,7 +2476,7 @@ fn rustc_no_trans() {
 #[test]
 fn build_multiple_packages() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2491,7 +2491,7 @@ fn build_multiple_packages() {
                 name = "foo"
         "#)
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]))
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -2502,7 +2502,7 @@ fn build_multiple_packages() {
         "#)
         .file("d1/src/lib.rs", "")
         .file("d1/src/main.rs", "fn main() { println!(\"d1\"); }")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.1"
@@ -2538,7 +2538,7 @@ fn build_multiple_packages() {
 #[test]
 fn invalid_spec() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2551,7 +2551,7 @@ fn invalid_spec() {
                 name = "foo"
         "#)
         .file("src/bin/foo.rs", &main_file(r#""i am foo""#, &[]))
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -2578,7 +2578,7 @@ fn invalid_spec() {
 #[test]
 fn manifest_with_bom_is_ok() {
     let p = project("foo")
-        .file("Cargo.toml", "\u{FEFF}
+        .file("Baler.toml", "\u{FEFF}
             [package]
             name = \"foo\"
             version = \"0.0.1\"
@@ -2592,7 +2592,7 @@ fn manifest_with_bom_is_ok() {
 #[test]
 fn panic_abort_compiles_with_panic_abort() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2610,7 +2610,7 @@ fn panic_abort_compiles_with_panic_abort() {
 #[test]
 fn explicit_color_config_is_propagated_to_rustc() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
                 [package]
 
                 name = "test"
@@ -2636,7 +2636,7 @@ fn explicit_color_config_is_propagated_to_rustc() {
 #[test]
 fn compiler_json_error_format() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -2647,7 +2647,7 @@ fn compiler_json_error_format() {
             path = "bar"
         "#)
         .file("src/main.rs", "fn main() { let unused = 92; }")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -2779,7 +2779,7 @@ fn compiler_json_error_format() {
 #[test]
 fn wrong_message_format_option() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", "fn main() {}");
 
     assert_that(p.baler_process("build").arg("--message-format").arg("XML"),
@@ -2791,7 +2791,7 @@ r#"[ERROR] Could not match 'xml' with any of the allowed variants: ["Human", "Js
 #[test]
 fn message_format_json_forward_stderr() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", "fn main() { let unused = 0; }");
 
     assert_that(p.baler_process("rustc").arg("--bin").arg("foo")
@@ -2836,7 +2836,7 @@ fn message_format_json_forward_stderr() {
 #[test]
 fn no_warn_about_package_metadata() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2860,7 +2860,7 @@ fn no_warn_about_package_metadata() {
 #[test]
 fn baler_build_empty_target() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", "fn main() {}");
 
     assert_that(p.baler_process("build").arg("--target").arg(""),
@@ -2871,7 +2871,7 @@ fn baler_build_empty_target() {
 #[test]
 fn build_all_workspace() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -2884,7 +2884,7 @@ fn build_all_workspace() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -2904,7 +2904,7 @@ fn build_all_workspace() {
 #[test]
 fn build_all_exclude() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -2915,7 +2915,7 @@ fn build_all_exclude() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -2923,7 +2923,7 @@ fn build_all_exclude() {
         .file("bar/src/lib.rs", r#"
             pub fn bar() {}
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.1.0"
@@ -2947,7 +2947,7 @@ fn build_all_exclude() {
 #[test]
 fn build_all_workspace_implicit_examples() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -2962,7 +2962,7 @@ fn build_all_workspace_implicit_examples() {
         .file("src/bin/b.rs", "fn main() {}")
         .file("examples/c.rs", "fn main() {}")
         .file("examples/d.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -2992,11 +2992,11 @@ fn build_all_workspace_implicit_examples() {
 #[test]
 fn build_all_virtual_manifest() {
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["foo", "bar"]
         "#)
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -3004,7 +3004,7 @@ fn build_all_virtual_manifest() {
         .file("foo/src/lib.rs", r#"
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -3027,11 +3027,11 @@ fn build_all_virtual_manifest() {
 #[test]
 fn build_all_virtual_manifest_implicit_examples() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["foo", "bar"]
         "#)
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -3041,7 +3041,7 @@ fn build_all_virtual_manifest_implicit_examples() {
         .file("foo/src/bin/b.rs", "fn main() {}")
         .file("foo/examples/c.rs", "fn main() {}")
         .file("foo/examples/d.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -3074,11 +3074,11 @@ fn build_all_virtual_manifest_implicit_examples() {
 #[test]
 fn build_all_member_dependency_same_name() {
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["a"]
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.1.0"
@@ -3105,7 +3105,7 @@ fn build_all_member_dependency_same_name() {
 #[test]
 fn run_proper_binary() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -3133,7 +3133,7 @@ fn run_proper_binary() {
 #[test]
 fn run_proper_binary_main_rs() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -3154,7 +3154,7 @@ fn run_proper_binary_main_rs() {
 #[test]
 fn run_proper_alias_binary_from_src() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -3187,7 +3187,7 @@ fn run_proper_alias_binary_from_src() {
 #[test]
 fn run_proper_alias_binary_main_rs() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -3216,7 +3216,7 @@ fn run_proper_alias_binary_main_rs() {
 #[test]
 fn run_proper_binary_main_rs_as_foo() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -3244,7 +3244,7 @@ fn rustc_wrapper() {
     if cfg!(windows) { return }
 
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("build").arg("-v").env("RUSTC_WRAPPER", "/usr/bin/env"),
@@ -3256,7 +3256,7 @@ fn rustc_wrapper() {
 #[test]
 fn cdylib_not_lifted() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             authors = []
@@ -3289,7 +3289,7 @@ fn deterministic_cfg_flags() {
     // This bug is non-deterministic
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -3332,7 +3332,7 @@ fn deterministic_cfg_flags() {
 #[test]
 fn explicit_bins_without_paths() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -3354,7 +3354,7 @@ fn explicit_bins_without_paths() {
 #[test]
 fn no_bin_in_src_with_lib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -3379,7 +3379,7 @@ Caused by:
 #[test]
 fn dirs_in_bin_dir_with_main_rs() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -3403,7 +3403,7 @@ fn dirs_in_bin_dir_with_main_rs() {
 fn dir_and_file_with_same_name_in_bin() {
     // this should fail, because we have two binaries with the same name
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -3423,7 +3423,7 @@ fn dir_and_file_with_same_name_in_bin() {
 #[test]
 fn inferred_path_in_src_bin_foo() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.1.0"

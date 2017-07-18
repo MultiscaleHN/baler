@@ -7,7 +7,7 @@ use hamcrest::{assert_that};
 #[test]
 fn rustdoc_simple() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -30,7 +30,7 @@ fn rustdoc_simple() {
 #[test]
 fn rustdoc_args() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -56,7 +56,7 @@ fn rustdoc_args() {
 #[test]
 fn rustdoc_foo_with_bar_dependency() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -70,7 +70,7 @@ fn rustdoc_foo_with_bar_dependency() {
             pub fn foo() {}
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -100,7 +100,7 @@ fn rustdoc_foo_with_bar_dependency() {
 #[test]
 fn rustdoc_only_bar_dependency() {
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -116,7 +116,7 @@ fn rustdoc_only_bar_dependency() {
             }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -145,7 +145,7 @@ fn rustdoc_only_bar_dependency() {
 #[test]
 fn rustdoc_same_name_err() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"

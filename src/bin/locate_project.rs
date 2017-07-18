@@ -8,7 +8,7 @@ pub struct LocateProjectFlags {
 }
 
 pub const USAGE: &'static str = "
-Print a JSON representation of a Cargo.toml file's location
+Print a JSON representation of a Baler.toml file's location
 
 Usage:
     baler locate-project [options]

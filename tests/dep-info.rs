@@ -7,7 +7,7 @@ use hamcrest::{assert_that, existing_file};
 #[test]
 fn build_dep_info() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("build"), execs().with_status(0));
@@ -20,7 +20,7 @@ fn build_dep_info() {
 #[test]
 fn build_dep_info_lib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -41,7 +41,7 @@ fn build_dep_info_lib() {
 #[test]
 fn build_dep_info_rlib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -61,7 +61,7 @@ fn build_dep_info_rlib() {
 #[test]
 fn build_dep_info_dylib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"

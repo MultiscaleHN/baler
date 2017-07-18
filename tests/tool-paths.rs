@@ -10,7 +10,7 @@ fn pathless_tools() {
     let target = rustc_host();
 
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -46,7 +46,7 @@ fn absolute_tools() {
     };
 
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -90,7 +90,7 @@ fn relative_tools() {
     // Funky directory structure to test that relative tool paths are made absolute
     // by reference to the `.baler/..` directory and not to (for example) the CWD.
     let origin = project("origin")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -130,7 +130,7 @@ fn custom_runner() {
     let target = rustc_host();
 
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"

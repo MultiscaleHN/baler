@@ -69,7 +69,7 @@ fn simple() {
     setup();
 
     VendorPackage::new("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -79,7 +79,7 @@ fn simple() {
         .build();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -110,7 +110,7 @@ fn simple_install() {
     setup();
 
     VendorPackage::new("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -120,7 +120,7 @@ fn simple_install() {
         .build();
 
     VendorPackage::new("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -154,7 +154,7 @@ fn simple_install_fail() {
     setup();
 
     VendorPackage::new("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -164,7 +164,7 @@ fn simple_install_fail() {
         .build();
 
     VendorPackage::new("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -200,7 +200,7 @@ fn install_without_feature_dep() {
     setup();
 
     VendorPackage::new("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -210,7 +210,7 @@ fn install_without_feature_dep() {
         .build();
 
     VendorPackage::new("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -250,7 +250,7 @@ fn not_there() {
     project("index").build();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -281,7 +281,7 @@ fn multiple() {
     setup();
 
     VendorPackage::new("foo-0.1.0")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -292,7 +292,7 @@ fn multiple() {
         .build();
 
     VendorPackage::new("foo-0.2.0")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.2.0"
@@ -303,7 +303,7 @@ fn multiple() {
         .build();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -332,7 +332,7 @@ fn multiple() {
 #[test]
 fn crates_io_then_directory() {
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -366,7 +366,7 @@ fn crates_io_then_directory() {
     setup();
 
     let mut v = VendorPackage::new("foo");
-    v.file("Cargo.toml", r#"
+    v.file("Baler.toml", r#"
         [package]
         name = "foo"
         version = "0.1.0"
@@ -387,7 +387,7 @@ fn crates_io_then_directory() {
 #[test]
 fn crates_io_then_bad_checksum() {
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -406,7 +406,7 @@ fn crates_io_then_bad_checksum() {
     setup();
 
     VendorPackage::new("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -435,7 +435,7 @@ fn bad_file_checksum() {
     setup();
 
     VendorPackage::new("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -448,7 +448,7 @@ fn bad_file_checksum() {
     t!(f.write_all(b"fn foo() -> u32 { 0 }"));
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -477,7 +477,7 @@ fn only_dot_files_ok() {
     setup();
 
     VendorPackage::new("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -490,7 +490,7 @@ fn only_dot_files_ok() {
         .build();
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"

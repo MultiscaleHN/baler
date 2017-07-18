@@ -53,8 +53,8 @@ Options:
     -q, --quiet                  No output printed to stdout
     --color WHEN                 Coloring: auto, always, never
     --message-format FMT         Error format: human, json [default: human]
-    --frozen                     Require Cargo.lock and cache are up to date
-    --locked                     Require Cargo.lock is up to date
+    --frozen                     Require Baler.lock and cache are up to date
+    --locked                     Require Baler.lock is up to date
 
 By default the documentation for the local package and all dependencies is
 built. The output is all placed in `target/doc` in rustdoc's usual format.

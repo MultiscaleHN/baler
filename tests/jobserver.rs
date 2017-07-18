@@ -13,7 +13,7 @@ use hamcrest::assert_that;
 #[test]
 fn jobserver_exists() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -69,7 +69,7 @@ fn makes_jobserver_used() {
     }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -81,7 +81,7 @@ fn makes_jobserver_used() {
             d3 = { path = "d3" }
         "#)
        .file("src/lib.rs", "")
-       .file("d1/Cargo.toml", r#"
+       .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -89,7 +89,7 @@ fn makes_jobserver_used() {
             build = "../dbuild.rs"
         "#)
        .file("d1/src/lib.rs", "")
-       .file("d2/Cargo.toml", r#"
+       .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.1"
@@ -97,7 +97,7 @@ fn makes_jobserver_used() {
             build = "../dbuild.rs"
         "#)
        .file("d2/src/lib.rs", "")
-       .file("d3/Cargo.toml", r#"
+       .file("d3/Baler.toml", r#"
             [package]
             name = "d3"
             version = "0.0.1"
@@ -159,7 +159,7 @@ fn jobserver_and_j() {
     }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"

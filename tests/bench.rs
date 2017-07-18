@@ -15,7 +15,7 @@ fn baler_bench_simple() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             #![feature(test)]
             extern crate test;
@@ -52,7 +52,7 @@ fn bench_bench_implicit() {
     if !is_nightly() { return }
 
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -87,7 +87,7 @@ fn bench_bin_implicit() {
     if !is_nightly() { return }
 
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -122,7 +122,7 @@ fn bench_tarname() {
     if !is_nightly() { return }
 
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -152,7 +152,7 @@ fn baler_bench_verbose() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             #![feature(test)]
             extern crate test;
@@ -174,7 +174,7 @@ fn many_similar_names() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -212,7 +212,7 @@ fn baler_bench_failing_test() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             #![feature(test)]
             extern crate test;
@@ -254,7 +254,7 @@ fn bench_with_lib_dep() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -304,7 +304,7 @@ fn bench_with_deep_lib_dep() {
     if !is_nightly() { return }
 
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -323,7 +323,7 @@ fn bench_with_deep_lib_dep() {
             }
         ");
     let p2 = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -355,7 +355,7 @@ fn external_bench_explicit() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -397,7 +397,7 @@ fn external_bench_implicit() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -436,7 +436,7 @@ fn dont_run_examples() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -456,7 +456,7 @@ fn pass_through_command_line() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -492,7 +492,7 @@ fn baler_bench_twice() {
     if !is_nightly() { return }
 
     let p = project("test_twice")
-        .file("Cargo.toml", &basic_lib_manifest("test_twice"))
+        .file("Baler.toml", &basic_lib_manifest("test_twice"))
         .file("src/test_twice.rs", r#"
             #![crate_type = "rlib"]
             #![feature(test)]
@@ -516,7 +516,7 @@ fn lib_bin_same_name() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -555,7 +555,7 @@ fn lib_with_standard_name() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -598,7 +598,7 @@ fn lib_with_standard_name2() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -637,7 +637,7 @@ fn bench_dylib() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -668,7 +668,7 @@ fn bench_dylib() {
             #[bench]
             fn foo(_b: &mut test::Bencher) { the_foo::bar(); }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -713,7 +713,7 @@ fn bench_twice_with_build_cmd() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -748,7 +748,7 @@ fn bench_with_examples() {
     if !is_nightly() { return }
 
     let p = project("testbench")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "testbench"
             version = "6.6.6"
@@ -818,7 +818,7 @@ fn test_a_bench() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             authors = []
@@ -853,7 +853,7 @@ fn test_bench_no_run() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             authors = []
@@ -884,7 +884,7 @@ fn test_bench_no_fail_fast() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", r#"
             #![feature(test)]
             extern crate test;
@@ -922,7 +922,7 @@ fn test_bench_multiple_packages() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             authors = []
@@ -937,7 +937,7 @@ fn test_bench_multiple_packages() {
         .file("src/lib.rs", "");
 
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             authors = []
@@ -960,7 +960,7 @@ fn test_bench_multiple_packages() {
     bar.build();
 
     let baz = project("baz")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "baz"
             authors = []
@@ -998,7 +998,7 @@ fn bench_all_workspace() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1020,7 +1020,7 @@ fn bench_all_workspace() {
             #[bench]
             fn bench_foo(_: &mut Bencher) -> () { () }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1054,7 +1054,7 @@ fn bench_all_exclude() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1065,7 +1065,7 @@ fn bench_all_exclude() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1080,7 +1080,7 @@ fn bench_all_exclude() {
                 b.iter(|| {});
             }
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.1.0"
@@ -1107,11 +1107,11 @@ fn bench_all_virtual_manifest() {
     if !is_nightly() { return }
 
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["foo", "bar"]
         "#)
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1128,7 +1128,7 @@ fn bench_all_virtual_manifest() {
             #[bench]
             fn bench_foo(_: &mut Bencher) -> () { () }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1164,7 +1164,7 @@ fn legacy_bench_name() {
     if !is_nightly() { return }
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1187,5 +1187,5 @@ fn legacy_bench_name() {
 
     assert_that(p.baler_process("bench"), execs().with_status(0).with_stderr_contains("\
 [WARNING] path `[..]src[/]bench.rs` was erroneously implicitly accepted for benchmark `bench`,
-please set bench.path in Cargo.toml"));
+please set bench.path in Baler.toml"));
 }

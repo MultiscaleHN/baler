@@ -10,7 +10,7 @@ static WARNING2: &'static str = "And one more!";
 
 fn make_lib(lib_src: &str) {
     Package::new("foo", "0.0.1")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -32,7 +32,7 @@ fn make_lib(lib_src: &str) {
 
 fn make_upstream(main_src: &str) -> ProjectBuilder {
     project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"

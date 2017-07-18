@@ -10,14 +10,14 @@ use hamcrest::{assert_that, existing_file, is_not};
 #[test]
 fn adding_and_removing_packages() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
             version = "0.0.1"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             authors = []
@@ -28,7 +28,7 @@ fn adding_and_removing_packages() {
     assert_that(p.baler_process("generate-lockfile"),
                 execs().with_status(0));
 
-    let toml = p.root().join("Cargo.toml");
+    let toml = p.root().join("Baler.toml");
     let lock1 = p.read_lockfile();
 
     // add a dep
@@ -47,7 +47,7 @@ fn adding_and_removing_packages() {
     assert!(lock1 != lock2);
 
     // change the dep
-    File::create(&p.root().join("bar/Cargo.toml")).unwrap().write_all(br#"
+    File::create(&p.root().join("bar/Baler.toml")).unwrap().write_all(br#"
         [package]
         name = "bar"
         authors = []
@@ -76,14 +76,14 @@ fn adding_and_removing_packages() {
 #[test]
 fn preserve_metadata() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
             version = "0.0.1"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             authors = []
@@ -99,7 +99,7 @@ fn preserve_metadata() {
 bar = "baz"
 foo = "bar"
 "#;
-    let lockfile = p.root().join("Cargo.lock");
+    let lockfile = p.root().join("Baler.lock");
     let lock = p.read_lockfile();
     let data = lock + metadata;
     File::create(&lockfile).unwrap().write_all(data.as_bytes()).unwrap();
@@ -120,14 +120,14 @@ foo = "bar"
 #[test]
 fn preserve_line_endings_issue_2076() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
             version = "0.0.1"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             authors = []
@@ -135,7 +135,7 @@ fn preserve_line_endings_issue_2076() {
         "#)
         .file("bar/src/lib.rs", "");
 
-    let lockfile = p.root().join("Cargo.lock");
+    let lockfile = p.root().join("Baler.lock");
     assert_that(p.baler_process("generate-lockfile"),
                 execs().with_status(0));
     assert_that(&lockfile,
@@ -164,7 +164,7 @@ fn preserve_line_endings_issue_2076() {
 #[test]
 fn baler_update_generate_lockfile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -172,12 +172,12 @@ fn baler_update_generate_lockfile() {
         "#)
         .file("src/main.rs", "fn main() {}");
 
-    let lockfile = p.root().join("Cargo.lock");
+    let lockfile = p.root().join("Baler.lock");
     assert_that(&lockfile, is_not(existing_file()));
     assert_that(p.baler_process("update"), execs().with_status(0).with_stdout(""));
     assert_that(&lockfile, existing_file());
 
-    fs::remove_file(p.root().join("Cargo.lock")).unwrap();
+    fs::remove_file(p.root().join("Baler.lock")).unwrap();
 
     assert_that(&lockfile, is_not(existing_file()));
     assert_that(p.baler("update"), execs().with_status(0).with_stdout(""));

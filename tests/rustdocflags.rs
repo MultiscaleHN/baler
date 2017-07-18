@@ -7,7 +7,7 @@ use hamcrest::assert_that;
 #[test]
 fn parses_env() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -26,7 +26,7 @@ fn parses_env() {
 #[test]
 fn parses_config() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -49,7 +49,7 @@ fn parses_config() {
 #[test]
 fn bad_flags() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -65,7 +65,7 @@ fn bad_flags() {
 #[test]
 fn rerun() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"

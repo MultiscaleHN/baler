@@ -32,7 +32,7 @@ point for printing status messages and other info to the console.
 
 `Workspace` is the description of the workspace for the current
 working directory. Each workspace contains at least one
-`Package`. Each package corresponds to a single `Cargo.toml`, and may
+`Package`. Each package corresponds to a single `Baler.toml`, and may
 define several `Target`s, such as the library, binaries, integration
 test or examples. Targets are crates (each target defines a crate
 root, like `src/lib.rs` or `examples/foo.rs`) and are what is actually
@@ -60,7 +60,7 @@ matches declared dependency specification according to semver.
 
 Cargo is a non-daemon command line application, which means that all
 the information used by Cargo must be persisted on the hard drive. The
-main sources of information are `Cargo.toml` and `Cargo.lock` files,
+main sources of information are `Baler.toml` and `Baler.lock` files,
 `.baler/config` configuration files and the globally shared registry
 of packages downloaded from crates.io, usually located at
 `~/.baler/registry`. See `src/sources/registry` for the specifics of
@@ -81,7 +81,7 @@ data like the registry or the target directory.
 ## Tests
 
 Cargo has an impressive test suite located in the `tests` folder. Most
-of the test are integration: a project structure with `Cargo.toml` and
+of the test are integration: a project structure with `Baler.toml` and
 rust source code is created in a temporary directory, `baler` binary
 is invoked via `std::process::Command` and then stdout and stderr are
 verified against the expected output. To simplify testing, several

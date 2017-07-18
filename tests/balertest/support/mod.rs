@@ -216,7 +216,7 @@ impl ProjectBuilder {
 
     pub fn read_lockfile(&self) -> String {
         let mut buffer = String::new();
-        fs::File::open(self.root().join("Cargo.lock")).unwrap()
+        fs::File::open(self.root().join("Baler.lock")).unwrap()
             .read_to_string(&mut buffer).unwrap();
         buffer
     }

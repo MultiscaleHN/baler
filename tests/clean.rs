@@ -10,7 +10,7 @@ use hamcrest::{assert_that, existing_dir, existing_file, is_not};
 #[test]
 fn baler_clean_simple() {
     let p = project("foo")
-              .file("Cargo.toml", &basic_bin_manifest("foo"))
+              .file("Baler.toml", &basic_bin_manifest("foo"))
               .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("build"), execs().with_status(0));
@@ -24,7 +24,7 @@ fn baler_clean_simple() {
 #[test]
 fn different_dir() {
     let p = project("foo")
-              .file("Cargo.toml", &basic_bin_manifest("foo"))
+              .file("Baler.toml", &basic_bin_manifest("foo"))
               .file("src/foo.rs", &main_file(r#""i am foo""#, &[]))
               .file("src/bar/a.rs", "");
 
@@ -39,7 +39,7 @@ fn different_dir() {
 #[test]
 fn clean_multiple_packages() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -54,7 +54,7 @@ fn clean_multiple_packages() {
                 name = "foo"
         "#)
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]))
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -64,7 +64,7 @@ fn clean_multiple_packages() {
                 name = "d1"
         "#)
         .file("d1/src/main.rs", "fn main() { println!(\"d1\"); }")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.1"
@@ -100,7 +100,7 @@ fn clean_multiple_packages() {
 #[test]
 fn clean_release() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -110,7 +110,7 @@ fn clean_release() {
             a = { path = "a" }
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -139,7 +139,7 @@ fn clean_release() {
 #[test]
 fn build_script() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -180,7 +180,7 @@ fn build_script() {
 #[test]
 fn clean_git() {
     let git = git::new("dep", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [project]
             name = "dep"
             version = "0.5.0"
@@ -190,7 +190,7 @@ fn clean_git() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -213,7 +213,7 @@ fn clean_git() {
 #[test]
 fn registry() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"

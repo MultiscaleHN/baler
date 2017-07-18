@@ -34,21 +34,21 @@ pub fn find_project_manifest(pwd: &Path, file: &str) -> CargoResult<PathBuf> {
           file, pwd.display())
 }
 
-/// Find the root Cargo.toml
+/// Find the root Baler.toml
 pub fn find_root_manifest_for_wd(manifest_path: Option<String>, cwd: &Path)
                                   -> CargoResult<PathBuf> {
     match manifest_path {
         Some(path) => {
             let absolute_path = paths::normalize_path(&cwd.join(&path));
-            if !absolute_path.ends_with("Cargo.toml") {
-                bail!("the manifest-path must be a path to a Cargo.toml file")
+            if !absolute_path.ends_with("Baler.toml") {
+                bail!("the manifest-path must be a path to a Baler.toml file")
             }
             if !fs::metadata(&absolute_path).is_ok() {
                 bail!("manifest path `{}` does not exist", path)
             }
             Ok(absolute_path)
         },
-        None => find_project_manifest(cwd, "Cargo.toml"),
+        None => find_project_manifest(cwd, "Baler.toml"),
     }
 }
 

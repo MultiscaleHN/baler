@@ -11,7 +11,7 @@ use hamcrest::assert_that;
 #[test]
 fn env_rustflags_normal_source() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -48,7 +48,7 @@ fn env_rustflags_build_script() {
     // when --target is not specified.
     // In this test if --cfg foo is passed the build will fail.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -72,7 +72,7 @@ fn env_rustflags_build_script_dep() {
     // when --target is not specified.
     // In this test if --cfg foo is not passed the build will fail.
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -86,7 +86,7 @@ fn env_rustflags_build_script_dep() {
             fn main() { }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -109,7 +109,7 @@ fn env_rustflags_plugin() {
     // when --target is not specified.
     // In this test if --cfg foo is not passed the build will fail.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -135,7 +135,7 @@ fn env_rustflags_plugin_dep() {
     // when --target is not specified.
     // In this test if --cfg foo is not passed the build will fail.
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -151,7 +151,7 @@ fn env_rustflags_plugin_dep() {
             fn foo() { }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -174,7 +174,7 @@ fn env_rustflags_plugin_dep() {
 #[test]
 fn env_rustflags_normal_source_with_target() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -215,7 +215,7 @@ fn env_rustflags_build_script_with_target() {
     // when --target is specified.
     // In this test if --cfg foo is passed the build will fail.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -241,7 +241,7 @@ fn env_rustflags_build_script_dep_with_target() {
     // when --target is specified.
     // In this test if --cfg foo is passed the build will fail.
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -255,7 +255,7 @@ fn env_rustflags_build_script_dep_with_target() {
             fn main() { }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -280,7 +280,7 @@ fn env_rustflags_plugin_with_target() {
     // when --target is specified.
     // In this test if --cfg foo is passed the build will fail.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -308,7 +308,7 @@ fn env_rustflags_plugin_dep_with_target() {
     // when --target is specified.
     // In this test if --cfg foo is passed the build will fail.
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -324,7 +324,7 @@ fn env_rustflags_plugin_dep_with_target() {
             fn foo() { }
         "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -349,7 +349,7 @@ fn env_rustflags_plugin_dep_with_target() {
 #[test]
 fn env_rustflags_recompile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -367,7 +367,7 @@ fn env_rustflags_recompile() {
 #[test]
 fn env_rustflags_recompile2() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -385,7 +385,7 @@ fn env_rustflags_recompile2() {
 #[test]
 fn env_rustflags_no_recompile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -402,7 +402,7 @@ fn env_rustflags_no_recompile() {
 #[test]
 fn build_rustflags_normal_source() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -442,7 +442,7 @@ fn build_rustflags_build_script() {
     // when --target is not specified.
     // In this test if --cfg foo is passed the build will fail.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -470,7 +470,7 @@ fn build_rustflags_build_script_dep() {
     // when --target is not specified.
     // In this test if --cfg foo is not passed the build will fail.
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -488,7 +488,7 @@ fn build_rustflags_build_script_dep() {
             rustflags = ["--cfg", "foo"]
             "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -511,7 +511,7 @@ fn build_rustflags_plugin() {
     // when --target is not specified.
     // In this test if --cfg foo is not passed the build will fail.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -541,7 +541,7 @@ fn build_rustflags_plugin_dep() {
     // when --target is not specified.
     // In this test if --cfg foo is not passed the build will fail.
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -561,7 +561,7 @@ fn build_rustflags_plugin_dep() {
             rustflags = ["--cfg", "foo"]
             "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -584,7 +584,7 @@ fn build_rustflags_plugin_dep() {
 #[test]
 fn build_rustflags_normal_source_with_target() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -629,7 +629,7 @@ fn build_rustflags_build_script_with_target() {
     // when --target is specified.
     // In this test if --cfg foo is passed the build will fail.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -659,7 +659,7 @@ fn build_rustflags_build_script_dep_with_target() {
     // when --target is specified.
     // In this test if --cfg foo is passed the build will fail.
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -677,7 +677,7 @@ fn build_rustflags_build_script_dep_with_target() {
             rustflags = ["--cfg", "foo"]
             "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -702,7 +702,7 @@ fn build_rustflags_plugin_with_target() {
     // when --target is specified.
     // In this test if --cfg foo is passed the build will fail.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -734,7 +734,7 @@ fn build_rustflags_plugin_dep_with_target() {
     // when --target is specified.
     // In this test if --cfg foo is passed the build will fail.
     let foo = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -754,7 +754,7 @@ fn build_rustflags_plugin_dep_with_target() {
             rustflags = ["--cfg", "foo"]
             "#);
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -779,7 +779,7 @@ fn build_rustflags_plugin_dep_with_target() {
 #[test]
 fn build_rustflags_recompile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -807,7 +807,7 @@ fn build_rustflags_recompile() {
 #[test]
 fn build_rustflags_recompile2() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -835,7 +835,7 @@ fn build_rustflags_recompile2() {
 #[test]
 fn build_rustflags_no_recompile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -867,7 +867,7 @@ fn build_rustflags_with_home_config() {
     // And we need the project to be inside the home directory
     // so the walking process finds the home project twice.
     let p = project_in_home("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -882,7 +882,7 @@ fn build_rustflags_with_home_config() {
 #[test]
 fn target_rustflags_normal_source() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -920,7 +920,7 @@ fn target_rustflags_normal_source() {
 #[test]
 fn target_rustflags_precedence() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -953,7 +953,7 @@ fn target_rustflags_precedence() {
 #[test]
 fn cfg_rustflags_normal_source() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1013,7 +1013,7 @@ fn cfg_rustflags_normal_source() {
 #[test]
 fn cfg_rustflags_precedence() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1075,7 +1075,7 @@ fn cfg_rustflags_precedence() {
 #[test]
 fn target_rustflags_string_and_array_form1() {
     let p1 = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1095,7 +1095,7 @@ fn target_rustflags_string_and_array_form1() {
 "));
 
     let p2 = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1119,7 +1119,7 @@ fn target_rustflags_string_and_array_form1() {
 #[test]
 fn target_rustflags_string_and_array_form2() {
     let p1 = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1139,7 +1139,7 @@ fn target_rustflags_string_and_array_form2() {
 "));
 
     let p2 = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"

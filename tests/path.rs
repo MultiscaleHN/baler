@@ -17,7 +17,7 @@ use hamcrest::{assert_that, existing_file};
                      // Windows, for more info see #3466.
 fn baler_compile_with_nested_deps_shorthand() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -31,7 +31,7 @@ fn baler_compile_with_nested_deps_shorthand() {
         "#)
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -54,7 +54,7 @@ fn baler_compile_with_nested_deps_shorthand() {
                 baz::gimme()
             }
         "#)
-        .file("bar/baz/Cargo.toml", r#"
+        .file("bar/baz/Baler.toml", r#"
             [project]
 
             name = "baz"
@@ -112,7 +112,7 @@ fn baler_compile_with_nested_deps_shorthand() {
 #[test]
 fn baler_compile_with_root_dev_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -130,7 +130,7 @@ fn baler_compile_with_root_dev_deps() {
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]));
     let p2 = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "bar"
@@ -151,7 +151,7 @@ fn baler_compile_with_root_dev_deps() {
 #[test]
 fn baler_compile_with_root_dev_deps_with_testing() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -169,7 +169,7 @@ fn baler_compile_with_root_dev_deps_with_testing() {
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]));
     let p2 = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "bar"
@@ -195,7 +195,7 @@ fn baler_compile_with_root_dev_deps_with_testing() {
 #[test]
 fn baler_compile_with_transitive_dev_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -209,7 +209,7 @@ fn baler_compile_with_transitive_dev_deps() {
         "#)
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -247,7 +247,7 @@ fn baler_compile_with_transitive_dev_deps() {
 #[test]
 fn no_rebuild_dependency() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -261,7 +261,7 @@ fn no_rebuild_dependency() {
             extern crate bar;
             fn main() { bar::bar() }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -300,7 +300,7 @@ fn no_rebuild_dependency() {
 fn deep_dependencies_trigger_rebuild() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -314,7 +314,7 @@ fn deep_dependencies_trigger_rebuild() {
             extern crate bar;
             fn main() { bar::bar() }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -330,7 +330,7 @@ fn deep_dependencies_trigger_rebuild() {
             extern crate baz;
             pub fn bar() { baz::baz() }
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
 
             name = "baz"
@@ -393,7 +393,7 @@ fn deep_dependencies_trigger_rebuild() {
 fn no_rebuild_two_deps() {
     let mut p = project("foo");
     p = p
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -409,7 +409,7 @@ fn no_rebuild_two_deps() {
             extern crate bar;
             fn main() { bar::bar() }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -424,7 +424,7 @@ fn no_rebuild_two_deps() {
         .file("bar/src/bar.rs", r#"
             pub fn bar() {}
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
 
             name = "baz"
@@ -455,7 +455,7 @@ fn no_rebuild_two_deps() {
 #[test]
 fn nested_deps_recompile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -469,7 +469,7 @@ fn nested_deps_recompile() {
         "#)
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("src/bar/Cargo.toml", r#"
+        .file("src/bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -507,7 +507,7 @@ fn nested_deps_recompile() {
 #[test]
 fn error_message_for_missing_manifest() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -530,7 +530,7 @@ Caused by:
   Unable to update file://[..]
 
 Caused by:
-  failed to read `[..]bar[/]Cargo.toml`
+  failed to read `[..]bar[/]Baler.toml`
 
 Caused by:
   [..] (os error [..])
@@ -541,7 +541,7 @@ Caused by:
 #[test]
 fn override_relative() {
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "bar"
@@ -555,7 +555,7 @@ fn override_relative() {
          .write_all(br#"paths = ["bar"]"#).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
 
             name = "foo"
@@ -574,7 +574,7 @@ fn override_relative() {
 #[test]
 fn override_self() {
     let bar = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
 
             name = "bar"
@@ -589,7 +589,7 @@ fn override_self() {
         .file(".baler/config", &format!(r#"
             paths = ['{}']
         "#, root.display()))
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
 
             name = "foo"
@@ -611,7 +611,7 @@ fn override_self() {
 #[test]
 fn override_path_dep() {
     let bar = project("bar")
-       .file("p1/Cargo.toml", r#"
+       .file("p1/Baler.toml", r#"
             [package]
             name = "p1"
             version = "0.5.0"
@@ -621,7 +621,7 @@ fn override_path_dep() {
             path = "../p2"
        "#)
        .file("p1/src/lib.rs", "")
-       .file("p2/Cargo.toml", r#"
+       .file("p2/Baler.toml", r#"
             [package]
             name = "p2"
             version = "0.5.0"
@@ -634,7 +634,7 @@ fn override_path_dep() {
             paths = ['{}', '{}']
         "#, bar.root().join("p1").display(),
             bar.root().join("p2").display()))
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
 
             name = "foo"
@@ -656,7 +656,7 @@ fn override_path_dep() {
 #[test]
 fn path_dep_build_cmd() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -670,7 +670,7 @@ fn path_dep_build_cmd() {
         "#)
         .file("src/main.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -729,7 +729,7 @@ fn path_dep_build_cmd() {
 #[test]
 fn dev_deps_no_rebuild_lib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
                 name = "foo"
                 version = "0.5.0"
@@ -746,7 +746,7 @@ fn dev_deps_no_rebuild_lib() {
             #[cfg(test)] extern crate bar;
             #[cfg(not(test))] pub fn foo() { env!("FOO"); }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
 
             name = "bar"
@@ -776,7 +776,7 @@ fn dev_deps_no_rebuild_lib() {
 #[test]
 fn custom_target_no_rebuild() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -785,14 +785,14 @@ fn custom_target_no_rebuild() {
             a = { path = "a" }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
             authors = []
         "#)
         .file("a/src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -811,7 +811,7 @@ fn custom_target_no_rebuild() {
 "));
 
     assert_that(p.baler("build")
-                 .arg("--manifest-path=b/Cargo.toml")
+                 .arg("--manifest-path=b/Baler.toml")
                  .env("CARGO_TARGET_DIR", "target"),
                 execs().with_status(0)
                        .with_stderr("\
@@ -823,7 +823,7 @@ fn custom_target_no_rebuild() {
 #[test]
 fn override_and_depend() {
     let p = project("foo")
-        .file("a/a1/Cargo.toml", r#"
+        .file("a/a1/Baler.toml", r#"
             [project]
             name = "a1"
             version = "0.5.0"
@@ -832,14 +832,14 @@ fn override_and_depend() {
             a2 = { path = "../a2" }
         "#)
         .file("a/a1/src/lib.rs", "")
-        .file("a/a2/Cargo.toml", r#"
+        .file("a/a2/Baler.toml", r#"
             [project]
             name = "a2"
             version = "0.5.0"
             authors = []
         "#)
         .file("a/a2/src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -866,7 +866,7 @@ fn override_and_depend() {
 #[test]
 fn missing_path_dependency() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -896,7 +896,7 @@ fn invalid_path_dep_in_workspace_with_lockfile() {
     Package::new("bar", "1.0.0").publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "top"
             version = "0.5.0"
@@ -908,7 +908,7 @@ fn invalid_path_dep_in_workspace_with_lockfile() {
             foo = { path = "foo" }
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -924,7 +924,7 @@ fn invalid_path_dep_in_workspace_with_lockfile() {
     assert_that(p.baler("build"), execs().with_status(0));
 
     // Change the dependency on `bar` to an invalid path
-    File::create(&p.root().join("foo/Cargo.toml")).unwrap().write_all(br#"
+    File::create(&p.root().join("foo/Baler.toml")).unwrap().write_all(br#"
         [project]
         name = "foo"
         version = "0.5.0"
@@ -948,7 +948,7 @@ version required: *
 #[test]
 fn workspace_produces_rlib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "top"
             version = "0.5.0"
@@ -960,7 +960,7 @@ fn workspace_produces_rlib() {
             foo = { path = "foo" }
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"

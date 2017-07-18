@@ -28,8 +28,8 @@ Options:
     -v, --verbose ...        Use verbose output (-vv very verbose/build.rs output)
     -q, --quiet              No output printed to stdout
     --color WHEN             Coloring: auto, always, never
-    --frozen                 Require Cargo.lock and cache are up to date
-    --locked                 Require Cargo.lock is up to date
+    --frozen                 Require Baler.lock and cache are up to date
+    --locked                 Require Baler.lock is up to date
 
 Given a <spec> argument, print out the fully qualified package id specifier.
 This command will generate an error if <spec> is ambiguous as to which package

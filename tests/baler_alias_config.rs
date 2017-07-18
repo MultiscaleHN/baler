@@ -6,7 +6,7 @@ use hamcrest::{assert_that};
 #[test]
 fn alias_incorrect_config_type() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn main() {
         }"#)
@@ -26,7 +26,7 @@ expected a list, but found a integer for [..]"));
 #[test]
 fn alias_default_config_overrides_config() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn main() {
         }"#)
@@ -43,7 +43,7 @@ fn alias_default_config_overrides_config() {
 #[test]
 fn alias_config() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn main() {
         }"#)
@@ -61,7 +61,7 @@ fn alias_config() {
 #[test]
 fn alias_list_test() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn main() {
          }"#)
@@ -80,7 +80,7 @@ fn alias_list_test() {
 #[test]
 fn alias_with_flags_config() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn main() {
          }"#)
@@ -99,7 +99,7 @@ fn alias_with_flags_config() {
 #[test]
 fn cant_shadow_builtin() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn main() {
          }"#)

@@ -139,7 +139,7 @@ fn cfg_matches() {
 #[test]
 fn cfg_easy() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -151,7 +151,7 @@ fn cfg_easy() {
             b = { path = 'b' }
         "#)
         .file("src/lib.rs", "extern crate b;")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -166,7 +166,7 @@ fn cfg_easy() {
 fn dont_include() {
     let other_family = if cfg!(unix) {"windows"} else {"unix"};
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -176,7 +176,7 @@ fn dont_include() {
             b = {{ path = 'b' }}
         "#, other_family))
         .file("src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -199,7 +199,7 @@ fn works_through_the_registry() {
             .publish();
 
     let p = project("a")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -230,7 +230,7 @@ fn ignore_version_from_other_platform() {
     Package::new("foo", "0.2.0").publish();
 
     let p = project("a")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -257,7 +257,7 @@ fn ignore_version_from_other_platform() {
 #[test]
 fn bad_target_spec() {
     let p = project("a")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -283,7 +283,7 @@ Caused by:
 #[test]
 fn bad_target_spec2() {
     let p = project("a")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -309,7 +309,7 @@ Caused by:
 #[test]
 fn multiple_match_ok() {
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -330,7 +330,7 @@ fn multiple_match_ok() {
             b = {{ path = 'b' }}
         "#, rustc_host()))
         .file("src/lib.rs", "extern crate b;")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -344,7 +344,7 @@ fn multiple_match_ok() {
 #[test]
 fn any_ok() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -354,7 +354,7 @@ fn any_ok() {
             b = { path = 'b' }
         "#)
         .file("src/lib.rs", "extern crate b;")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"

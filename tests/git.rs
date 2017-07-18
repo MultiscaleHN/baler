@@ -18,7 +18,7 @@ fn baler_compile_simple_git_dep() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
 
                 name = "dep1"
@@ -37,7 +37,7 @@ fn baler_compile_simple_git_dep() {
     }).unwrap();
 
     let project = project
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -75,7 +75,7 @@ fn baler_compile_git_dep_branch() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
 
                 name = "dep1"
@@ -100,7 +100,7 @@ fn baler_compile_git_dep_branch() {
     repo.branch("branchy", &head, true).unwrap();
 
     let project = project
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -140,7 +140,7 @@ fn baler_compile_git_dep_tag() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
 
                 name = "dep1"
@@ -168,7 +168,7 @@ fn baler_compile_git_dep_tag() {
              false).unwrap();
 
     let project = project
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -208,7 +208,7 @@ fn baler_compile_git_dep_tag() {
 fn baler_compile_with_nested_paths() {
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
 
                 name = "dep1"
@@ -231,7 +231,7 @@ fn baler_compile_with_nested_paths() {
                     dep2::hello()
                 }
             "#)
-            .file("vendor/dep2/Cargo.toml", r#"
+            .file("vendor/dep2/Baler.toml", r#"
                 [project]
 
                 name = "dep2"
@@ -250,7 +250,7 @@ fn baler_compile_with_nested_paths() {
     }).unwrap();
 
     let p = project("parent")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "parent"
@@ -283,7 +283,7 @@ fn baler_compile_with_nested_paths() {
 fn baler_compile_with_malformed_nested_paths() {
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
 
                 name = "dep1"
@@ -299,13 +299,13 @@ fn baler_compile_with_malformed_nested_paths() {
                     "hello world"
                 }
             "#)
-            .file("vendor/dep2/Cargo.toml", r#"
+            .file("vendor/dep2/Baler.toml", r#"
                 !INVALID!
             "#)
     }).unwrap();
 
     let p = project("parent")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "parent"
@@ -338,7 +338,7 @@ fn baler_compile_with_malformed_nested_paths() {
 fn baler_compile_with_meta_package() {
     let git_project = git::new("meta-dep", |project| {
         project
-            .file("dep1/Cargo.toml", r#"
+            .file("dep1/Baler.toml", r#"
                 [project]
 
                 name = "dep1"
@@ -354,7 +354,7 @@ fn baler_compile_with_meta_package() {
                     "this is dep1"
                 }
             "#)
-            .file("dep2/Cargo.toml", r#"
+            .file("dep2/Baler.toml", r#"
                 [project]
 
                 name = "dep2"
@@ -373,7 +373,7 @@ fn baler_compile_with_meta_package() {
     }).unwrap();
 
     let p = project("parent")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "parent"
@@ -412,7 +412,7 @@ fn baler_compile_with_short_ssh_git() {
     let url = "git@github.com:a/dep";
 
     let project = project("project")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -443,7 +443,7 @@ Caused by:
 #[test]
 fn two_revs_same_deps() {
     let bar = git::new("meta-dep", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.0"
@@ -463,7 +463,7 @@ fn two_revs_same_deps() {
     let rev2 = git::commit(&repo);
 
     let foo = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.0.0"
@@ -487,7 +487,7 @@ fn two_revs_same_deps() {
         "#);
 
     let baz = project("baz")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "baz"
             version = "0.0.0"
@@ -514,7 +514,7 @@ fn two_revs_same_deps() {
 fn recompilation() {
     let git_project = git::new("bar", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
 
                 name = "bar"
@@ -530,7 +530,7 @@ fn recompilation() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -616,7 +616,7 @@ fn recompilation() {
 fn update_with_shared_deps() {
     let git_project = git::new("bar", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
 
                 name = "bar"
@@ -632,7 +632,7 @@ fn update_with_shared_deps() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.5.0"
@@ -648,7 +648,7 @@ fn update_with_shared_deps() {
             extern crate dep2;
             fn main() {}
         "#)
-        .file("dep1/Cargo.toml", &format!(r#"
+        .file("dep1/Baler.toml", &format!(r#"
             [package]
             name = "dep1"
             version = "0.5.0"
@@ -659,7 +659,7 @@ fn update_with_shared_deps() {
             git = '{}'
         "#, git_project.url()))
         .file("dep1/src/lib.rs", "")
-        .file("dep2/Cargo.toml", &format!(r#"
+        .file("dep2/Baler.toml", &format!(r#"
             [package]
             name = "dep2"
             version = "0.5.0"
@@ -750,7 +750,7 @@ fn dep_with_submodule() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [package]
                 name = "dep1"
                 version = "0.5.0"
@@ -767,7 +767,7 @@ fn dep_with_submodule() {
     git::commit(&repo);
 
     let project = project
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -796,7 +796,7 @@ fn dep_with_bad_submodule() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [package]
                 name = "dep1"
                 version = "0.5.0"
@@ -826,7 +826,7 @@ fn dep_with_bad_submodule() {
         None).unwrap();
 
     let project = project
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -863,7 +863,7 @@ fn two_deps_only_update_one() {
     let project = project("foo");
     let git1 = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [package]
                 name = "dep1"
                 version = "0.5.0"
@@ -873,7 +873,7 @@ fn two_deps_only_update_one() {
     }).unwrap();
     let git2 = git::new("dep2", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [package]
                 name = "dep2"
                 version = "0.5.0"
@@ -883,7 +883,7 @@ fn two_deps_only_update_one() {
     }).unwrap();
 
     let project = project
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -925,7 +925,7 @@ fn two_deps_only_update_one() {
 #[test]
 fn stale_cached_version() {
     let bar = git::new("meta-dep", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.0"
@@ -937,7 +937,7 @@ fn stale_cached_version() {
     // Update the git database in the cache with the current state of the git
     // repo
     let foo = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.0.0"
@@ -968,7 +968,7 @@ fn stale_cached_version() {
 
     let rev = repo.revparse_single("HEAD").unwrap().id();
 
-    File::create(&foo.root().join("Cargo.lock")).unwrap().write_all(format!(r#"
+    File::create(&foo.root().join("Baler.lock")).unwrap().write_all(format!(r#"
         [root]
         name = "foo"
         version = "0.0.0"
@@ -999,7 +999,7 @@ fn dep_with_changed_submodule() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [package]
                 name = "dep1"
                 version = "0.5.0"
@@ -1023,7 +1023,7 @@ fn dep_with_changed_submodule() {
     git::commit(&repo);
 
     let project = project
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1093,7 +1093,7 @@ fn dep_with_changed_submodule() {
 #[test]
 fn dev_deps_with_testing() {
     let p2 = git::new("bar", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.5.0"
@@ -1105,7 +1105,7 @@ fn dev_deps_with_testing() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
 
             name = "foo"
@@ -1149,7 +1149,7 @@ fn dev_deps_with_testing() {
 #[test]
 fn git_build_cmd_freshness() {
     let foo = git::new("foo", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.0"
@@ -1190,7 +1190,7 @@ fn git_build_cmd_freshness() {
 #[test]
 fn git_name_not_always_needed() {
     let p2 = git::new("bar", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.5.0"
@@ -1207,7 +1207,7 @@ fn git_name_not_always_needed() {
     let _ = cfg.remove("user.email");
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1231,7 +1231,7 @@ fn git_name_not_always_needed() {
 #[test]
 fn git_repo_changing_no_rebuild() {
     let bar = git::new("bar", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.5.0"
@@ -1242,7 +1242,7 @@ fn git_repo_changing_no_rebuild() {
 
     // Lock p1 to the first rev in the git repo
     let p1 = project("p1")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "p1"
             version = "0.5.0"
@@ -1273,7 +1273,7 @@ fn git_repo_changing_no_rebuild() {
 
     // Lock p2 to the second rev
     let p2 = project("p2")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "p2"
             version = "0.5.0"
@@ -1299,7 +1299,7 @@ fn git_repo_changing_no_rebuild() {
 #[test]
 fn git_dep_build_cmd() {
     let p = git::new("foo", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -1317,7 +1317,7 @@ fn git_dep_build_cmd() {
         "#)
         .file("src/foo.rs",
               &main_file(r#""{}", bar::gimme()"#, &["bar"]))
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -1362,7 +1362,7 @@ fn git_dep_build_cmd() {
 #[test]
 fn fetch_downloads() {
     let bar = git::new("bar", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.5.0"
@@ -1372,7 +1372,7 @@ fn fetch_downloads() {
     }).unwrap();
 
     let p = project("p1")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "p1"
             version = "0.5.0"
@@ -1393,7 +1393,7 @@ fn fetch_downloads() {
 #[test]
 fn warnings_in_git_dep() {
     let bar = git::new("bar", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.5.0"
@@ -1403,7 +1403,7 @@ fn warnings_in_git_dep() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1427,7 +1427,7 @@ fn warnings_in_git_dep() {
 #[test]
 fn update_ambiguous() {
     let foo1 = git::new("foo1", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.5.0"
@@ -1436,7 +1436,7 @@ fn update_ambiguous() {
         .file("src/lib.rs", "")
     }).unwrap();
     let foo2 = git::new("foo2", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.6.0"
@@ -1445,7 +1445,7 @@ fn update_ambiguous() {
         .file("src/lib.rs", "")
     }).unwrap();
     let bar = git::new("bar", |project| {
-        project.file("Cargo.toml", &format!(r#"
+        project.file("Baler.toml", &format!(r#"
             [package]
             name = "bar"
             version = "0.5.0"
@@ -1458,7 +1458,7 @@ fn update_ambiguous() {
     }).unwrap();
 
     let p = project("project")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "project"
             version = "0.5.0"
@@ -1487,14 +1487,14 @@ following:
 #[test]
 fn update_one_dep_in_repo_with_many_deps() {
     let foo = git::new("foo", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.5.0"
             authors = ["wycats@example.com"]
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.5.0"
@@ -1504,7 +1504,7 @@ fn update_one_dep_in_repo_with_many_deps() {
     }).unwrap();
 
     let p = project("project")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "project"
             version = "0.5.0"
@@ -1528,7 +1528,7 @@ fn update_one_dep_in_repo_with_many_deps() {
 #[test]
 fn switch_deps_does_not_update_transitive() {
     let transitive = git::new("transitive", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "transitive"
             version = "0.5.0"
@@ -1537,7 +1537,7 @@ fn switch_deps_does_not_update_transitive() {
         .file("src/lib.rs", "")
     }).unwrap();
     let dep1 = git::new("dep1", |project| {
-        project.file("Cargo.toml", &format!(r#"
+        project.file("Baler.toml", &format!(r#"
             [package]
             name = "dep"
             version = "0.5.0"
@@ -1549,7 +1549,7 @@ fn switch_deps_does_not_update_transitive() {
         .file("src/lib.rs", "")
     }).unwrap();
     let dep2 = git::new("dep2", |project| {
-        project.file("Cargo.toml", &format!(r#"
+        project.file("Baler.toml", &format!(r#"
             [package]
             name = "dep"
             version = "0.5.0"
@@ -1562,7 +1562,7 @@ fn switch_deps_does_not_update_transitive() {
     }).unwrap();
 
     let p = project("project")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "project"
             version = "0.5.0"
@@ -1586,7 +1586,7 @@ fn switch_deps_does_not_update_transitive() {
 
     // Update the dependency to point to the second repository, but this
     // shouldn't update the transitive dependency which is the same.
-    File::create(&p.root().join("Cargo.toml")).unwrap().write_all(format!(r#"
+    File::create(&p.root().join("Baler.toml")).unwrap().write_all(format!(r#"
             [project]
             name = "project"
             version = "0.5.0"
@@ -1608,7 +1608,7 @@ fn switch_deps_does_not_update_transitive() {
 #[test]
 fn update_one_source_updates_all_packages_in_that_git_source() {
     let dep = git::new("dep", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "dep"
             version = "0.5.0"
@@ -1618,7 +1618,7 @@ fn update_one_source_updates_all_packages_in_that_git_source() {
             path = "a"
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.5.0"
@@ -1628,7 +1628,7 @@ fn update_one_source_updates_all_packages_in_that_git_source() {
     }).unwrap();
 
     let p = project("project")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "project"
             version = "0.5.0"
@@ -1655,7 +1655,7 @@ fn update_one_source_updates_all_packages_in_that_git_source() {
     assert_that(p.baler("update").arg("-p").arg("dep"),
                 execs().with_status(0));
     let mut lockfile = String::new();
-    File::open(&p.root().join("Cargo.lock")).unwrap()
+    File::open(&p.root().join("Baler.lock")).unwrap()
          .read_to_string(&mut lockfile).unwrap();
     assert!(!lockfile.contains(&rev1.to_string()),
             "{} in {}", rev1, lockfile);
@@ -1664,7 +1664,7 @@ fn update_one_source_updates_all_packages_in_that_git_source() {
 #[test]
 fn switch_sources() {
     let a1 = git::new("a1", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.5.0"
@@ -1673,7 +1673,7 @@ fn switch_sources() {
         .file("src/lib.rs", "")
     }).unwrap();
     let a2 = git::new("a2", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.5.1"
@@ -1683,7 +1683,7 @@ fn switch_sources() {
     }).unwrap();
 
     let p = project("project")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "project"
             version = "0.5.0"
@@ -1692,7 +1692,7 @@ fn switch_sources() {
             path = "b"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("b/Cargo.toml", &format!(r#"
+        .file("b/Baler.toml", &format!(r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -1713,7 +1713,7 @@ fn switch_sources() {
 [FINISHED] dev [unoptimized + debuginfo] target(s) in [..]
 "));
 
-    File::create(&p.root().join("b/Cargo.toml")).unwrap().write_all(format!(r#"
+    File::create(&p.root().join("b/Baler.toml")).unwrap().write_all(format!(r#"
         [project]
         name = "b"
         version = "0.5.0"
@@ -1737,7 +1737,7 @@ fn switch_sources() {
 fn dont_require_submodules_are_checked_out() {
     let project = project("foo");
     let git1 = git::new("dep1", |p| {
-        p.file("Cargo.toml", r#"
+        p.file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1767,7 +1767,7 @@ fn dont_require_submodules_are_checked_out() {
 #[test]
 fn doctest_same_name() {
     let a2 = git::new("a2", |p| {
-        p.file("Cargo.toml", r#"
+        p.file("Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -1777,7 +1777,7 @@ fn doctest_same_name() {
     }).unwrap();
 
     let a1 = git::new("a1", |p| {
-        p.file("Cargo.toml", &format!(r#"
+        p.file("Baler.toml", &format!(r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -1789,7 +1789,7 @@ fn doctest_same_name() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1810,7 +1810,7 @@ fn doctest_same_name() {
 #[test]
 fn lints_are_suppressed() {
     let a = git::new("a", |p| {
-        p.file("Cargo.toml", r#"
+        p.file("Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -1822,7 +1822,7 @@ fn lints_are_suppressed() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1845,7 +1845,7 @@ fn lints_are_suppressed() {
 #[test]
 fn denied_lints_are_allowed() {
     let a = git::new("a", |p| {
-        p.file("Cargo.toml", r#"
+        p.file("Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -1858,7 +1858,7 @@ fn denied_lints_are_allowed() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1881,7 +1881,7 @@ fn denied_lints_are_allowed() {
 #[test]
 fn add_a_git_dep() {
     let git = git::new("git", |p| {
-        p.file("Cargo.toml", r#"
+        p.file("Baler.toml", r#"
             [project]
             name = "git"
             version = "0.5.0"
@@ -1891,7 +1891,7 @@ fn add_a_git_dep() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1902,7 +1902,7 @@ fn add_a_git_dep() {
             git = {{ git = '{}' }}
         "#, git.url()))
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -1912,7 +1912,7 @@ fn add_a_git_dep() {
 
     assert_that(p.baler_process("build"), execs().with_status(0));
 
-    File::create(p.root().join("a/Cargo.toml")).unwrap().write_all(format!(r#"
+    File::create(p.root().join("a/Baler.toml")).unwrap().write_all(format!(r#"
         [package]
         name = "a"
         version = "0.0.1"
@@ -1928,14 +1928,14 @@ fn add_a_git_dep() {
 #[test]
 fn two_at_rev_instead_of_tag() {
     let git = git::new("git", |p| {
-        p.file("Cargo.toml", r#"
+        p.file("Baler.toml", r#"
             [project]
             name = "git1"
             version = "0.5.0"
             authors = []
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "git2"
             version = "0.5.0"
@@ -1954,7 +1954,7 @@ fn two_at_rev_instead_of_tag() {
              false).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1974,20 +1974,20 @@ fn two_at_rev_instead_of_tag() {
 #[ignore] // accesses crates.io
 fn include_overrides_gitignore() {
     let p = git::new("reduction", |repo| {
-        repo.file("Cargo.toml", r#"
+        repo.file("Baler.toml", r#"
             [package]
             name = "reduction"
             version = "0.5.0"
             authors = ["pnkfelix"]
             build = "tango-build.rs"
-            include = ["src/lib.rs", "src/incl.rs", "src/mod.md", "tango-build.rs", "Cargo.toml"]
+            include = ["src/lib.rs", "src/incl.rs", "src/mod.md", "tango-build.rs", "Baler.toml"]
 
             [build-dependencies]
             filetime = "0.1"
         "#)
         .file(".gitignore", r#"
             target
-            Cargo.lock
+            Baler.lock
             # Below files represent generated code, thus not managed by `git`
             src/incl.rs
             src/not_incl.rs

@@ -13,7 +13,7 @@ pub struct Options {
 
 pub const USAGE: &'static str = "
 Deprecated, use `baler metadata --no-deps` instead.
-Print a JSON representation of a Cargo.toml manifest.
+Print a JSON representation of a Baler.toml manifest.
 
 Usage:
     baler read-manifest [options]

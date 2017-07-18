@@ -9,7 +9,7 @@ use balertest::support::{project, execs, basic_bin_manifest, basic_lib_manifest,
 fn baler_metadata_simple() {
     let p = project("foo")
             .file("src/foo.rs", "")
-            .file("Cargo.toml", &basic_bin_manifest("foo"));
+            .file("Baler.toml", &basic_bin_manifest("foo"));
 
     assert_that(p.baler_process("metadata"), execs().with_json(r#"
     {
@@ -36,7 +36,7 @@ fn baler_metadata_simple() {
                     }
                 ],
                 "features": {},
-                "manifest_path": "[..]Cargo.toml"
+                "manifest_path": "[..]Baler.toml"
             }
         ],
         "workspace_members": ["foo 0.5.0 (path+file:[..]foo)"],
@@ -58,7 +58,7 @@ fn baler_metadata_simple() {
 fn baler_metadata_warns_on_implicit_version() {
     let p = project("foo")
         .file("src/foo.rs", "")
-        .file("Cargo.toml", &basic_bin_manifest("foo"));
+        .file("Baler.toml", &basic_bin_manifest("foo"));
     p.build();
 
     assert_that(p.baler("metadata"),
@@ -73,7 +73,7 @@ fn baler_metadata_warns_on_implicit_version() {
 fn library_with_several_crate_types() {
     let p = project("foo")
             .file("src/lib.rs", "")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
 [package]
 name = "foo"
 version = "0.5.0"
@@ -109,7 +109,7 @@ crate-type = ["lib", "staticlib"]
                     }
                 ],
                 "features": {},
-                "manifest_path": "[..]Cargo.toml"
+                "manifest_path": "[..]Baler.toml"
             }
         ],
         "workspace_members": ["foo 0.5.0 (path+file:[..]foo)"],
@@ -131,7 +131,7 @@ crate-type = ["lib", "staticlib"]
 fn baler_metadata_with_deps_and_version() {
     let p = project("foo")
         .file("src/foo.rs", "")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -158,7 +158,7 @@ fn baler_metadata_with_deps_and_version() {
                 "dependencies": [],
                 "features": {},
                 "id": "baz 0.0.1 (registry+[..])",
-                "manifest_path": "[..]Cargo.toml",
+                "manifest_path": "[..]Baler.toml",
                 "name": "baz",
                 "source": "registry+[..]",
                 "license": null,
@@ -193,7 +193,7 @@ fn baler_metadata_with_deps_and_version() {
                 ],
                 "features": {},
                 "id": "bar 0.0.1 (registry+[..])",
-                "manifest_path": "[..]Cargo.toml",
+                "manifest_path": "[..]Baler.toml",
                 "name": "bar",
                 "source": "registry+[..]",
                 "license": null,
@@ -228,7 +228,7 @@ fn baler_metadata_with_deps_and_version() {
                 ],
                 "features": {},
                 "id": "foo 0.5.0 (path+file:[..]foo)",
-                "manifest_path": "[..]Cargo.toml",
+                "manifest_path": "[..]Baler.toml",
                 "name": "foo",
                 "source": null,
                 "license": "MIT",
@@ -281,7 +281,7 @@ fn example() {
     let p = project("foo")
             .file("src/lib.rs", "")
             .file("examples/ex.rs", "")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
 [package]
 name = "foo"
 version = "0.1.0"
@@ -317,7 +317,7 @@ name = "ex"
                     }
                 ],
                 "features": {},
-                "manifest_path": "[..]Cargo.toml"
+                "manifest_path": "[..]Baler.toml"
             }
         ],
         "workspace_members": [
@@ -342,7 +342,7 @@ fn example_lib() {
     let p = project("foo")
             .file("src/lib.rs", "")
             .file("examples/ex.rs", "")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
 [package]
 name = "foo"
 version = "0.1.0"
@@ -379,7 +379,7 @@ crate-type = ["rlib", "dylib"]
                     }
                 ],
                 "features": {},
-                "manifest_path": "[..]Cargo.toml"
+                "manifest_path": "[..]Baler.toml"
             }
         ],
         "workspace_members": [
@@ -402,13 +402,13 @@ crate-type = ["rlib", "dylib"]
 #[test]
 fn workspace_metadata() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["bar", "baz"]
         "#)
-        .file("bar/Cargo.toml", &basic_lib_manifest("bar"))
+        .file("bar/Baler.toml", &basic_lib_manifest("bar"))
         .file("bar/src/lib.rs", "")
-        .file("baz/Cargo.toml", &basic_lib_manifest("baz"))
+        .file("baz/Baler.toml", &basic_lib_manifest("baz"))
         .file("baz/src/lib.rs", "");
 
     assert_that(p.baler_process("metadata"), execs().with_status(0).with_json(r#"
@@ -432,7 +432,7 @@ fn workspace_metadata() {
                     }
                 ],
                 "features": {},
-                "manifest_path": "[..]bar[/]Cargo.toml"
+                "manifest_path": "[..]bar[/]Baler.toml"
             },
             {
                 "name": "baz",
@@ -452,7 +452,7 @@ fn workspace_metadata() {
                     }
                 ],
                 "features": {},
-                "manifest_path": "[..]baz[/]Cargo.toml"
+                "manifest_path": "[..]baz[/]Baler.toml"
             }
         ],
         "workspace_members": ["baz 0.5.0 (path+file:[..]baz)", "bar 0.5.0 (path+file:[..]bar)"],
@@ -477,13 +477,13 @@ fn workspace_metadata() {
 #[test]
 fn workspace_metadata_no_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["bar", "baz"]
         "#)
-        .file("bar/Cargo.toml", &basic_lib_manifest("bar"))
+        .file("bar/Baler.toml", &basic_lib_manifest("bar"))
         .file("bar/src/lib.rs", "")
-        .file("baz/Cargo.toml", &basic_lib_manifest("baz"))
+        .file("baz/Baler.toml", &basic_lib_manifest("baz"))
         .file("baz/src/lib.rs", "");
 
     assert_that(p.baler_process("metadata").arg("--no-deps"), execs().with_status(0).with_json(r#"
@@ -507,7 +507,7 @@ fn workspace_metadata_no_deps() {
                     }
                 ],
                 "features": {},
-                "manifest_path": "[..]bar[/]Cargo.toml"
+                "manifest_path": "[..]bar[/]Baler.toml"
             },
             {
                 "name": "baz",
@@ -527,7 +527,7 @@ fn workspace_metadata_no_deps() {
                     }
                 ],
                 "features": {},
-                "manifest_path": "[..]baz[/]Cargo.toml"
+                "manifest_path": "[..]baz[/]Baler.toml"
             }
         ],
         "workspace_members": ["baz 0.5.0 (path+file:[..]baz)", "bar 0.5.0 (path+file:[..]bar)"],
@@ -540,7 +540,7 @@ fn workspace_metadata_no_deps() {
 #[test]
 fn baler_metadata_with_invalid_manifest() {
     let p = project("foo")
-            .file("Cargo.toml", "");
+            .file("Baler.toml", "");
 
     assert_that(p.baler_process("metadata").arg("--format-version").arg("1"),
                 execs().with_status(101).with_stderr("\
@@ -569,7 +569,7 @@ const MANIFEST_OUTPUT: &'static str=
             "src_path":"[..][/]foo[/]src[/]foo.rs"
         }],
         "features":{},
-        "manifest_path":"[..]Cargo.toml"
+        "manifest_path":"[..]Baler.toml"
     }],
     "workspace_members": [ "foo 0.5.0 (path+file:[..]foo)" ],
     "resolve": null,
@@ -580,11 +580,11 @@ const MANIFEST_OUTPUT: &'static str=
 #[test]
 fn baler_metadata_no_deps_path_to_baler_toml_relative() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
         assert_that(p.baler_process("metadata").arg("--no-deps")
-                     .arg("--manifest-path").arg("foo/Cargo.toml")
+                     .arg("--manifest-path").arg("foo/Baler.toml")
                      .cwd(p.root().parent().unwrap()),
                     execs().with_status(0)
                            .with_json(MANIFEST_OUTPUT));
@@ -593,11 +593,11 @@ fn baler_metadata_no_deps_path_to_baler_toml_relative() {
 #[test]
 fn baler_metadata_no_deps_path_to_baler_toml_absolute() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("metadata").arg("--no-deps")
-                 .arg("--manifest-path").arg(p.root().join("Cargo.toml"))
+                 .arg("--manifest-path").arg(p.root().join("Baler.toml"))
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(0)
                        .with_json(MANIFEST_OUTPUT));
@@ -606,7 +606,7 @@ fn baler_metadata_no_deps_path_to_baler_toml_absolute() {
 #[test]
 fn baler_metadata_no_deps_path_to_baler_toml_parent_relative() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("metadata").arg("--no-deps")
@@ -614,13 +614,13 @@ fn baler_metadata_no_deps_path_to_baler_toml_parent_relative() {
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(101)
                        .with_stderr("[ERROR] the manifest-path must be \
-                                             a path to a Cargo.toml file"));
+                                             a path to a Baler.toml file"));
 }
 
 #[test]
 fn baler_metadata_no_deps_path_to_baler_toml_parent_absolute() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("metadata").arg("--no-deps")
@@ -628,13 +628,13 @@ fn baler_metadata_no_deps_path_to_baler_toml_parent_absolute() {
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(101)
                        .with_stderr("[ERROR] the manifest-path must be \
-                                             a path to a Cargo.toml file"));
+                                             a path to a Baler.toml file"));
 }
 
 #[test]
 fn baler_metadata_no_deps_cwd() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("metadata").arg("--no-deps")
@@ -646,7 +646,7 @@ fn baler_metadata_no_deps_cwd() {
 #[test]
 fn baler_metadata_bad_version() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("metadata").arg("--no-deps")
@@ -659,7 +659,7 @@ fn baler_metadata_bad_version() {
 #[test]
 fn multiple_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"

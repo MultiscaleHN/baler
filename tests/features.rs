@@ -12,7 +12,7 @@ use hamcrest::assert_that;
 #[test]
 fn invalid1() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -35,7 +35,7 @@ Caused by:
 #[test]
 fn invalid2() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -61,7 +61,7 @@ Caused by:
 #[test]
 fn invalid3() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -88,7 +88,7 @@ Consider adding `optional = true` to the dependency
 #[test]
 fn invalid4() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -99,7 +99,7 @@ fn invalid4() {
             features = ["bar"]
         "#)
         .file("src/main.rs", "")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.0.1"
@@ -113,7 +113,7 @@ fn invalid4() {
 [ERROR] Package `bar v0.0.1 ([..])` does not have these features: `bar`
 "));
 
-    p.change_file("Cargo.toml", r#"
+    p.change_file("Baler.toml", r#"
         [project]
         name = "foo"
         version = "0.0.1"
@@ -129,7 +129,7 @@ fn invalid4() {
 #[test]
 fn invalid5() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -153,7 +153,7 @@ Caused by:
 #[test]
 fn invalid6() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -176,7 +176,7 @@ Caused by:
 #[test]
 fn invalid7() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -200,7 +200,7 @@ Caused by:
 #[test]
 fn invalid8() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -211,7 +211,7 @@ fn invalid8() {
             features = ["foo/bar"]
         "#)
         .file("src/main.rs", "")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -228,7 +228,7 @@ fn invalid8() {
 #[test]
 fn no_transitive_dep_feature_requirement() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -244,7 +244,7 @@ fn no_transitive_dep_feature_requirement() {
             extern crate derived;
             fn main() { derived::test(); }
         "#)
-        .file("derived/Cargo.toml", r#"
+        .file("derived/Baler.toml", r#"
             [package]
             name = "derived"
             version = "0.0.1"
@@ -257,7 +257,7 @@ fn no_transitive_dep_feature_requirement() {
             extern crate bar;
             pub use bar::test;
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -279,7 +279,7 @@ fn no_transitive_dep_feature_requirement() {
 #[test]
 fn no_feature_doesnt_build() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -297,7 +297,7 @@ fn no_feature_doesnt_build() {
             #[cfg(not(feature = "bar"))]
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -326,7 +326,7 @@ fn no_feature_doesnt_build() {
 #[test]
 fn default_feature_pulled_in() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -347,7 +347,7 @@ fn default_feature_pulled_in() {
             #[cfg(not(feature = "bar"))]
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -376,7 +376,7 @@ fn default_feature_pulled_in() {
 #[test]
 fn cyclic_feature() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -396,7 +396,7 @@ fn cyclic_feature() {
 #[test]
 fn cyclic_feature2() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -417,7 +417,7 @@ fn cyclic_feature2() {
 #[test]
 fn groups_on_groups_on_groups() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -446,14 +446,14 @@ fn groups_on_groups_on_groups() {
             extern crate baz;
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
             authors = []
         "#)
         .file("bar/src/lib.rs", "pub fn bar() {}")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -473,7 +473,7 @@ fn groups_on_groups_on_groups() {
 #[test]
 fn many_cli_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -492,14 +492,14 @@ fn many_cli_features() {
             extern crate baz;
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
             authors = []
         "#)
         .file("bar/src/lib.rs", "pub fn bar() {}")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -519,7 +519,7 @@ fn many_cli_features() {
 #[test]
 fn union_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -540,7 +540,7 @@ fn union_features() {
                 d2::f2();
             }
         "#)
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -555,7 +555,7 @@ fn union_features() {
             optional = true
         "#)
         .file("d1/src/lib.rs", "")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.1"
@@ -582,7 +582,7 @@ fn union_features() {
 #[test]
 fn many_features_no_rebuilds() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name    = "b"
             version = "0.1.0"
@@ -593,7 +593,7 @@ fn many_features_no_rebuilds() {
             features = ["fall"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name    = "a"
             version = "0.1.0"
@@ -626,7 +626,7 @@ fn many_features_no_rebuilds() {
 #[test]
 fn empty_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -642,7 +642,7 @@ fn empty_features() {
 #[test]
 fn transitive_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -658,7 +658,7 @@ fn transitive_features() {
             extern crate bar;
             fn main() { bar::baz(); }
         ")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -679,7 +679,7 @@ fn transitive_features() {
 #[test]
 fn everything_in_the_lockfile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -699,7 +699,7 @@ fn everything_in_the_lockfile() {
             optional = true
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -709,14 +709,14 @@ fn everything_in_the_lockfile() {
             f1 = []
         "#)
         .file("d1/src/lib.rs", "")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.2"
             authors = []
         "#)
         .file("d2/src/lib.rs", "")
-        .file("d3/Cargo.toml", r#"
+        .file("d3/Baler.toml", r#"
             [package]
             name = "d3"
             version = "0.0.3"
@@ -728,7 +728,7 @@ fn everything_in_the_lockfile() {
         .file("d3/src/lib.rs", "");
 
     assert_that(p.baler_process("fetch"), execs().with_status(0));
-    let loc = p.root().join("Cargo.lock");
+    let loc = p.root().join("Baler.lock");
     let mut lockfile = String::new();
     t!(t!(File::open(&loc)).read_to_string(&mut lockfile));
     assert!(lockfile.contains(r#"name = "d1""#), "d1 not found\n{}", lockfile);
@@ -739,7 +739,7 @@ fn everything_in_the_lockfile() {
 #[test]
 fn no_rebuild_when_frobbing_default_feature() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -750,7 +750,7 @@ fn no_rebuild_when_frobbing_default_feature() {
             b = { path = "b" }
         "#)
         .file("src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.1.0"
@@ -760,7 +760,7 @@ fn no_rebuild_when_frobbing_default_feature() {
             a = { path = "../a", features = ["f1"], default-features = false }
         "#)
         .file("b/src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.1.0"
@@ -780,7 +780,7 @@ fn no_rebuild_when_frobbing_default_feature() {
 #[test]
 fn unions_work_with_no_default_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -794,7 +794,7 @@ fn unions_work_with_no_default_features() {
             extern crate a;
             pub fn foo() { a::a(); }
         "#)
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.1.0"
@@ -804,7 +804,7 @@ fn unions_work_with_no_default_features() {
             a = { path = "../a", features = [], default-features = false }
         "#)
         .file("b/src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.1.0"
@@ -827,7 +827,7 @@ fn unions_work_with_no_default_features() {
 #[test]
 fn optional_and_dev_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name    = "test"
             version = "0.1.0"
@@ -839,7 +839,7 @@ fn optional_and_dev_dep() {
             foo = { path = "foo" }
         "#)
         .file("src/lib.rs", "")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -857,7 +857,7 @@ fn optional_and_dev_dep() {
 #[test]
 fn activating_feature_activates_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name    = "test"
             version = "0.1.0"
@@ -875,7 +875,7 @@ fn activating_feature_activates_dep() {
                 foo::bar();
             }
         ")
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -896,7 +896,7 @@ fn activating_feature_activates_dep() {
 #[test]
 fn dep_feature_in_cmd_line() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -909,7 +909,7 @@ fn dep_feature_in_cmd_line() {
             extern crate derived;
             fn main() { derived::test(); }
         "#)
-        .file("derived/Cargo.toml", r#"
+        .file("derived/Baler.toml", r#"
             [package]
             name = "derived"
             version = "0.0.1"
@@ -926,7 +926,7 @@ fn dep_feature_in_cmd_line() {
             extern crate bar;
             pub use bar::test;
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -967,7 +967,7 @@ fn dep_feature_in_cmd_line() {
 #[test]
 fn all_features_flag_enables_all_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -996,7 +996,7 @@ fn all_features_flag_enables_all_features() {
                 bar();
             }
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -1011,7 +1011,7 @@ fn all_features_flag_enables_all_features() {
 #[test]
 fn many_cli_features_comma_delimited() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -1030,14 +1030,14 @@ fn many_cli_features_comma_delimited() {
             extern crate baz;
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
             authors = []
         "#)
         .file("bar/src/lib.rs", "pub fn bar() {}")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
@@ -1057,7 +1057,7 @@ fn many_cli_features_comma_delimited() {
 #[test]
 fn many_cli_features_comma_and_space_delimited() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -1086,28 +1086,28 @@ fn many_cli_features_comma_and_space_delimited() {
             extern crate bap;
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
             authors = []
         "#)
         .file("bar/src/lib.rs", "pub fn bar() {}")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.0.1"
             authors = []
         "#)
         .file("baz/src/lib.rs", "pub fn baz() {}")
-        .file("bam/Cargo.toml", r#"
+        .file("bam/Baler.toml", r#"
             [package]
             name = "bam"
             version = "0.0.1"
             authors = []
         "#)
         .file("bam/src/lib.rs", "pub fn bam() {}")
-        .file("bap/Cargo.toml", r#"
+        .file("bap/Baler.toml", r#"
             [package]
             name = "bap"
             version = "0.0.1"

@@ -21,17 +21,17 @@ static MANIFEST_OUTPUT: &'static str = r#"
         "src_path":"[..][/]foo[/]src[/]foo.rs"
     }],
     "features":{},
-    "manifest_path":"[..]Cargo.toml"
+    "manifest_path":"[..]Baler.toml"
 }"#;
 
 #[test]
 fn baler_read_manifest_path_to_baler_toml_relative() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("read-manifest")
-                 .arg("--manifest-path").arg("foo/Cargo.toml")
+                 .arg("--manifest-path").arg("foo/Baler.toml")
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(0)
                        .with_json(MANIFEST_OUTPUT));
@@ -40,11 +40,11 @@ fn baler_read_manifest_path_to_baler_toml_relative() {
 #[test]
 fn baler_read_manifest_path_to_baler_toml_absolute() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("read-manifest")
-                 .arg("--manifest-path").arg(p.root().join("Cargo.toml"))
+                 .arg("--manifest-path").arg(p.root().join("Baler.toml"))
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(0)
                        .with_json(MANIFEST_OUTPUT));
@@ -53,7 +53,7 @@ fn baler_read_manifest_path_to_baler_toml_absolute() {
 #[test]
 fn baler_read_manifest_path_to_baler_toml_parent_relative() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("read-manifest")
@@ -61,13 +61,13 @@ fn baler_read_manifest_path_to_baler_toml_parent_relative() {
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(101)
                        .with_stderr("[ERROR] the manifest-path must be \
-                                             a path to a Cargo.toml file"));
+                                             a path to a Baler.toml file"));
 }
 
 #[test]
 fn baler_read_manifest_path_to_baler_toml_parent_absolute() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("read-manifest")
@@ -75,13 +75,13 @@ fn baler_read_manifest_path_to_baler_toml_parent_absolute() {
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(101)
                        .with_stderr("[ERROR] the manifest-path must be \
-                                             a path to a Cargo.toml file"));
+                                             a path to a Baler.toml file"));
 }
 
 #[test]
 fn baler_read_manifest_cwd() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
     assert_that(p.baler_process("read-manifest")

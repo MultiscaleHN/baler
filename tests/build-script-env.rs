@@ -10,7 +10,7 @@ use hamcrest::assert_that;
 #[test]
 fn rerun_if_env_changes() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.5.0"
@@ -60,7 +60,7 @@ fn rerun_if_env_changes() {
 #[test]
 fn rerun_if_env_or_file_changes() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.5.0"

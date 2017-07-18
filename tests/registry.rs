@@ -21,7 +21,7 @@ fn registry() -> Url { Url::from_file_path(&*registry_path()).ok().unwrap() }
 #[test]
 fn simple() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -61,7 +61,7 @@ fn simple() {
 #[test]
 fn deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -94,7 +94,7 @@ fn nonexistent() {
     Package::new("init", "0.0.1").publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -117,7 +117,7 @@ version required: >= 0.0.0
 #[test]
 fn wrong_version() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -153,7 +153,7 @@ versions found: 0.0.4, 0.0.3, 0.0.2, ...
 #[test]
 fn bad_cksum() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -187,7 +187,7 @@ fn update_registry() {
     Package::new("init", "0.0.1").publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -224,7 +224,7 @@ fn package_with_path_deps() {
     Package::new("init", "0.0.1").publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -238,7 +238,7 @@ fn package_with_path_deps() {
             path = "notyet"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("notyet/Cargo.toml", r#"
+        .file("notyet/Baler.toml", r#"
             [package]
             name = "notyet"
             version = "0.0.1"
@@ -274,7 +274,7 @@ version required: ^0.0.1
 #[test]
 fn lockfile_locks() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -308,7 +308,7 @@ fn lockfile_locks() {
 #[test]
 fn lockfile_locks_transitively() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -346,7 +346,7 @@ fn lockfile_locks_transitively() {
 #[test]
 fn yanks_are_not_used() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -379,7 +379,7 @@ fn yanks_are_not_used() {
 #[test]
 fn relying_on_a_yank_is_bad() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -406,7 +406,7 @@ versions found: 0.0.1
 #[test]
 fn yanks_in_lockfiles_are_ok() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -441,7 +441,7 @@ version required: *
 #[test]
 fn update_with_lockfile_if_packages_missing() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -470,7 +470,7 @@ fn update_with_lockfile_if_packages_missing() {
 #[test]
 fn update_lockfile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -551,7 +551,7 @@ fn update_lockfile() {
 #[test]
 fn dev_dependency_not_used() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -602,7 +602,7 @@ fn login_with_differently_sized_token() {
 fn bad_license_file() {
     Package::new("foo", "1.0.0").publish();
     let p = project("all")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -625,7 +625,7 @@ fn bad_license_file() {
 #[test]
 fn updating_a_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -635,7 +635,7 @@ fn updating_a_dep() {
             path = "a"
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.0.1"
@@ -660,7 +660,7 @@ fn updating_a_dep() {
 ",
    dir = p.url())));
 
-    t!(t!(File::create(&p.root().join("a/Cargo.toml"))).write_all(br#"
+    t!(t!(File::create(&p.root().join("a/Baler.toml"))).write_all(br#"
         [project]
         name = "a"
         version = "0.0.1"
@@ -687,7 +687,7 @@ fn updating_a_dep() {
 #[test]
 fn git_and_registry_dep() {
     let b = git::repo(&paths::root().join("b"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "b"
             version = "0.0.1"
@@ -699,7 +699,7 @@ fn git_and_registry_dep() {
         .file("src/lib.rs", "");
     b.build();
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -737,10 +737,10 @@ fn git_and_registry_dep() {
 
 #[test]
 fn update_publish_then_update() {
-    // First generate a Cargo.lock and a clone of the registry index at the
+    // First generate a Baler.lock and a clone of the registry index at the
     // "head" of the current registry.
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -762,10 +762,10 @@ fn update_publish_then_update() {
     let backup = paths::root().join("registry-backup");
     t!(fs::rename(&registry, &backup));
 
-    // Generate a Cargo.lock with the newer version, and then move the old copy
+    // Generate a Baler.lock with the newer version, and then move the old copy
     // of the registry back into place.
     let p2 = project("foo2")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -779,9 +779,9 @@ fn update_publish_then_update() {
                 execs().with_status(0));
     registry.rm_rf();
     t!(fs::rename(&backup, &registry));
-    t!(fs::rename(p2.root().join("Cargo.lock"), p.root().join("Cargo.lock")));
+    t!(fs::rename(p2.root().join("Baler.lock"), p.root().join("Baler.lock")));
 
-    // Finally, build the first project again (with our newer Cargo.lock) which
+    // Finally, build the first project again (with our newer Baler.lock) which
     // should force an update of the old registry, download the new crate, and
     // then build everything again.
     assert_that(p.baler("build"),
@@ -799,7 +799,7 @@ fn update_publish_then_update() {
 #[test]
 fn fetch_downloads() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -824,7 +824,7 @@ fn fetch_downloads() {
 #[test]
 fn update_transitive_dependency() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -865,7 +865,7 @@ fn update_transitive_dependency() {
 #[test]
 fn update_backtracking_ok() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -902,7 +902,7 @@ fn update_backtracking_ok() {
 #[test]
 fn update_multiple_packages() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -963,7 +963,7 @@ fn update_multiple_packages() {
 #[test]
 fn bundled_crate_in_registry() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -979,7 +979,7 @@ fn bundled_crate_in_registry() {
     Package::new("bar", "0.1.0").publish();
     Package::new("baz", "0.1.0")
         .dep("bar", "0.1.0")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.1.0"
@@ -989,7 +989,7 @@ fn bundled_crate_in_registry() {
             bar = { path = "bar", version = "0.1.0" }
         "#)
         .file("src/lib.rs", "")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -1004,7 +1004,7 @@ fn bundled_crate_in_registry() {
 #[test]
 fn update_same_prefix_oh_my_how_was_this_a_bug() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "ugh"
             version = "0.5.0"
@@ -1029,7 +1029,7 @@ fn update_same_prefix_oh_my_how_was_this_a_bug() {
 #[test]
 fn use_semver() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1049,7 +1049,7 @@ fn use_semver() {
 #[test]
 fn only_download_relevant() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1082,7 +1082,7 @@ fn only_download_relevant() {
 #[test]
 fn resolve_and_backtracking() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1106,7 +1106,7 @@ fn resolve_and_backtracking() {
 #[test]
 fn upstream_warnings_on_extra_verbose() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1131,7 +1131,7 @@ fn upstream_warnings_on_extra_verbose() {
 #[test]
 fn disallow_network() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1158,7 +1158,7 @@ Caused by:
 #[test]
 fn add_dep_dont_update_registry() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1168,7 +1168,7 @@ fn add_dep_dont_update_registry() {
             baz = { path = "baz" }
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.5.0"
@@ -1184,7 +1184,7 @@ fn add_dep_dont_update_registry() {
 
     assert_that(p.baler("build"), execs().with_status(0));
 
-    t!(t!(File::create(p.root().join("Cargo.toml"))).write_all(br#"
+    t!(t!(File::create(p.root().join("Baler.toml"))).write_all(br#"
         [project]
         name = "bar"
         version = "0.5.0"
@@ -1206,7 +1206,7 @@ fn add_dep_dont_update_registry() {
 #[test]
 fn bump_version_dont_update_registry() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1216,7 +1216,7 @@ fn bump_version_dont_update_registry() {
             baz = { path = "baz" }
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.5.0"
@@ -1232,7 +1232,7 @@ fn bump_version_dont_update_registry() {
 
     assert_that(p.baler("build"), execs().with_status(0));
 
-    t!(t!(File::create(p.root().join("Cargo.toml"))).write_all(br#"
+    t!(t!(File::create(p.root().join("Baler.toml"))).write_all(br#"
         [project]
         name = "bar"
         version = "0.6.0"
@@ -1253,7 +1253,7 @@ fn bump_version_dont_update_registry() {
 #[test]
 fn old_version_req() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1301,7 +1301,7 @@ this warning.
 #[test]
 fn old_version_req_upstream() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1314,7 +1314,7 @@ fn old_version_req_upstream() {
     p.build();
 
     Package::new("remote", "0.3.0")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "remote"
                 version = "0.3.0"
@@ -1353,7 +1353,7 @@ fn toml_lies_but_index_is_truth() {
     Package::new("foo", "0.2.0").publish();
     Package::new("bar", "0.3.0")
             .dep("foo", "0.2.0")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "bar"
                 version = "0.3.0"
@@ -1366,7 +1366,7 @@ fn toml_lies_but_index_is_truth() {
             .publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.5.0"
@@ -1393,7 +1393,7 @@ fn vv_prints_warnings() {
             .publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "fo"
             version = "0.5.0"

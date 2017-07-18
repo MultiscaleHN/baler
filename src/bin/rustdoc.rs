@@ -62,8 +62,8 @@ Options:
     -q, --quiet              No output printed to stdout
     --color WHEN             Coloring: auto, always, never
     --message-format FMT     Error format: human, json [default: human]
-    --frozen                 Require Cargo.lock and cache are up to date
-    --locked                 Require Cargo.lock is up to date
+    --frozen                 Require Baler.lock and cache are up to date
+    --locked                 Require Baler.lock is up to date
 
 The specified target for the current package (or package specified by SPEC if
 provided) will be documented with the specified <opts>... being passed to the

@@ -100,7 +100,7 @@ fn no_crate() {
 [ERROR] `[..]` is not a crate root; specify a crate to install [..]
 
 Caused by:
-  failed to read `[..]Cargo.toml`
+  failed to read `[..]Baler.toml`
 
 Caused by:
   [..] (os error [..])
@@ -159,7 +159,7 @@ fn install_location_precedence() {
 #[test]
 fn install_path() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -182,14 +182,14 @@ Add --force to overwrite
 #[test]
 fn multiple_crates_error() {
     let p = git::repo(&paths::root().join("foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
             authors = []
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -208,14 +208,14 @@ fn multiple_crates_error() {
 #[test]
 fn multiple_crates_select() {
     let p = git::repo(&paths::root().join("foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
             authors = []
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -239,7 +239,7 @@ fn multiple_crates_select() {
 #[test]
 fn multiple_crates_auto_binaries() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -249,7 +249,7 @@ fn multiple_crates_auto_binaries() {
             bar = { path = "a" }
         "#)
         .file("src/main.rs", "extern crate bar; fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -266,7 +266,7 @@ fn multiple_crates_auto_binaries() {
 #[test]
 fn multiple_crates_auto_examples() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -281,7 +281,7 @@ fn multiple_crates_auto_examples() {
             extern crate foo;
             fn main() {}
         ")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -299,7 +299,7 @@ fn multiple_crates_auto_examples() {
 #[test]
 fn no_binaries_or_examples() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -309,7 +309,7 @@ fn no_binaries_or_examples() {
             bar = { path = "a" }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -327,7 +327,7 @@ fn no_binaries_or_examples() {
 #[test]
 fn no_binaries() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -347,7 +347,7 @@ fn no_binaries() {
 #[test]
 fn examples() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -366,7 +366,7 @@ fn examples() {
 #[test]
 fn install_twice() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -390,7 +390,7 @@ Add --force to overwrite
 #[test]
 fn install_force() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -403,7 +403,7 @@ fn install_force() {
                 execs().with_status(0));
 
     let p = project("foo2")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.2.0"
@@ -432,7 +432,7 @@ foo v0.2.0 ([..]):
 #[test]
 fn install_force_partial_overlap() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -446,7 +446,7 @@ fn install_force_partial_overlap() {
                 execs().with_status(0));
 
     let p = project("foo2")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.2.0"
@@ -480,7 +480,7 @@ foo v0.2.0 ([..]):
 #[test]
 fn install_force_bin() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -494,7 +494,7 @@ fn install_force_bin() {
                 execs().with_status(0));
 
     let p = project("foo2")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.2.0"
@@ -530,7 +530,7 @@ foo v0.2.0 ([..]):
 #[test]
 fn compile_failure() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -554,7 +554,7 @@ To learn more, run the command again with --verbose.
 #[test]
 fn git_repo() {
     let p = git::repo(&paths::root().join("foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -623,7 +623,7 @@ fn uninstall_bin_does_not_exist() {
 #[test]
 fn uninstall_piecemeal() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -678,7 +678,7 @@ fn subcommand_works_out_of_the_box() {
 #[test]
 fn installs_from_cwd_by_default() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -695,7 +695,7 @@ fn installs_from_cwd_by_default() {
 #[test]
 fn do_not_rebuilds_on_local_install() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -739,7 +739,7 @@ thread '[..]' panicked at 'explicit panic', [..]
 #[test]
 fn git_with_lockfile() {
     let p = git::repo(&paths::root().join("foo"))
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -749,14 +749,14 @@ fn git_with_lockfile() {
             bar = { path = "bar" }
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
             authors = []
         "#)
         .file("bar/src/lib.rs", "fn main() {}")
-        .file("Cargo.lock", r#"
+        .file("Baler.lock", r#"
             [root]
             name = "foo"
             version = "0.1.0"
@@ -775,7 +775,7 @@ fn git_with_lockfile() {
 #[test]
 fn q_silences_warnings() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -808,7 +808,7 @@ fn readonly_dir() {
 fn use_path_workspace() {
     Package::new("foo", "1.0.0").publish();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.1.0"
@@ -818,7 +818,7 @@ fn use_path_workspace() {
             members = ["baz"]
         "#)
         .file("src/main.rs", "fn main() {}")
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [package]
             name = "baz"
             version = "0.1.0"

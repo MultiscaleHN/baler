@@ -7,7 +7,7 @@ use hamcrest::assert_that;
 #[test]
 fn net_retry_loads_from_config() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -32,7 +32,7 @@ fn net_retry_loads_from_config() {
 #[test]
 fn net_retry_git_outputs_warning() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"

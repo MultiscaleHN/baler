@@ -27,14 +27,14 @@ fn pkg(name: &str, vers: &str) {
 #[test]
 fn multiple_installs() {
     let p = project("foo")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
             version = "0.0.0"
         "#)
         .file("a/src/main.rs", "fn main() {}")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "bar"
             authors = []
@@ -94,14 +94,14 @@ fn concurrent_installs() {
 #[test]
 fn one_install_should_be_bad() {
     let p = project("foo")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
             version = "0.0.0"
         "#)
         .file("a/src/main.rs", "fn main() {}")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -144,7 +144,7 @@ fn multiple_registry_fetches() {
     pkg.publish();
 
     let p = project("foo")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -154,7 +154,7 @@ fn multiple_registry_fetches() {
             bar = "*"
         "#)
         .file("a/src/main.rs", "fn main() {}")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "bar"
             authors = []
@@ -191,7 +191,7 @@ fn multiple_registry_fetches() {
 #[test]
 fn git_same_repo_different_tags() {
     let a = git::new("dep", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [project]
             name = "dep"
             version = "0.5.0"
@@ -209,7 +209,7 @@ fn git_same_repo_different_tags() {
     git::tag(&repo, "tag2");
 
     let p = project("foo")
-        .file("a/Cargo.toml", &format!(r#"
+        .file("a/Baler.toml", &format!(r#"
             [package]
             name = "foo"
             authors = []
@@ -219,7 +219,7 @@ fn git_same_repo_different_tags() {
             dep = {{ git = '{}', tag = 'tag1' }}
         "#, a.url()))
         .file("a/src/main.rs", "extern crate dep; fn main() { dep::tag1(); }")
-        .file("b/Cargo.toml", &format!(r#"
+        .file("b/Baler.toml", &format!(r#"
             [package]
             name = "bar"
             authors = []
@@ -250,7 +250,7 @@ fn git_same_repo_different_tags() {
 #[test]
 fn git_same_branch_different_revs() {
     let a = git::new("dep", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [project]
             name = "dep"
             version = "0.5.0"
@@ -259,7 +259,7 @@ fn git_same_branch_different_revs() {
     }).unwrap();
 
     let p = project("foo")
-        .file("a/Cargo.toml", &format!(r#"
+        .file("a/Baler.toml", &format!(r#"
             [package]
             name = "foo"
             authors = []
@@ -269,7 +269,7 @@ fn git_same_branch_different_revs() {
             dep = {{ git = '{}' }}
         "#, a.url()))
         .file("a/src/main.rs", "extern crate dep; fn main() { dep::f1(); }")
-        .file("b/Cargo.toml", &format!(r#"
+        .file("b/Baler.toml", &format!(r#"
             [package]
             name = "bar"
             authors = []
@@ -281,7 +281,7 @@ fn git_same_branch_different_revs() {
         .file("b/src/main.rs", "extern crate dep; fn main() { dep::f2(); }");
     p.build();
 
-    // Generate a Cargo.lock pointing at the current rev, then clear out the
+    // Generate a Baler.lock pointing at the current rev, then clear out the
     // target directory
     assert_that(p.baler("build").cwd(p.root().join("a")),
                 execs().with_status(0));
@@ -315,7 +315,7 @@ fn git_same_branch_different_revs() {
 #[test]
 fn same_project() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -348,7 +348,7 @@ fn same_project() {
 #[cfg_attr(target_os = "windows", ignore)]
 fn killing_baler_releases_the_lock() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -401,7 +401,7 @@ fn killing_baler_releases_the_lock() {
 #[test]
 fn debug_release_ok() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -436,7 +436,7 @@ fn debug_release_ok() {
 #[test]
 fn no_deadlock_with_git_dependencies() {
     let dep1 = git::new("dep1", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [project]
             name = "dep1"
             version = "0.5.0"
@@ -445,7 +445,7 @@ fn no_deadlock_with_git_dependencies() {
     }).unwrap();
 
     let dep2 = git::new("dep2", |project| {
-        project.file("Cargo.toml", r#"
+        project.file("Baler.toml", r#"
             [project]
             name = "dep2"
             version = "0.5.0"
@@ -454,7 +454,7 @@ fn no_deadlock_with_git_dependencies() {
     }).unwrap();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [package]
             name = "foo"
             authors = []

@@ -13,7 +13,7 @@ use hamcrest::{assert_that, existing_file, existing_dir};
 #[test]
 fn custom_build_script_failed() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -43,7 +43,7 @@ url = p.url())));
 #[test]
 fn custom_build_env_vars() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -59,7 +59,7 @@ fn custom_build_env_vars() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -121,7 +121,7 @@ fn custom_build_env_vars() {
 #[test]
 fn custom_build_script_wrong_rustc_flags() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -150,7 +150,7 @@ p.url())));
 #[test]
 fn custom_build_script_rustc_flags() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
 
             name = "bar"
@@ -163,7 +163,7 @@ fn custom_build_script_rustc_flags() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("foo/Cargo.toml", r#"
+        .file("foo/Baler.toml", r#"
             [project]
 
             name = "foo"
@@ -201,7 +201,7 @@ url = p.url(),
 #[test]
 fn links_no_build_cmd() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -221,7 +221,7 @@ not have a custom build script
 #[test]
 fn links_duplicates() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -234,7 +234,7 @@ fn links_duplicates() {
         "#)
         .file("src/lib.rs", "")
         .file("build.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -261,7 +261,7 @@ fn overrides_and_links() {
     let target = rustc_host();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -287,7 +287,7 @@ fn overrides_and_links() {
             foo = "bar"
             bar = "baz"
         "#, target))
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -316,7 +316,7 @@ fn unused_overrides() {
     let target = rustc_host();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -339,7 +339,7 @@ fn unused_overrides() {
 #[test]
 fn links_passes_env_vars() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -357,7 +357,7 @@ fn links_passes_env_vars() {
                 assert_eq!(env::var("DEP_FOO_BAR").unwrap(), "baz");
             }
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -384,7 +384,7 @@ fn links_passes_env_vars() {
 #[test]
 fn only_rerun_build_script() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -416,7 +416,7 @@ fn only_rerun_build_script() {
 #[test]
 fn rebuild_continues_to_pass_env_vars() {
     let a = project("a")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -437,7 +437,7 @@ fn rebuild_continues_to_pass_env_vars() {
     a.root().move_into_the_past();
 
     let p = project("foo")
-        .file("Cargo.toml", &format!(r#"
+        .file("Baler.toml", &format!(r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -470,7 +470,7 @@ fn rebuild_continues_to_pass_env_vars() {
 #[test]
 fn testing_and_such() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -529,7 +529,7 @@ fn testing_and_such() {
 fn propagation_of_l_flags() {
     let target = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -538,7 +538,7 @@ fn propagation_of_l_flags() {
             path = "a"
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -555,7 +555,7 @@ fn propagation_of_l_flags() {
                 println!("baler:rustc-flags=-L bar");
             }
         "#)
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -583,7 +583,7 @@ fn propagation_of_l_flags() {
 fn propagation_of_l_flags_new() {
     let target = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -592,7 +592,7 @@ fn propagation_of_l_flags_new() {
             path = "a"
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -609,7 +609,7 @@ fn propagation_of_l_flags_new() {
                 println!("baler:rustc-link-search=bar");
             }
         "#)
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -636,7 +636,7 @@ fn propagation_of_l_flags_new() {
 #[test]
 fn build_deps_simple() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -650,7 +650,7 @@ fn build_deps_simple() {
             extern crate a;
             fn main() {}
         ")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -675,7 +675,7 @@ fn build_deps_simple() {
 fn build_deps_not_for_normal() {
     let target = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -689,7 +689,7 @@ fn build_deps_not_for_normal() {
             extern crate aaaaa;
             fn main() {}
         ")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "aaaaa"
             version = "0.5.0"
@@ -713,7 +713,7 @@ Caused by:
 #[test]
 fn build_cmd_with_a_build_cmd() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -728,7 +728,7 @@ fn build_cmd_with_a_build_cmd() {
             extern crate a;
             fn main() {}
         ")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -740,7 +740,7 @@ fn build_cmd_with_a_build_cmd() {
         "#)
         .file("a/src/lib.rs", "")
         .file("a/build.rs", "extern crate b; fn main() {}")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -780,7 +780,7 @@ fn build_cmd_with_a_build_cmd() {
 #[test]
 fn out_dir_is_preserved() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -829,7 +829,7 @@ fn out_dir_is_preserved() {
 #[test]
 fn output_separate_lines() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -857,7 +857,7 @@ fn output_separate_lines() {
 #[test]
 fn output_separate_lines_new() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -886,7 +886,7 @@ fn output_separate_lines_new() {
 #[test]
 fn code_generation() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -935,7 +935,7 @@ Hello, World!
 #[test]
 fn release_with_build_script() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -954,7 +954,7 @@ fn release_with_build_script() {
 #[test]
 fn build_script_only() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
               [project]
               name = "foo"
               version = "0.0.0"
@@ -975,7 +975,7 @@ Caused by:
 #[test]
 fn shared_dep_with_a_build_script() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -990,7 +990,7 @@ fn shared_dep_with_a_build_script() {
         "#)
         .file("src/lib.rs", "")
         .file("build.rs", "fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.5.0"
@@ -999,7 +999,7 @@ fn shared_dep_with_a_build_script() {
         "#)
         .file("a/build.rs", "fn main() {}")
         .file("a/src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.5.0"
@@ -1016,7 +1016,7 @@ fn shared_dep_with_a_build_script() {
 #[test]
 fn transitive_dep_host() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1028,7 +1028,7 @@ fn transitive_dep_host() {
         "#)
         .file("src/lib.rs", "")
         .file("build.rs", "fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.5.0"
@@ -1038,7 +1038,7 @@ fn transitive_dep_host() {
         "#)
         .file("a/build.rs", "fn main() {}")
         .file("a/src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.5.0"
@@ -1059,7 +1059,7 @@ fn transitive_dep_host() {
 #[test]
 fn test_a_lib_with_a_build_command() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1096,7 +1096,7 @@ fn test_a_lib_with_a_build_command() {
 #[test]
 fn test_dev_dep_build_script() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1106,7 +1106,7 @@ fn test_dev_dep_build_script() {
             path = "a"
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -1123,14 +1123,14 @@ fn test_dev_dep_build_script() {
 fn build_script_with_dynamic_native_dependency() {
 
     let workspace = project("ws")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["builder", "foo"]
         "#);
     workspace.build();
 
     let build = project("ws/builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -1148,7 +1148,7 @@ fn build_script_with_dynamic_native_dependency() {
     build.build();
 
     let foo = project("ws/foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1163,7 +1163,7 @@ fn build_script_with_dynamic_native_dependency() {
             fn main() { bar::bar() }
         "#)
         .file("src/lib.rs", "")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -1202,7 +1202,7 @@ fn build_script_with_dynamic_native_dependency() {
 #[test]
 fn profile_and_opt_level_set_correctly() {
     let build = project("builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -1226,7 +1226,7 @@ fn profile_and_opt_level_set_correctly() {
 #[test]
 fn build_script_with_lto() {
     let build = project("builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -1248,7 +1248,7 @@ fn build_script_with_lto() {
 #[test]
 fn test_duplicate_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -1269,7 +1269,7 @@ fn test_duplicate_deps() {
             extern crate bar;
             fn main() { bar::do_nothing() }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -1283,7 +1283,7 @@ fn test_duplicate_deps() {
 #[test]
 fn cfg_feedback() {
     let build = project("builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -1308,7 +1308,7 @@ fn cfg_override() {
     let target = rustc_host();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1333,7 +1333,7 @@ fn cfg_override() {
 #[test]
 fn cfg_test() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1390,7 +1390,7 @@ fn cfg_test() {
 #[test]
 fn cfg_doc() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1409,7 +1409,7 @@ fn cfg_doc() {
             #[cfg(foo)]
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -1435,7 +1435,7 @@ fn cfg_doc() {
 #[test]
 fn cfg_override_test() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1491,7 +1491,7 @@ fn cfg_override_test() {
 #[test]
 fn cfg_override_doc() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1513,7 +1513,7 @@ fn cfg_override_doc() {
             #[cfg(foo)]
             pub fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -1536,7 +1536,7 @@ fn cfg_override_doc() {
 #[test]
 fn env_build() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1563,7 +1563,7 @@ fn env_build() {
 #[test]
 fn env_test() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1606,7 +1606,7 @@ fn env_test() {
 #[test]
 fn env_doc() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1629,7 +1629,7 @@ fn env_doc() {
 #[test]
 fn flags_go_into_tests() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1640,7 +1640,7 @@ fn flags_go_into_tests() {
         "#)
         .file("src/lib.rs", "")
         .file("tests/foo.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -1649,7 +1649,7 @@ fn flags_go_into_tests() {
             a = { path = "../a" }
         "#)
         .file("b/src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -1693,7 +1693,7 @@ fn flags_go_into_tests() {
 #[test]
 fn diamond_passes_args_only_once() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1705,7 +1705,7 @@ fn diamond_passes_args_only_once() {
         "#)
         .file("src/lib.rs", "")
         .file("tests/foo.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -1715,7 +1715,7 @@ fn diamond_passes_args_only_once() {
             c = { path = "../c" }
         "#)
         .file("a/src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -1724,7 +1724,7 @@ fn diamond_passes_args_only_once() {
             c = { path = "../c" }
         "#)
         .file("b/src/lib.rs", "")
-        .file("c/Cargo.toml", r#"
+        .file("c/Baler.toml", r#"
             [project]
             name = "c"
             version = "0.5.0"
@@ -1758,7 +1758,7 @@ fn diamond_passes_args_only_once() {
 fn adding_an_override_invalidates() {
     let target = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1800,7 +1800,7 @@ fn adding_an_override_invalidates() {
 fn changing_an_override_invalidates() {
     let target = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1841,7 +1841,7 @@ fn fresh_builds_possible_with_link_libs() {
     // The bug is non-deterministic. Sometimes you can get a fresh build
     let target = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1880,7 +1880,7 @@ fn fresh_builds_possible_with_multiple_metadata_overrides() {
     // The bug is non-deterministic. Sometimes you can get a fresh build
     let target = rustc_host();
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -1919,7 +1919,7 @@ fn fresh_builds_possible_with_multiple_metadata_overrides() {
 #[test]
 fn rebuild_only_on_explicit_paths() {
     let p = project("a")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -2007,7 +2007,7 @@ fn rebuild_only_on_explicit_paths() {
 #[test]
 fn doctest_recieves_build_link_args() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2016,7 +2016,7 @@ fn doctest_recieves_build_link_args() {
             path = "a"
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -2041,7 +2041,7 @@ fn doctest_recieves_build_link_args() {
 #[test]
 fn please_respect_the_dag() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2057,7 +2057,7 @@ fn please_respect_the_dag() {
                 println!("baler:rustc-link-search=native=foo");
             }
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -2082,7 +2082,7 @@ fn please_respect_the_dag() {
 #[test]
 fn non_utf8_output() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2116,7 +2116,7 @@ fn non_utf8_output() {
 #[test]
 fn custom_target_dir() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2130,7 +2130,7 @@ fn custom_target_dir() {
             [build]
             target-dir = 'test'
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -2147,7 +2147,7 @@ fn custom_target_dir() {
 #[test]
 fn panic_abort_with_build_scripts() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2160,7 +2160,7 @@ fn panic_abort_with_build_scripts() {
             a = { path = "a" }
         "#)
         .file("src/lib.rs", "extern crate a;")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.5.0"
@@ -2172,7 +2172,7 @@ fn panic_abort_with_build_scripts() {
         "#)
         .file("a/src/lib.rs", "")
         .file("a/build.rs", "extern crate b; fn main() {}")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.5.0"
@@ -2187,7 +2187,7 @@ fn panic_abort_with_build_scripts() {
 #[test]
 fn warnings_emitted() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2224,7 +2224,7 @@ fn warnings_hidden_for_upstream() {
                     println!("baler:warning=bar");
                 }
             "#)
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "bar"
                 version = "0.1.0"
@@ -2235,7 +2235,7 @@ fn warnings_hidden_for_upstream() {
             .publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2270,7 +2270,7 @@ fn warnings_printed_on_vv() {
                     println!("baler:warning=bar");
                 }
             "#)
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "bar"
                 version = "0.1.0"
@@ -2281,7 +2281,7 @@ fn warnings_printed_on_vv() {
             .publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2312,7 +2312,7 @@ warning: bar
 #[test]
 fn output_shows_on_vv() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2349,7 +2349,7 @@ fn links_with_dots() {
     let target = rustc_host();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.5.0"
@@ -2378,7 +2378,7 @@ fn links_with_dots() {
 #[test]
 fn rustc_and_rustdoc_set_correctly() {
     let build = project("builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -2401,7 +2401,7 @@ fn rustc_and_rustdoc_set_correctly() {
 #[test]
 fn cfg_env_vars_available() {
     let build = project("builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -2428,7 +2428,7 @@ fn cfg_env_vars_available() {
 #[test]
 fn switch_features_rerun() {
     let build = project("builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -2474,7 +2474,7 @@ fn switch_features_rerun() {
 #[test]
 fn assume_build_script_when_build_rs_present() {
     let p = project("builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -2501,7 +2501,7 @@ fn assume_build_script_when_build_rs_present() {
 #[test]
 fn if_build_set_to_false_dont_treat_build_rs_as_build_script() {
     let p = project("builder")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "builder"
             version = "0.0.1"
@@ -2532,7 +2532,7 @@ fn deterministic_rustc_dependency_flags() {
     // in the hopes it will have a much higher chance of triggering it.
 
     Package::new("dep1", "0.1.0")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "dep1"
                 version = "0.1.0"
@@ -2547,7 +2547,7 @@ fn deterministic_rustc_dependency_flags() {
             .file("src/lib.rs", "")
             .publish();
     Package::new("dep2", "0.1.0")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "dep2"
                 version = "0.1.0"
@@ -2562,7 +2562,7 @@ fn deterministic_rustc_dependency_flags() {
             .file("src/lib.rs", "")
             .publish();
     Package::new("dep3", "0.1.0")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "dep3"
                 version = "0.1.0"
@@ -2577,7 +2577,7 @@ fn deterministic_rustc_dependency_flags() {
             .file("src/lib.rs", "")
             .publish();
     Package::new("dep4", "0.1.0")
-            .file("Cargo.toml", r#"
+            .file("Baler.toml", r#"
                 [project]
                 name = "dep4"
                 version = "0.1.0"
@@ -2593,7 +2593,7 @@ fn deterministic_rustc_dependency_flags() {
             .publish();
 
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"

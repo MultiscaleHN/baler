@@ -231,7 +231,7 @@ fn detect_source_paths_and_types(project_path : &Path,
 multiple possible binary sources found:
   {}
   {}
-cannot automatically generate Cargo.toml as the main target would be ambiguous",
+cannot automatically generate Baler.toml as the main target would be ambiguous",
                       &x.relative_path, &i.relative_path);
             }
             duplicates_checker.insert(i.target_name.as_ref(), i);
@@ -296,7 +296,7 @@ pub fn new(opts: NewOptions, config: &Config) -> CargoResult<()> {
 pub fn init(opts: NewOptions, config: &Config) -> CargoResult<()> {
     let path = config.cwd().join(opts.path);
 
-    let balertoml_path = path.join("Cargo.toml");
+    let balertoml_path = path.join("Baler.toml");
     if fs::metadata(&balertoml_path).is_ok() {
         bail!("`baler init` cannot be run on existing Cargo projects")
     }
@@ -391,7 +391,7 @@ fn mk(config: &Config, opts: &MkOptions) -> CargoResult<()> {
     let name = opts.name;
     let cfg = global_config(config)?;
     let ignore = ["/target/\n", "**/*.rs.bk\n",
-        if !opts.bin { "Cargo.lock\n" } else { "" }]
+        if !opts.bin { "Baler.lock\n" } else { "" }]
         .concat();
 
     let in_existing_vcs_repo = existing_vcs_repo(path.parent().unwrap(), config.cwd());
@@ -443,7 +443,7 @@ fn mk(config: &Config, opts: &MkOptions) -> CargoResult<()> {
 
     let mut balertoml_path_specifier = String::new();
 
-    // Calculate what [lib] and [[bin]]s do we need to append to Cargo.toml
+    // Calculate what [lib] and [[bin]]s do we need to append to Baler.toml
 
     for i in &opts.source_files {
         if i.bin {
@@ -465,9 +465,9 @@ path = {}
         }
     }
 
-    // Create Cargo.toml file with necessary [lib] and [[bin]] sections, if needed
+    // Create Baler.toml file with necessary [lib] and [[bin]] sections, if needed
 
-    paths::write(&path.join("Cargo.toml"), format!(
+    paths::write(&path.join("Baler.toml"), format!(
 r#"[package]
 name = "{}"
 version = "0.1.0"
@@ -510,7 +510,7 @@ mod tests {
         }
     }
 
-    if let Err(e) = Workspace::new(&path.join("Cargo.toml"), config) {
+    if let Err(e) = Workspace::new(&path.join("Baler.toml"), config) {
         let msg = format!("compiling this new crate may not work due to invalid \
                            workspace configuration\n\n{}", e);
         config.shell().warn(msg)?;

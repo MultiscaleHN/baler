@@ -61,7 +61,7 @@ pub fn read_packages(path: &Path, source_id: &SourceId, config: &Config)
     })?;
 
     if all_packages.is_empty() {
-        Err(format!("Could not find Cargo.toml in `{}`", path.display()).into())
+        Err(format!("Could not find Baler.toml in `{}`", path.display()).into())
     } else {
         Ok(all_packages.into_iter().map(|(_, v)| v).collect())
     }
@@ -97,7 +97,7 @@ fn walk(path: &Path, callback: &mut FnMut(&Path) -> CargoResult<bool>)
 }
 
 fn has_manifest(path: &Path) -> bool {
-    find_project_manifest_exact(path, "Cargo.toml").is_ok()
+    find_project_manifest_exact(path, "Baler.toml").is_ok()
 }
 
 fn read_nested_packages(path: &Path,
@@ -107,7 +107,7 @@ fn read_nested_packages(path: &Path,
                         visited: &mut HashSet<PathBuf>) -> CargoResult<()> {
     if !visited.insert(path.to_path_buf()) { return Ok(()) }
 
-    let manifest_path = find_project_manifest_exact(path, "Cargo.toml")?;
+    let manifest_path = find_project_manifest_exact(path, "Baler.toml")?;
 
     let (manifest, nested) = match read_manifest(&manifest_path, source_id, config) {
         Err(_) => {

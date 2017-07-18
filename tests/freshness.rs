@@ -12,7 +12,7 @@ use hamcrest::{assert_that, existing_file};
 #[test]
 fn modifying_and_moving() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -50,7 +50,7 @@ fn modifying_and_moving() {
 #[test]
 fn modify_only_some_files() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -95,7 +95,7 @@ fn modify_only_some_files() {
 #[test]
 fn rebuild_sub_package_then_while_package() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -107,7 +107,7 @@ fn rebuild_sub_package_then_while_package() {
             path = "b"
         "#)
         .file("src/lib.rs", "extern crate a; extern crate b;")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             authors = []
@@ -116,7 +116,7 @@ fn rebuild_sub_package_then_while_package() {
             path = "../b"
         "#)
         .file("a/src/lib.rs", "extern crate b;")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             authors = []
@@ -147,7 +147,7 @@ fn rebuild_sub_package_then_while_package() {
 #[test]
 fn changing_lib_features_caches_targets() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -194,7 +194,7 @@ fn changing_lib_features_caches_targets() {
 #[test]
 fn changing_profiles_caches_targets() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -249,7 +249,7 @@ fn changing_bin_paths_common_target_features_caches_targets() {
             [build]
             target-dir = "./target"
         "#)
-        .file("dep_crate/Cargo.toml", r#"
+        .file("dep_crate/Baler.toml", r#"
             [package]
             name    = "dep_crate"
             version = "0.0.1"
@@ -268,7 +268,7 @@ fn changing_bin_paths_common_target_features_caches_targets() {
                 println!("ftest off")
             }
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name    = "a"
             version = "0.0.1"
@@ -285,7 +285,7 @@ fn changing_bin_paths_common_target_features_caches_targets() {
                 yo();
             }
         "#)
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name    = "b"
             version = "0.0.1"
@@ -375,7 +375,7 @@ fn changing_bin_paths_common_target_features_caches_targets() {
 #[test]
 fn changing_bin_features_caches_targets() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -431,7 +431,7 @@ fn changing_bin_features_caches_targets() {
 #[test]
 fn rebuild_tests_if_lib_changes() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -462,7 +462,7 @@ fn rebuild_tests_if_lib_changes() {
 #[test]
 fn no_rebuild_transitive_target_deps() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -475,7 +475,7 @@ fn no_rebuild_transitive_target_deps() {
         "#)
         .file("src/lib.rs", "")
         .file("tests/foo.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -485,7 +485,7 @@ fn no_rebuild_transitive_target_deps() {
             c = { path = "../c" }
         "#)
         .file("a/src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -495,7 +495,7 @@ fn no_rebuild_transitive_target_deps() {
             c = { path = "../c" }
         "#)
         .file("b/src/lib.rs", "")
-        .file("c/Cargo.toml", r#"
+        .file("c/Baler.toml", r#"
             [package]
             name = "c"
             version = "0.0.1"
@@ -518,7 +518,7 @@ fn no_rebuild_transitive_target_deps() {
 #[test]
 fn rerun_if_changed_in_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -528,7 +528,7 @@ fn rerun_if_changed_in_dep() {
             a = { path = "a" }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -551,7 +551,7 @@ fn rerun_if_changed_in_dep() {
 #[test]
 fn same_build_dir_cached_packages() {
     let p = project("foo")
-        .file("a1/Cargo.toml", r#"
+        .file("a1/Baler.toml", r#"
             [package]
             name = "a1"
             version = "0.0.1"
@@ -560,7 +560,7 @@ fn same_build_dir_cached_packages() {
             b = { path = "../b" }
         "#)
         .file("a1/src/lib.rs", "")
-        .file("a2/Cargo.toml", r#"
+        .file("a2/Baler.toml", r#"
             [package]
             name = "a2"
             version = "0.0.1"
@@ -569,7 +569,7 @@ fn same_build_dir_cached_packages() {
             b = { path = "../b" }
         "#)
         .file("a2/src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -578,7 +578,7 @@ fn same_build_dir_cached_packages() {
             c = { path = "../c" }
         "#)
         .file("b/src/lib.rs", "")
-        .file("c/Cargo.toml", r#"
+        .file("c/Baler.toml", r#"
             [package]
             name = "c"
             version = "0.0.1"
@@ -587,7 +587,7 @@ fn same_build_dir_cached_packages() {
             d = { path = "../d" }
         "#)
         .file("c/src/lib.rs", "")
-        .file("d/Cargo.toml", r#"
+        .file("d/Baler.toml", r#"
             [package]
             name = "d"
             version = "0.0.1"
@@ -618,7 +618,7 @@ fn same_build_dir_cached_packages() {
 #[test]
 fn no_rebuild_if_build_artifacts_move_backwards_in_time() {
     let p = project("backwards_in_time")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "backwards_in_time"
             version = "0.0.1"
@@ -628,7 +628,7 @@ fn no_rebuild_if_build_artifacts_move_backwards_in_time() {
             a = { path = "a" }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -650,7 +650,7 @@ fn no_rebuild_if_build_artifacts_move_backwards_in_time() {
 #[test]
 fn rebuild_if_build_artifacts_move_forward_in_time() {
     let p = project("forwards_in_time")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "forwards_in_time"
             version = "0.0.1"
@@ -660,7 +660,7 @@ fn rebuild_if_build_artifacts_move_forward_in_time() {
             a = { path = "a" }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -684,7 +684,7 @@ fn rebuild_if_build_artifacts_move_forward_in_time() {
 #[test]
 fn rebuild_if_environment_changes() {
     let p = project("env_change")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "env_change"
             description = "old desc"
@@ -705,7 +705,7 @@ fn rebuild_if_environment_changes() {
 [RUNNING] `target[/]debug[/]env_change[EXE]`
 ", dir = p.url())));
 
-    File::create(&p.root().join("Cargo.toml")).unwrap().write_all(br#"
+    File::create(&p.root().join("Baler.toml")).unwrap().write_all(br#"
         [package]
         name = "env_change"
         description = "new desc"

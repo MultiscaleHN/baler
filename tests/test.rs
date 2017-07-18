@@ -16,7 +16,7 @@ use baler::util::process;
 #[test]
 fn baler_test_simple() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn hello() -> &'static str {
                 "hello"
@@ -48,7 +48,7 @@ fn baler_test_simple() {
 #[test]
 fn baler_test_release() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             authors = []
@@ -70,7 +70,7 @@ fn baler_test_release() {
             #[test]
             fn test() { foo::foo(); }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -101,7 +101,7 @@ fn baler_test_overflow_checks() {
         return;
     }
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.5.0"
@@ -133,7 +133,7 @@ fn baler_test_overflow_checks() {
 #[test]
 fn baler_test_verbose() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn main() {}
             #[test] fn test_hello() {}
@@ -151,7 +151,7 @@ fn baler_test_verbose() {
 #[test]
 fn many_similar_names() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -181,7 +181,7 @@ fn many_similar_names() {
 #[test]
 fn baler_test_failing_test_in_bin() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             fn hello() -> &'static str {
                 "hello"
@@ -230,7 +230,7 @@ failures:
 #[test]
 fn baler_test_failing_test_in_test() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_bin_manifest("foo"))
+        .file("Baler.toml", &basic_bin_manifest("foo"))
         .file("src/main.rs", r#"
             pub fn main() {
                 println!("hello");
@@ -275,7 +275,7 @@ failures:
 #[test]
 fn baler_test_failing_test_in_lib() {
     let p = project("foo")
-        .file("Cargo.toml", &basic_lib_manifest("foo"))
+        .file("Baler.toml", &basic_lib_manifest("foo"))
         .file("src/lib.rs", r#"
             #[test]
             fn test_hello() {
@@ -308,7 +308,7 @@ failures:
 #[test]
 fn test_with_lib_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -354,7 +354,7 @@ fn test_with_lib_dep() {
 #[test]
 fn test_with_deep_lib_dep() {
     let p = project("bar")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -376,7 +376,7 @@ fn test_with_deep_lib_dep() {
             }
         ");
     let p2 = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -405,7 +405,7 @@ fn test_with_deep_lib_dep() {
 #[test]
 fn external_test_explicit() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -443,7 +443,7 @@ fn external_test_explicit() {
 #[test]
 fn external_test_named_test() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -465,7 +465,7 @@ fn external_test_named_test() {
 #[test]
 fn external_test_implicit() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -499,7 +499,7 @@ fn external_test_implicit() {
 #[test]
 fn dont_run_examples() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -517,7 +517,7 @@ fn dont_run_examples() {
 #[test]
 fn pass_through_command_line() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -553,7 +553,7 @@ fn pass_through_command_line() {
 #[test]
 fn baler_test_twice() {
     let p = project("test_twice")
-        .file("Cargo.toml", &basic_lib_manifest("test_twice"))
+        .file("Baler.toml", &basic_lib_manifest("test_twice"))
         .file("src/test_twice.rs", r#"
             #![crate_type = "rlib"]
 
@@ -572,7 +572,7 @@ fn baler_test_twice() {
 #[test]
 fn lib_bin_same_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -607,7 +607,7 @@ fn lib_bin_same_name() {
 #[test]
 fn lib_with_standard_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -645,7 +645,7 @@ fn lib_with_standard_name() {
 #[test]
 fn lib_with_standard_name2() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -680,7 +680,7 @@ fn lib_with_standard_name2() {
 #[test]
 fn lib_without_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -714,7 +714,7 @@ fn lib_without_name() {
 #[test]
 fn bin_without_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -751,7 +751,7 @@ Caused by:
 #[test]
 fn bench_without_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -796,7 +796,7 @@ Caused by:
 #[test]
 fn test_without_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -840,7 +840,7 @@ Caused by:
 #[test]
 fn example_without_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "syntax"
             version = "0.0.1"
@@ -884,7 +884,7 @@ Caused by:
 #[test]
 fn bin_there_for_integration() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -912,7 +912,7 @@ fn bin_there_for_integration() {
 #[test]
 fn test_dylib() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -939,7 +939,7 @@ fn test_dylib() {
             #[test]
             fn foo() { the_foo::bar(); }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -976,7 +976,7 @@ fn test_dylib() {
 #[test]
 fn test_twice_with_build_cmd() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1012,7 +1012,7 @@ fn test_twice_with_build_cmd() {
 #[test]
 fn test_then_build() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1041,7 +1041,7 @@ fn test_then_build() {
 #[test]
 fn test_no_run() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1064,7 +1064,7 @@ fn test_no_run() {
 #[test]
 fn test_run_specific_bin_target() {
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1093,7 +1093,7 @@ fn test_run_specific_bin_target() {
 #[test]
 fn test_run_implicit_bin_target() {
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1122,7 +1122,7 @@ fn test_run_implicit_bin_target() {
 #[test]
 fn test_run_specific_test_target() {
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1145,7 +1145,7 @@ fn test_run_specific_test_target() {
 #[test]
 fn test_run_implicit_test_target() {
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1174,7 +1174,7 @@ fn test_run_implicit_test_target() {
 #[test]
 fn test_run_implicit_bench_target() {
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1203,7 +1203,7 @@ fn test_run_implicit_bench_target() {
 #[test]
 fn test_run_implicit_example_target() {
     let prj = project("foo")
-        .file("Cargo.toml" , r#"
+        .file("Baler.toml" , r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1230,7 +1230,7 @@ fn test_run_implicit_example_target() {
 #[test]
 fn test_no_harness() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1261,7 +1261,7 @@ fn test_no_harness() {
 #[test]
 fn selective_testing() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1277,7 +1277,7 @@ fn selective_testing() {
                 doctest = false
         "#)
         .file("src/lib.rs", "")
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -1289,7 +1289,7 @@ fn selective_testing() {
         "#)
         .file("d1/src/lib.rs", "")
         .file("d1/src/main.rs", "extern crate d1; fn main() {}")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.1"
@@ -1336,7 +1336,7 @@ fn selective_testing() {
 #[test]
 fn almost_cyclic_but_not_quite() {
     let p = project("a")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -1351,7 +1351,7 @@ fn almost_cyclic_but_not_quite() {
             #[cfg(test)] extern crate b;
             #[cfg(test)] extern crate c;
         "#)
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -1363,7 +1363,7 @@ fn almost_cyclic_but_not_quite() {
         .file("b/src/lib.rs", r#"
             extern crate a;
         "#)
-        .file("c/Cargo.toml", r#"
+        .file("c/Baler.toml", r#"
             [package]
             name = "c"
             version = "0.0.1"
@@ -1379,7 +1379,7 @@ fn almost_cyclic_but_not_quite() {
 #[test]
 fn build_then_selective_test() {
     let p = project("a")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -1390,7 +1390,7 @@ fn build_then_selective_test() {
         "#)
         .file("src/lib.rs", "extern crate b;")
         .file("src/main.rs", "extern crate b; extern crate a; fn main() {}")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -1407,7 +1407,7 @@ fn build_then_selective_test() {
 #[test]
 fn example_dev_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.0.1"
@@ -1422,7 +1422,7 @@ fn example_dev_dep() {
             extern crate bar;
             fn main() { }
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -1453,7 +1453,7 @@ fn example_dev_dep() {
 #[test]
 fn selective_testing_with_docs() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1468,7 +1468,7 @@ fn selective_testing_with_docs() {
             /// ```
             pub fn foo() {}
         "#)
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -1494,7 +1494,7 @@ fn selective_testing_with_docs() {
 #[test]
 fn example_bin_same_name() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1533,7 +1533,7 @@ bin
 #[test]
 fn test_with_example_twice() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1555,7 +1555,7 @@ fn test_with_example_twice() {
 #[test]
 fn example_with_dev_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1571,7 +1571,7 @@ fn example_with_dev_dep() {
         "#)
         .file("src/lib.rs", "")
         .file("examples/ex.rs", "extern crate a; fn main() {}")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -1594,7 +1594,7 @@ fn example_with_dev_dep() {
 #[test]
 fn bin_is_preserved() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1616,7 +1616,7 @@ fn bin_is_preserved() {
 #[test]
 fn bad_example() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1638,7 +1638,7 @@ fn bad_example() {
 #[test]
 fn doctest_feature() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1668,7 +1668,7 @@ fn doctest_feature() {
 #[test]
 fn dashes_to_underscores() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo-bar"
             version = "0.0.1"
@@ -1688,7 +1688,7 @@ fn dashes_to_underscores() {
 #[test]
 fn doctest_dev_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1703,7 +1703,7 @@ fn doctest_dev_dep() {
             /// ```
             pub fn foo() {}
         "#)
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [package]
             name = "b"
             version = "0.0.1"
@@ -1718,7 +1718,7 @@ fn doctest_dev_dep() {
 #[test]
 fn filter_no_doc_tests() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1743,7 +1743,7 @@ fn filter_no_doc_tests() {
 #[test]
 fn dylib_doctest() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1773,7 +1773,7 @@ fn dylib_doctest() {
 fn dylib_doctest2() {
     // can't doctest dylibs as they're statically linked together
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1798,7 +1798,7 @@ fn dylib_doctest2() {
 #[test]
 fn cyclic_dev_dep_doc_test() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1812,7 +1812,7 @@ fn cyclic_dev_dep_doc_test() {
             //! extern crate bar;
             //! ```
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -1838,7 +1838,7 @@ fn cyclic_dev_dep_doc_test() {
 #[test]
 fn dev_dep_with_build_script() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1849,7 +1849,7 @@ fn dev_dep_with_build_script() {
         "#)
         .file("src/lib.rs", "")
         .file("examples/foo.rs", "fn main() {}")
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -1865,7 +1865,7 @@ fn dev_dep_with_build_script() {
 #[test]
 fn no_fail_fast() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1926,7 +1926,7 @@ fn no_fail_fast() {
 #[test]
 fn test_multiple_packages() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -1942,7 +1942,7 @@ fn test_multiple_packages() {
                 doctest = false
         "#)
         .file("src/lib.rs", "")
-        .file("d1/Cargo.toml", r#"
+        .file("d1/Baler.toml", r#"
             [package]
             name = "d1"
             version = "0.0.1"
@@ -1953,7 +1953,7 @@ fn test_multiple_packages() {
                 doctest = false
         "#)
         .file("d1/src/lib.rs", "")
-        .file("d2/Cargo.toml", r#"
+        .file("d2/Baler.toml", r#"
             [package]
             name = "d2"
             version = "0.0.1"
@@ -1978,7 +1978,7 @@ fn test_multiple_packages() {
 #[test]
 fn bin_does_not_rebuild_tests() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2009,7 +2009,7 @@ fn bin_does_not_rebuild_tests() {
 #[test]
 fn selective_test_wonky_profile() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2022,7 +2022,7 @@ fn selective_test_wonky_profile() {
             a = { path = "a" }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -2039,7 +2039,7 @@ fn selective_test_wonky_profile() {
 #[test]
 fn selective_test_optional_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2049,7 +2049,7 @@ fn selective_test_optional_dep() {
             a = { path = "a", optional = true }
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -2071,7 +2071,7 @@ fn selective_test_optional_dep() {
 #[test]
 fn only_test_docs() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2105,7 +2105,7 @@ fn only_test_docs() {
 #[test]
 fn test_panic_abort_with_dep() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2123,7 +2123,7 @@ fn test_panic_abort_with_dep() {
             #[test]
             fn foo() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [package]
             name = "bar"
             version = "0.0.1"
@@ -2137,7 +2137,7 @@ fn test_panic_abort_with_dep() {
 #[test]
 fn cfg_test_even_with_no_harness() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2167,7 +2167,7 @@ fn cfg_test_even_with_no_harness() {
 #[test]
 fn panic_abort_multiple() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2180,7 +2180,7 @@ fn panic_abort_multiple() {
             panic = 'abort'
         "#)
         .file("src/lib.rs", "extern crate a;")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -2197,7 +2197,7 @@ fn panic_abort_multiple() {
 #[test]
 fn pass_correct_cfgs_flags_to_rustdoc() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.1.0"
@@ -2220,7 +2220,7 @@ fn pass_correct_cfgs_flags_to_rustdoc() {
                 }
             }
         "#)
-        .file("libs/feature_a/Cargo.toml", r#"
+        .file("libs/feature_a/Baler.toml", r#"
             [package]
             name = "feature_a"
             version = "0.1.0"
@@ -2247,14 +2247,14 @@ fn pass_correct_cfgs_flags_to_rustdoc() {
                 MSG
             }
         "#)
-        .file("libs/mock_serde_derive/Cargo.toml", r#"
+        .file("libs/mock_serde_derive/Baler.toml", r#"
             [package]
             name = "mock_serde_derive"
             version = "0.1.0"
             authors = []
         "#)
         .file("libs/mock_serde_derive/src/lib.rs", "")
-        .file("libs/mock_serde_codegen/Cargo.toml", r#"
+        .file("libs/mock_serde_codegen/Baler.toml", r#"
                 [package]
                 name = "mock_serde_codegen"
                 version = "0.1.0"
@@ -2282,7 +2282,7 @@ fn pass_correct_cfgs_flags_to_rustdoc() {
 #[test]
 fn test_release_ignore_panic() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2297,7 +2297,7 @@ fn test_release_ignore_panic() {
             panic = 'abort'
         "#)
         .file("src/lib.rs", "extern crate a;")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -2314,7 +2314,7 @@ fn test_release_ignore_panic() {
 #[test]
 fn test_many_with_features() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [package]
             name = "foo"
             version = "0.0.1"
@@ -2329,7 +2329,7 @@ fn test_many_with_features() {
             [workspace]
         "#)
         .file("src/lib.rs", "")
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [package]
             name = "a"
             version = "0.0.1"
@@ -2347,7 +2347,7 @@ fn test_many_with_features() {
 #[test]
 fn test_all_workspace() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -2361,7 +2361,7 @@ fn test_all_workspace() {
             #[test]
             fn foo_test() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -2381,7 +2381,7 @@ fn test_all_workspace() {
 #[test]
 fn test_all_exclude() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -2392,7 +2392,7 @@ fn test_all_exclude() {
         .file("src/main.rs", r#"
             fn main() {}
         "#)
-        .file("bar/Cargo.toml", r#"
+        .file("bar/Baler.toml", r#"
             [project]
             name = "bar"
             version = "0.1.0"
@@ -2401,7 +2401,7 @@ fn test_all_exclude() {
             #[test]
             pub fn bar() {}
         "#)
-        .file("baz/Cargo.toml", r#"
+        .file("baz/Baler.toml", r#"
             [project]
             name = "baz"
             version = "0.1.0"
@@ -2425,11 +2425,11 @@ test bar ... ok"));
 #[test]
 fn test_all_virtual_manifest() {
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["a", "b"]
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.1.0"
@@ -2438,7 +2438,7 @@ fn test_all_virtual_manifest() {
             #[test]
             fn a() {}
         "#)
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.1.0"
@@ -2458,11 +2458,11 @@ fn test_all_virtual_manifest() {
 #[test]
 fn test_all_member_dependency_same_name() {
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [workspace]
             members = ["a"]
         "#)
-        .file("a/Cargo.toml", r#"
+        .file("a/Baler.toml", r#"
             [project]
             name = "a"
             version = "0.1.0"
@@ -2486,7 +2486,7 @@ fn test_all_member_dependency_same_name() {
 #[test]
 fn doctest_only_with_dev_dep() {
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "a"
             version = "0.1.0"
@@ -2502,7 +2502,7 @@ fn doctest_only_with_dev_dep() {
             /// ```
             pub fn a() {}
         "#)
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.1.0"
@@ -2518,7 +2518,7 @@ fn doctest_only_with_dev_dep() {
 #[test]
 fn test_many_targets() {
     let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -2573,7 +2573,7 @@ fn test_many_targets() {
 #[test]
 fn doctest_and_registry() {
     let p = project("workspace")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "a"
             version = "0.1.0"
@@ -2585,7 +2585,7 @@ fn doctest_and_registry() {
             [workspace]
         "#)
         .file("src/lib.rs", "")
-        .file("b/Cargo.toml", r#"
+        .file("b/Baler.toml", r#"
             [project]
             name = "b"
             version = "0.1.0"
@@ -2596,7 +2596,7 @@ fn doctest_and_registry() {
             /// ```
             pub fn foo() {}
         ")
-        .file("c/Cargo.toml", r#"
+        .file("c/Baler.toml", r#"
             [project]
             name = "c"
             version = "0.1.0"
@@ -2625,7 +2625,7 @@ fn baler_test_env() {
         "#, baler::CARGO_ENV);
 
     let p = project("env_test")
-        .file("Cargo.toml", &basic_lib_manifest("env_test"))
+        .file("Baler.toml", &basic_lib_manifest("env_test"))
         .file("src/lib.rs", &src);
 
     let mut pr = p.baler_process("test");
@@ -2641,7 +2641,7 @@ test env_test ... ok
 #[test]
 fn test_order() {
    let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
@@ -2682,7 +2682,7 @@ test result: ok. [..]
 #[test]
 fn cyclic_dev() {
    let p = project("foo")
-        .file("Cargo.toml", r#"
+        .file("Baler.toml", r#"
             [project]
             name = "foo"
             version = "0.1.0"
