@@ -1,20 +1,17 @@
 [package]
-name = "cargo"
-version = "0.21.0"
-authors = ["Yehuda Katz <wycats@gmail.com>",
-           "Carl Lerche <me@carllerche.com>",
-           "Alex Crichton <alex@alexcrichton.com>"]
+name = "baler"
+version = "0.1.0"
+authors = ["Nicodemus Allen-Tonar <nicodemus26@gmail.com>"]
 license = "MIT/Apache-2.0"
-homepage = "https://crates.io"
-repository = "https://github.com/rust-lang/cargo"
-documentation = "https://docs.rs/cargo"
+repository = "https://github.com/MultiscaleHN/baler"
+documentation = "https://docs.rs/baler"
 description = """
-Cargo, a package manager for Rust.
+Baler, a package manager for RDF.
 """
 
 [lib]
-name = "cargo"
-path = "src/cargo/lib.rs"
+name = "baler"
+path = "src/baler/lib.rs"
 
 [dependencies]
 atty = "0.2"
@@ -67,6 +64,6 @@ filetime = "0.1"
 hamcrest = "=0.1.1"
 
 [[bin]]
-name = "cargo"
+name = "baler"
 test = false
 doc = false
