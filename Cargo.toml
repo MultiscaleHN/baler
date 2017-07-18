@@ -62,7 +62,7 @@ winapi = "0.2"
 
 [dev-dependencies]
 bufstream = "0.1"
-cargotest = { path = "tests/cargotest" }
+balertest = { path = "tests/balertest" }
 filetime = "0.1"
 hamcrest = "=0.1.1"
 
