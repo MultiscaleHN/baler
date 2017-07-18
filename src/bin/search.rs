@@ -1,5 +1,5 @@
-use cargo::ops;
-use cargo::util::{CliResult, Config};
+use baler::ops;
+use baler::util::{CliResult, Config};
 
 use std::cmp;
 
@@ -20,8 +20,8 @@ pub const USAGE: &'static str = "
 Search packages in crates.io
 
 Usage:
-    cargo search [options] <query>...
-    cargo search [-h | --help]
+    baler search [options] <query>...
+    baler search [-h | --help]
 
 Options:
     -h, --help               Print this message
@@ -53,7 +53,7 @@ pub fn execute(options: Options, config: &Config) -> CliResult {
     // remove once it has been decided --host can be safely removed
     // We may instead want to repurpose the host flag, as
     // mentioned in this issue
-    // https://github.com/rust-lang/cargo/issues/4208
+    // https://github.com/rust-lang/baler/issues/4208
 
     let msg = "The flag '--host' is no longer valid.
 

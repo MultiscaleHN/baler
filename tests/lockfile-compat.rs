@@ -1,9 +1,9 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::git;
-use cargotest::support::registry::Package;
-use cargotest::support::{execs, project, lines_match};
+use balertest::support::git;
+use balertest::support::registry::Package;
+use balertest::support::{execs, project, lines_match};
 use hamcrest::assert_that;
 
 #[test]
@@ -38,7 +38,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
         .file("Cargo.lock", lockfile);
     p.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
 
     let lock = p.read_lockfile();
@@ -80,7 +80,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
     p.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
 
     let lock = p.read_lockfile();
@@ -135,7 +135,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
     p.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(101).with_stderr("\
 [UPDATING] registry `[..]`
 error: checksum for `foo v0.1.0` changed between lock files
@@ -187,7 +187,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "#);
     p.build();
 
-    assert_that(p.cargo("fetch"),
+    assert_that(p.baler("fetch"),
                 execs().with_status(101).with_stderr("\
 [UPDATING] registry `[..]`
 error: checksum for `foo v0.1.0` was not previously calculated, but a checksum \
@@ -248,7 +248,7 @@ source = "git+{0}"
 
     p.build();
 
-    assert_that(p.cargo("fetch"),
+    assert_that(p.baler("fetch"),
                 execs().with_status(101).with_stderr("\
 [UPDATING] git repository `[..]`
 error: checksum for `foo v0.1.0 ([..])` could not be calculated, but a \
@@ -282,7 +282,7 @@ fn current_lockfile_format() {
         .file("src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("build"), execs().with_status(0));
+    assert_that(p.baler("build"), execs().with_status(0));
 
     let actual = p.read_lockfile();
 
@@ -341,7 +341,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
     p.build();
 
-    assert_that(p.cargo("build"), execs().with_status(0));
+    assert_that(p.baler("build"), execs().with_status(0));
 
     let lock = p.read_lockfile();
     assert!(lock.starts_with(lockfile.trim()));

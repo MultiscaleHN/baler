@@ -1,6 +1,6 @@
-use cargo::ops;
-use cargo::core::{SourceId, GitReference};
-use cargo::util::{CliResult, Config, ToUrl};
+use baler::ops;
+use baler::core::{SourceId, GitReference};
+use baler::util::{CliResult, Config, ToUrl};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -37,8 +37,8 @@ pub const USAGE: &'static str = "
 Install a Rust binary
 
 Usage:
-    cargo install [options] [<crate>]
-    cargo install [options] --list
+    baler install [options] [<crate>]
+    baler install [options] --list
 
 Specifying what crate to install:
     --vers VERS               Specify a version to install from crates.io
@@ -72,7 +72,7 @@ which have [[bin]] targets can be installed, and all binaries are installed into
 the installation root's `bin` folder. The installation root is determined, in
 order of precedence, by `--root`, `$CARGO_INSTALL_ROOT`, the `install.root`
 configuration key, and finally the home directory (which is either
-`$CARGO_HOME` if set or `$HOME/.cargo` by default).
+`$CARGO_HOME` if set or `$HOME/.baler` by default).
 
 There are multiple sources from which a crate can be installed. The default
 location is crates.io but the `--git` and `--path` flags can change this source.
@@ -87,9 +87,9 @@ crate has multiple binaries, the `--bin` argument can selectively install only
 one of them, and if you'd rather install examples the `--example` argument can
 be used as well.
 
-By default cargo will refuse to overwrite existing binaries. The `--force` flag
+By default baler will refuse to overwrite existing binaries. The `--force` flag
 enables overwriting existing binaries. Thus you can reinstall a crate with
-`cargo install --force <crate>`.
+`baler install --force <crate>`.
 
 As a special convenience, omitting the <crate> specification entirely will
 install the crate in the current directory. That is, `install` is equivalent to

@@ -112,8 +112,8 @@ impl<'cfg> RegistryIndex<'cfg> {
 
             // Attempt forwards-compatibility on the index by ignoring
             // everything that we ourselves don't understand, that should
-            // allow future cargo implementations to break the
-            // interpretation of each line here and older cargo will simply
+            // allow future baler implementations to break the
+            // interpretation of each line here and older baler will simply
             // ignore the new lines.
             ret.extend(lines.filter_map(|line| {
                 self.parse_registry_package(line).ok()
@@ -167,7 +167,7 @@ impl<'cfg> RegistryIndex<'cfg> {
             dep.source_id().precise().is_some() || !yanked
         }).map(|s| s.0.clone());
 
-        // Handle `cargo update --precise` here. If specified, our own source
+        // Handle `baler update --precise` here. If specified, our own source
         // will have a precise version listed of the form `<pkg>=<req>` where
         // `<pkg>` is the name of a crate on this source and `<req>` is the
         // version requested (agument to `--precise`).

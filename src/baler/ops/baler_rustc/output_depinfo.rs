@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 
 use ops::{Context, Unit};
 use util::{CargoResult, internal};
-use ops::cargo_rustc::fingerprint;
+use ops::baler_rustc::fingerprint;
 
 fn render_filename<P: AsRef<Path>>(path: P, basedir: Option<&str>) -> CargoResult<String> {
     let path = path.as_ref();

@@ -164,7 +164,7 @@ impl<'cfg> RegistryData for RemoteRegistry<'cfg> {
     fn update_index(&mut self) -> CargoResult<()> {
         // Ensure that we'll actually be able to acquire an HTTP handle later on
         // once we start trying to download crates. This will weed out any
-        // problems with `.cargo/config` configuration related to HTTP.
+        // problems with `.baler/config` configuration related to HTTP.
         //
         // This way if there's a problem the error gets printed before we even
         // hit the index, which may not actually read this configuration.
@@ -322,7 +322,7 @@ fn github_up_to_date(handle: &mut Easy, url: &Url, oid: &git2::Oid) -> bool {
                       username, repo);
     try!(handle.get(true).ok());
     try!(handle.url(&url).ok());
-    try!(handle.useragent("cargo").ok());
+    try!(handle.useragent("baler").ok());
     let mut headers = List::new();
     try!(headers.append("Accept: application/vnd.github.3.sha").ok());
     try!(headers.append(&format!("If-None-Match: \"{}\"", oid)).ok());

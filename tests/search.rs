@@ -1,5 +1,5 @@
-extern crate cargo;
-extern crate cargotest;
+extern crate baler;
+extern crate balertest;
 extern crate hamcrest;
 extern crate url;
 
@@ -7,10 +7,10 @@ use std::fs::{self, File};
 use std::io::prelude::*;
 use std::path::PathBuf;
 
-use cargo::util::ProcessBuilder;
-use cargotest::support::execs;
-use cargotest::support::git::repo;
-use cargotest::support::paths;
+use baler::util::ProcessBuilder;
+use balertest::support::execs;
+use balertest::support::git::repo;
+use balertest::support::paths;
 use hamcrest::assert_that;
 use url::Url;
 
@@ -20,7 +20,7 @@ fn api_path() -> PathBuf { paths::root().join("api") }
 fn api() -> Url { Url::from_file_path(&*api_path()).ok().unwrap() }
 
 fn setup() {
-    let config = paths::root().join(".cargo/config");
+    let config = paths::root().join(".baler/config");
     fs::create_dir_all(config.parent().unwrap()).unwrap();
     fs::create_dir_all(&api_path().join("api/v1")).unwrap();
 
@@ -32,8 +32,8 @@ fn setup() {
         .build();
 }
 
-fn cargo_process(s: &str) -> ProcessBuilder {
-    let mut b = cargotest::cargo_process();
+fn baler_process(s: &str) -> ProcessBuilder {
+    let mut b = balertest::baler_process();
     b.arg(s);
     return b
 }
@@ -81,7 +81,7 @@ fn simple() {
              .write_all(contents.as_bytes()).unwrap();
     }
 
-    assert_that(cargo_process("search").arg("postgres")
+    assert_that(baler_process("search").arg("postgres")
                     .arg("--index").arg(registry().to_string()),
                 execs().with_status(0)
                        .with_stdout_contains("\
@@ -133,7 +133,7 @@ fn simple_with_host() {
              .write_all(contents.as_bytes()).unwrap();
     }
 
-    assert_that(cargo_process("search").arg("postgres")
+    assert_that(baler_process("search").arg("postgres")
                     .arg("--host").arg(registry().to_string()),
                 execs().with_status(0)
                        .with_stderr(&format!("\
@@ -199,7 +199,7 @@ fn simple_with_index_and_host() {
              .write_all(contents.as_bytes()).unwrap();
     }
 
-    assert_that(cargo_process("search").arg("postgres")
+    assert_that(baler_process("search").arg("postgres")
                     .arg("--index").arg(registry().to_string())
                     .arg("--host").arg(registry().to_string()),
                 execs().with_status(0)
@@ -264,7 +264,7 @@ fn multiple_query_params() {
              .write_all(contents.as_bytes()).unwrap();
     }
 
-    assert_that(cargo_process("search").arg("postgres").arg("sql")
+    assert_that(baler_process("search").arg("postgres").arg("sql")
                     .arg("--index").arg(registry().to_string()),
                 execs().with_status(0)
                        .with_stdout_contains("\
@@ -273,8 +273,8 @@ hoare = \"0.1.1\"    # Design by contract style assertions for Rust"));
 
 #[test]
 fn help() {
-    assert_that(cargo_process("search").arg("-h"),
+    assert_that(baler_process("search").arg("-h"),
                 execs().with_status(0));
-    assert_that(cargo_process("help").arg("search"),
+    assert_that(baler_process("help").arg("search"),
                 execs().with_status(0));
 }

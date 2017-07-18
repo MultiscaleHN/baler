@@ -1,7 +1,7 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::{project, execs, main_file, basic_bin_manifest};
+use balertest::support::{project, execs, main_file, basic_bin_manifest};
 use hamcrest::{assert_that};
 
 static MANIFEST_OUTPUT: &'static str = r#"
@@ -25,12 +25,12 @@ static MANIFEST_OUTPUT: &'static str = r#"
 }"#;
 
 #[test]
-fn cargo_read_manifest_path_to_cargo_toml_relative() {
+fn baler_read_manifest_path_to_baler_toml_relative() {
     let p = project("foo")
         .file("Cargo.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
-    assert_that(p.cargo_process("read-manifest")
+    assert_that(p.baler_process("read-manifest")
                  .arg("--manifest-path").arg("foo/Cargo.toml")
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(0)
@@ -38,12 +38,12 @@ fn cargo_read_manifest_path_to_cargo_toml_relative() {
 }
 
 #[test]
-fn cargo_read_manifest_path_to_cargo_toml_absolute() {
+fn baler_read_manifest_path_to_baler_toml_absolute() {
     let p = project("foo")
         .file("Cargo.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
-    assert_that(p.cargo_process("read-manifest")
+    assert_that(p.baler_process("read-manifest")
                  .arg("--manifest-path").arg(p.root().join("Cargo.toml"))
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(0)
@@ -51,12 +51,12 @@ fn cargo_read_manifest_path_to_cargo_toml_absolute() {
 }
 
 #[test]
-fn cargo_read_manifest_path_to_cargo_toml_parent_relative() {
+fn baler_read_manifest_path_to_baler_toml_parent_relative() {
     let p = project("foo")
         .file("Cargo.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
-    assert_that(p.cargo_process("read-manifest")
+    assert_that(p.baler_process("read-manifest")
                  .arg("--manifest-path").arg("foo")
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(101)
@@ -65,12 +65,12 @@ fn cargo_read_manifest_path_to_cargo_toml_parent_relative() {
 }
 
 #[test]
-fn cargo_read_manifest_path_to_cargo_toml_parent_absolute() {
+fn baler_read_manifest_path_to_baler_toml_parent_absolute() {
     let p = project("foo")
         .file("Cargo.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
-    assert_that(p.cargo_process("read-manifest")
+    assert_that(p.baler_process("read-manifest")
                  .arg("--manifest-path").arg(p.root())
                  .cwd(p.root().parent().unwrap()),
                 execs().with_status(101)
@@ -79,12 +79,12 @@ fn cargo_read_manifest_path_to_cargo_toml_parent_absolute() {
 }
 
 #[test]
-fn cargo_read_manifest_cwd() {
+fn baler_read_manifest_cwd() {
     let p = project("foo")
         .file("Cargo.toml", &basic_bin_manifest("foo"))
         .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
-    assert_that(p.cargo_process("read-manifest")
+    assert_that(p.baler_process("read-manifest")
                  .cwd(p.root()),
                 execs().with_status(0)
                        .with_json(MANIFEST_OUTPUT));

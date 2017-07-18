@@ -1,22 +1,22 @@
 extern crate hamcrest;
-extern crate cargotest;
+extern crate balertest;
 
 use std::env;
 
-use cargotest::support::{git, project, execs, main_file, basic_bin_manifest};
-use cargotest::support::registry::Package;
+use balertest::support::{git, project, execs, main_file, basic_bin_manifest};
+use balertest::support::registry::Package;
 use hamcrest::{assert_that, existing_dir, existing_file, is_not};
 
 #[test]
-fn cargo_clean_simple() {
+fn baler_clean_simple() {
     let p = project("foo")
               .file("Cargo.toml", &basic_bin_manifest("foo"))
               .file("src/foo.rs", &main_file(r#""i am foo""#, &[]));
 
-    assert_that(p.cargo_process("build"), execs().with_status(0));
+    assert_that(p.baler_process("build"), execs().with_status(0));
     assert_that(&p.build_dir(), existing_dir());
 
-    assert_that(p.cargo("clean"),
+    assert_that(p.baler("clean"),
                 execs().with_status(0));
     assert_that(&p.build_dir(), is_not(existing_dir()));
 }
@@ -28,10 +28,10 @@ fn different_dir() {
               .file("src/foo.rs", &main_file(r#""i am foo""#, &[]))
               .file("src/bar/a.rs", "");
 
-    assert_that(p.cargo_process("build"), execs().with_status(0));
+    assert_that(p.baler_process("build"), execs().with_status(0));
     assert_that(&p.build_dir(), existing_dir());
 
-    assert_that(p.cargo("clean").cwd(&p.root().join("src")),
+    assert_that(p.baler("clean").cwd(&p.root().join("src")),
                 execs().with_status(0).with_stdout(""));
     assert_that(&p.build_dir(), is_not(existing_dir()));
 }
@@ -75,7 +75,7 @@ fn clean_multiple_packages() {
         "#)
         .file("d2/src/main.rs", "fn main() { println!(\"d2\"); }");
 
-    assert_that(p.cargo_process("build").arg("-p").arg("d1").arg("-p").arg("d2")
+    assert_that(p.baler_process("build").arg("-p").arg("d1").arg("-p").arg("d2")
                                         .arg("-p").arg("foo"),
                 execs().with_status(0));
 
@@ -89,7 +89,7 @@ fn clean_multiple_packages() {
     assert_that(d1_path, existing_file());
     assert_that(d2_path, existing_file());
 
-    assert_that(p.cargo("clean").arg("-p").arg("d1").arg("-p").arg("d2")
+    assert_that(p.baler("clean").arg("-p").arg("d1").arg("-p").arg("d2")
                                 .cwd(&p.root().join("src")),
                 execs().with_status(0).with_stdout(""));
     assert_that(&p.bin("foo"), existing_file());
@@ -119,17 +119,17 @@ fn clean_release() {
         .file("a/src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("build").arg("--release"),
+    assert_that(p.baler("build").arg("--release"),
                 execs().with_status(0));
 
-    assert_that(p.cargo("clean").arg("-p").arg("foo"),
+    assert_that(p.baler("clean").arg("-p").arg("foo"),
                 execs().with_status(0));
-    assert_that(p.cargo("build").arg("--release"),
+    assert_that(p.baler("build").arg("--release"),
                 execs().with_status(0).with_stdout(""));
 
-    assert_that(p.cargo("clean").arg("-p").arg("foo").arg("--release"),
+    assert_that(p.baler("clean").arg("-p").arg("foo").arg("--release"),
                 execs().with_status(0));
-    assert_that(p.cargo("build").arg("--release"),
+    assert_that(p.baler("build").arg("--release"),
                 execs().with_status(0).with_stderr("\
 [COMPILING] foo v0.0.1 ([..])
 [FINISHED] release [optimized] target(s) in [..]
@@ -163,11 +163,11 @@ fn build_script() {
         .file("a/src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("build").env("FIRST", "1"),
+    assert_that(p.baler("build").env("FIRST", "1"),
                 execs().with_status(0));
-    assert_that(p.cargo("clean").arg("-p").arg("foo"),
+    assert_that(p.baler("clean").arg("-p").arg("foo"),
                 execs().with_status(0));
-    assert_that(p.cargo("build").arg("-v"),
+    assert_that(p.baler("build").arg("-v"),
                 execs().with_status(0).with_stderr("\
 [COMPILING] foo v0.0.1 ([..])
 [RUNNING] `rustc [..] build.rs [..]`
@@ -202,11 +202,11 @@ fn clean_git() {
         .file("src/main.rs", "fn main() {}");
     p.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
-    assert_that(p.cargo("clean").arg("-p").arg("dep"),
+    assert_that(p.baler("clean").arg("-p").arg("dep"),
                 execs().with_status(0).with_stdout(""));
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
 }
 
@@ -227,10 +227,10 @@ fn registry() {
 
     Package::new("bar", "0.1.0").publish();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
-    assert_that(p.cargo("clean").arg("-p").arg("bar"),
+    assert_that(p.baler("clean").arg("-p").arg("bar"),
                 execs().with_status(0).with_stdout(""));
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
 }

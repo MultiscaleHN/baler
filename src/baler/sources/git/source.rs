@@ -131,7 +131,7 @@ impl<'cfg> Source for GitSource<'cfg> {
 
     fn update(&mut self) -> CargoResult<()> {
         let lock = self.config.git_path()
-            .open_rw(".cargo-lock-git", self.config, "the git checkouts")?;
+            .open_rw(".baler-lock-git", self.config, "the git checkouts")?;
 
         let db_path = lock.parent().join("db").join(&self.ident);
 
@@ -202,8 +202,8 @@ mod test {
 
     #[test]
     pub fn test_url_to_path_ident_with_path() {
-        let ident = ident(&url("https://github.com/carlhuda/cargo"));
-        assert!(ident.starts_with("cargo-"));
+        let ident = ident(&url("https://github.com/carlhuda/baler"));
+        assert!(ident.starts_with("baler-"));
     }
 
     #[test]

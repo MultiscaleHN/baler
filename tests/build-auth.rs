@@ -1,6 +1,6 @@
 extern crate bufstream;
 extern crate git2;
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
 use std::collections::HashSet;
@@ -9,8 +9,8 @@ use std::net::TcpListener;
 use std::thread;
 
 use bufstream::BufStream;
-use cargotest::support::paths;
-use cargotest::support::{project, execs};
+use balertest::support::paths;
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 // Test that HTTP auth is offered from `credential.helper`
@@ -79,7 +79,7 @@ fn http_auth_offered() {
             }
         "#);
 
-    assert_that(script.cargo_process("build").arg("-v"),
+    assert_that(script.baler_process("build").arg("-v"),
                 execs().with_status(0));
     let script = script.bin("script");
 
@@ -99,12 +99,12 @@ fn http_auth_offered() {
             git = "http://127.0.0.1:{}/foo/bar"
         "#, addr.port()))
         .file("src/main.rs", "")
-        .file(".cargo/config","\
+        .file(".baler/config","\
         [net]
         retry = 0
         ");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr(&format!("\
 [UPDATING] git repository `http://{addr}/foo/bar`
 [ERROR] failed to load source for a dependency on `bar`
@@ -149,12 +149,12 @@ fn https_something_happens() {
             git = "https://127.0.0.1:{}/foo/bar"
         "#, addr.port()))
         .file("src/main.rs", "")
-        .file(".cargo/config","\
+        .file(".baler/config","\
         [net]
         retry = 0
         ");
 
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(101).with_stderr_contains(&format!("\
 [UPDATING] git repository `https://{addr}/foo/bar`
 ", addr = addr))
@@ -197,7 +197,7 @@ fn ssh_something_happens() {
         "#, addr.port()))
         .file("src/main.rs", "");
 
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(101).with_stderr_contains(&format!("\
 [UPDATING] git repository `ssh://{addr}/foo/bar`
 ", addr = addr))

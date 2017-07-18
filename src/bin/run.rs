@@ -1,9 +1,9 @@
 use std::iter::FromIterator;
 
-use cargo::core::Workspace;
-use cargo::ops::{self, MessageFormat, Packages};
-use cargo::util::{CliResult, CliError, Config, CargoErrorKind};
-use cargo::util::important_paths::{find_root_manifest_for_wd};
+use baler::core::Workspace;
+use baler::ops::{self, MessageFormat, Packages};
+use baler::util::{CliResult, CliError, Config, CargoErrorKind};
+use baler::util::important_paths::{find_root_manifest_for_wd};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -30,7 +30,7 @@ pub const USAGE: &'static str = "
 Run the main binary of the local package (src/main.rs)
 
 Usage:
-    cargo run [options] [--] [<args>...]
+    baler run [options] [--] [<args>...]
 
 Options:
     -h, --help                   Print this message

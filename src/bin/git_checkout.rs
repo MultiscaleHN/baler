@@ -1,6 +1,6 @@
-use cargo::core::source::{Source, SourceId, GitReference};
-use cargo::sources::git::{GitSource};
-use cargo::util::{Config, CliResult, ToUrl};
+use baler::core::source::{Source, SourceId, GitReference};
+use baler::sources::git::{GitSource};
+use baler::util::{Config, CliResult, ToUrl};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -17,8 +17,8 @@ pub const USAGE: &'static str = "
 Checkout a copy of a Git repository
 
 Usage:
-    cargo git-checkout [options] --url=URL --reference=REF
-    cargo git-checkout -h | --help
+    baler git-checkout [options] --url=URL --reference=REF
+    baler git-checkout -h | --help
 
 Options:
     -h, --help               Print this message

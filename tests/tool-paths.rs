@@ -1,8 +1,8 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::rustc_host;
-use cargotest::support::{path2url, project, execs};
+use balertest::rustc_host;
+use balertest::support::{path2url, project, execs};
 use hamcrest::assert_that;
 
 #[test]
@@ -20,13 +20,13 @@ fn pathless_tools() {
             name = "foo"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", &format!(r#"
+        .file(".baler/config", &format!(r#"
             [target.{}]
             ar = "nonexistent-ar"
             linker = "nonexistent-linker"
         "#, target));
 
-    assert_that(foo.cargo_process("build").arg("--verbose"),
+    assert_that(foo.baler_process("build").arg("--verbose"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({url})
 [RUNNING] `rustc [..] -C ar=nonexistent-ar -C linker=nonexistent-linker [..]`
@@ -56,7 +56,7 @@ fn absolute_tools() {
             name = "foo"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", &format!(r#"
+        .file(".baler/config", &format!(r#"
             [target.{target}]
             ar = "{ar}"
             linker = "{linker}"
@@ -68,7 +68,7 @@ fn absolute_tools() {
         (r#"/bogus/nonexistent-ar"#, r#"/bogus/nonexistent-linker"#)
     };
 
-    assert_that(foo.cargo_process("build").arg("--verbose"),
+    assert_that(foo.baler_process("build").arg("--verbose"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({url})
 [RUNNING] `rustc [..] -C ar={ar} -C linker={linker} [..]`
@@ -88,7 +88,7 @@ fn relative_tools() {
     };
 
     // Funky directory structure to test that relative tool paths are made absolute
-    // by reference to the `.cargo/..` directory and not to (for example) the CWD.
+    // by reference to the `.baler/..` directory and not to (for example) the CWD.
     let origin = project("origin")
         .file("foo/Cargo.toml", r#"
             [package]
@@ -100,7 +100,7 @@ fn relative_tools() {
             name = "foo"
         "#)
         .file("foo/src/lib.rs", "")
-        .file(".cargo/config", &format!(r#"
+        .file(".baler/config", &format!(r#"
             [target.{target}]
             ar = "{ar}"
             linker = "{linker}"
@@ -117,7 +117,7 @@ fn relative_tools() {
          format!(r#"{}/./tools/nonexistent-linker"#, prefix))
     };
 
-    assert_that(origin.cargo_process("build").cwd(foo_path).arg("--verbose"),
+    assert_that(origin.baler_process("build").cwd(foo_path).arg("--verbose"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({url})
 [RUNNING] `rustc [..] -C ar={ar} -C linker={linker} [..]`
@@ -138,21 +138,21 @@ fn custom_runner() {
         .file("src/main.rs", "fn main() {}")
         .file("tests/test.rs", "")
         .file("benches/bench.rs", "")
-        .file(".cargo/config", &format!(r#"
+        .file(".baler/config", &format!(r#"
             [target.{}]
             runner = "nonexistent-runner -r"
         "#, target));
 
     foo.build();
 
-    assert_that(foo.cargo("run").args(&["--", "--param"]),
+    assert_that(foo.baler("run").args(&["--", "--param"]),
                 execs().with_stderr_contains(&format!("\
 [COMPILING] foo v0.0.1 ({url})
 [FINISHED] dev [unoptimized + debuginfo] target(s) in [..]
 [RUNNING] `nonexistent-runner -r target[/]debug[/]foo[EXE] --param`
 ", url = foo.url())));
 
-    assert_that(foo.cargo("test").args(&["--test", "test", "--verbose", "--", "--param"]),
+    assert_that(foo.baler("test").args(&["--test", "test", "--verbose", "--", "--param"]),
                 execs().with_stderr_contains(&format!("\
 [COMPILING] foo v0.0.1 ({url})
 [RUNNING] `rustc [..]`
@@ -160,7 +160,7 @@ fn custom_runner() {
 [RUNNING] `nonexistent-runner -r [..][/]target[/]debug[/]deps[/]test-[..][EXE] --param`
 ", url = foo.url())));
 
-    assert_that(foo.cargo("bench").args(&["--bench", "bench", "--verbose", "--", "--param"]),
+    assert_that(foo.baler("bench").args(&["--bench", "bench", "--verbose", "--", "--param"]),
                 execs().with_stderr_contains(&format!("\
 [COMPILING] foo v0.0.1 ({url})
 [RUNNING] `rustc [..]`

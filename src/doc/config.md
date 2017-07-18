@@ -11,11 +11,11 @@ configuration (like git). Cargo also extends this ability to a hierarchical
 strategy. If, for example, Cargo were invoked in `/home/foo/bar/baz`, then the
 following configuration files would be probed for:
 
-* `/home/foo/bar/baz/.cargo/config`
-* `/home/foo/bar/.cargo/config`
-* `/home/foo/.cargo/config`
-* `/home/.cargo/config`
-* `/.cargo/config`
+* `/home/foo/bar/baz/.baler/config`
+* `/home/foo/bar/.baler/config`
+* `/home/foo/.baler/config`
+* `/home/.baler/config`
+* `/.baler/config`
 
 With this structure you can specify local configuration per-project, and even
 possibly check it into version control. You can also specify personal default
@@ -37,21 +37,21 @@ value unless otherwise noted.
 Key values that specify a tool may be given as an absolute path, a relative path
 or as a pathless tool name. Absolute paths and pathless tool names are used as
 given. Relative paths are resolved relative to the parent directory of the
-`.cargo` directory of the config file that the value resides within.
+`.baler` directory of the config file that the value resides within.
 
 ```toml
 # An array of paths to local repositories which are to be used as overrides for
 # dependencies. For more information see the Specifying Dependencies guide.
 paths = ["/path/to/override"]
 
-[cargo-new]
+[baler-new]
 # This is your name/email to place in the `authors` section of a new Cargo.toml
 # that is generated. If not present, then `git` will be probed, and if that is
 # not present then `$USER` and `$EMAIL` will be used.
 name = "..."
 email = "..."
 
-# By default `cargo new` will initialize a new Git repository. This key can be
+# By default `baler new` will initialize a new Git repository. This key can be
 # set to `hg` to create a Mercurial repository, or `none` to disable this
 # behavior.
 vcs = "none"
@@ -68,7 +68,7 @@ linker = ".."
 ar = ".."
 # If a runner is provided, compiled targets for the `$triple` will be executed
 # by invoking the specified runner executable with actual target as first argument.
-# This applies to `cargo run`, `cargo test` and `cargo bench` commands.
+# This applies to `baler run`, `baler test` and `baler bench` commands.
 # By default compiled targets are executed directly.
 runner = ".."
 # custom flags to pass to all compiler invocations that target $triple
@@ -103,14 +103,14 @@ target-dir = "target"     # path of where to place all generated artifacts
 rustflags = ["..", ".."]  # custom flags to pass to all compiler invocations
 
 [term]
-verbose = false        # whether cargo provides verbose output
-color = 'auto'         # whether cargo colorizes output
+verbose = false        # whether baler provides verbose output
+color = 'auto'         # whether baler colorizes output
 
 # Network configuration
 [net]
 retry = 2 # number of times a network call will automatically retried
 
-# Alias cargo commands. The first 3 aliases are built in. If your
+# Alias baler commands. The first 3 aliases are built in. If your
 # command requires grouped whitespace use the list format.
 [alias]
 b = "build"

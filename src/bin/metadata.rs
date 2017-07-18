@@ -1,8 +1,8 @@
-use cargo;
-use cargo::core::Workspace;
-use cargo::ops::{output_metadata, OutputMetadataOptions};
-use cargo::util::important_paths::find_root_manifest_for_wd;
-use cargo::util::{CliResult, Config};
+use baler;
+use baler::core::Workspace;
+use baler::ops::{output_metadata, OutputMetadataOptions};
+use baler::util::important_paths::find_root_manifest_for_wd;
+use baler::util::{CliResult, Config};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -24,7 +24,7 @@ Output the resolved dependencies of a project, the concrete used versions
 including overrides, in machine-readable format.
 
 Usage:
-    cargo metadata [options]
+    baler metadata [options]
 
 Options:
     -h, --help                 Print this message
@@ -66,6 +66,6 @@ pub fn execute(options: Options, config: &Config) -> CliResult {
 
     let ws = Workspace::new(&manifest, config)?;
     let result = output_metadata(&ws, &options)?;
-    cargo::print_json(&result);
+    baler::print_json(&result);
     Ok(())
 }

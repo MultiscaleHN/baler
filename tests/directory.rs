@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 #[macro_use]
 extern crate serde_derive;
@@ -10,16 +10,16 @@ use std::fs::{self, File};
 use std::io::prelude::*;
 use std::str;
 
-use cargotest::cargo_process;
-use cargotest::support::{project, execs, ProjectBuilder};
-use cargotest::support::paths;
-use cargotest::support::registry::{Package, cksum};
+use balertest::baler_process;
+use balertest::support::{project, execs, ProjectBuilder};
+use balertest::support::paths;
+use balertest::support::registry::{Package, cksum};
 use hamcrest::assert_that;
 
 fn setup() {
     let root = paths::root();
-    t!(fs::create_dir(&root.join(".cargo")));
-    t!(t!(File::create(root.join(".cargo/config"))).write_all(br#"
+    t!(fs::create_dir(&root.join(".baler")));
+    t!(t!(File::create(root.join(".baler/config"))).write_all(br#"
         [source.crates-io]
         replace-with = 'my-awesome-local-registry'
 
@@ -59,7 +59,7 @@ impl VendorPackage {
     fn build(&mut self) {
         let p = self.p.take().unwrap();
         let json = serde_json::to_string(&self.cksum).unwrap();
-        let p = p.file(".cargo-checksum.json", &json);
+        let p = p.file(".baler-checksum.json", &json);
         p.build();
     }
 }
@@ -97,7 +97,7 @@ fn simple() {
         "#);
     p.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0).with_stderr("\
 [COMPILING] foo v0.1.0
 [COMPILING] bar v0.1.0 ([..]bar)
@@ -138,7 +138,7 @@ fn simple_install() {
         "#)
         .build();
 
-    assert_that(cargo_process().arg("install").arg("bar"),
+    assert_that(baler_process().arg("install").arg("bar"),
                 execs().with_status(0).with_stderr(
 "  Installing bar v0.1.0
    Compiling foo v0.1.0
@@ -183,7 +183,7 @@ fn simple_install_fail() {
         "#)
         .build();
 
-    assert_that(cargo_process().arg("install").arg("bar"),
+    assert_that(baler_process().arg("install").arg("bar"),
                 execs().with_status(101).with_stderr(
 "  Installing bar v0.1.0
 error: failed to compile `bar v0.1.0`, intermediate artifacts can be found at `[..]`
@@ -232,7 +232,7 @@ fn install_without_feature_dep() {
         "#)
         .build();
 
-    assert_that(cargo_process().arg("install").arg("bar"),
+    assert_that(baler_process().arg("install").arg("bar"),
                 execs().with_status(0).with_stderr(
 "  Installing bar v0.1.0
    Compiling foo v0.1.0
@@ -268,7 +268,7 @@ fn not_there() {
         "#);
     p.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(101).with_stderr("\
 error: no matching package named `foo` found (required by `bar`)
 location searched: [..]
@@ -288,7 +288,7 @@ fn multiple() {
             authors = []
         "#)
         .file("src/lib.rs", "pub fn foo() {}")
-        .file(".cargo-checksum", "")
+        .file(".baler-checksum", "")
         .build();
 
     VendorPackage::new("foo-0.2.0")
@@ -299,7 +299,7 @@ fn multiple() {
             authors = []
         "#)
         .file("src/lib.rs", "pub fn foo() {}")
-        .file(".cargo-checksum", "")
+        .file(".baler-checksum", "")
         .build();
 
     let p = project("bar")
@@ -321,7 +321,7 @@ fn multiple() {
         "#);
     p.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0).with_stderr("\
 [COMPILING] foo v0.1.0
 [COMPILING] bar v0.1.0 ([..]bar)
@@ -354,7 +354,7 @@ fn crates_io_then_directory() {
                         .file("src/lib.rs", "pub fn foo() -> u32 { 0 }")
                         .publish();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0).with_stderr("\
 [UPDATING] registry `[..]`
 [DOWNLOADING] foo v0.1.0 ([..])
@@ -376,7 +376,7 @@ fn crates_io_then_directory() {
     v.cksum.package = cksum;
     v.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0).with_stderr("\
 [COMPILING] foo v0.1.0
 [COMPILING] bar v0.1.0 ([..]bar)
@@ -401,7 +401,7 @@ fn crates_io_then_bad_checksum() {
 
     Package::new("foo", "0.1.0").publish();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
     setup();
 
@@ -415,7 +415,7 @@ fn crates_io_then_bad_checksum() {
         .file("src/lib.rs", "")
         .build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(101).with_stderr("\
 error: checksum for `foo v0.1.0` changed between lock files
 
@@ -460,7 +460,7 @@ fn bad_file_checksum() {
         .file("src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(101).with_stderr("\
 error: the listed checksum of `[..]lib.rs` has changed:
 expected: [..]
@@ -502,5 +502,5 @@ fn only_dot_files_ok() {
         .file("src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("build"), execs().with_status(0));
+    assert_that(p.baler("build"), execs().with_status(0));
 }

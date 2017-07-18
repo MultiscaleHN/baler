@@ -1,8 +1,8 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::{project, execs};
-use cargotest::support::registry::Package;
+use balertest::support::{project, execs};
+use balertest::support::registry::Package;
 use hamcrest::assert_that;
 
 #[test]
@@ -15,11 +15,11 @@ fn bad1() {
             authors = []
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
               [target]
               nonexistent-target = "foo"
         "#);
-    assert_that(foo.cargo_process("build").arg("-v")
+    assert_that(foo.baler_process("build").arg("-v")
                    .arg("--target=nonexistent-target"),
                 execs().with_status(101).with_stderr("\
 [ERROR] expected table for configuration key `target.nonexistent-target`, \
@@ -37,11 +37,11 @@ fn bad2() {
             authors = []
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
               [http]
                 proxy = 3.0
         "#);
-    assert_that(foo.cargo_process("publish").arg("-v"),
+    assert_that(foo.baler_process("publish").arg("-v"),
                 execs().with_status(101).with_stderr("\
 [ERROR] Couldn't load Cargo configuration
 
@@ -69,13 +69,13 @@ fn bad3() {
             authors = []
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [http]
               proxy = true
         "#);
     Package::new("foo", "1.0.0").publish();
 
-    assert_that(foo.cargo_process("publish").arg("-v"),
+    assert_that(foo.baler_process("publish").arg("-v"),
                 execs().with_status(101).with_stderr("\
 error: failed to update registry [..]
 
@@ -88,31 +88,31 @@ expected a string, but found a boolean for `http.proxy` in [..]config
 #[test]
 fn bad4() {
     let foo = project("foo")
-        .file(".cargo/config", r#"
-            [cargo-new]
+        .file(".baler/config", r#"
+            [baler-new]
               name = false
         "#);
-    assert_that(foo.cargo_process("new").arg("-v").arg("foo"),
+    assert_that(foo.baler_process("new").arg("-v").arg("foo"),
                 execs().with_status(101).with_stderr("\
 [ERROR] Failed to create project `foo` at `[..]`
 
 Caused by:
-  invalid configuration for key `cargo-new.name`
-expected a string, but found a boolean for `cargo-new.name` in [..]config
+  invalid configuration for key `baler-new.name`
+expected a string, but found a boolean for `baler-new.name` in [..]config
 "));
 }
 
 #[test]
 fn bad5() {
     let foo = project("foo")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             foo = ""
         "#)
-        .file("foo/.cargo/config", r#"
+        .file("foo/.baler/config", r#"
             foo = 2
         "#);
     foo.build();
-    assert_that(foo.cargo("new")
+    assert_that(foo.baler("new")
                    .arg("-v").arg("foo").cwd(&foo.root().join("foo")),
                 execs().with_status(101).with_stderr("\
 [ERROR] Failed to create project `foo` at `[..]`
@@ -134,7 +134,7 @@ Caused by:
 }
 
 #[test]
-fn bad_cargo_config_jobs() {
+fn bad_baler_config_jobs() {
     let foo = project("foo")
     .file("Cargo.toml", r#"
         [package]
@@ -143,18 +143,18 @@ fn bad_cargo_config_jobs() {
         authors = []
     "#)
     .file("src/lib.rs", "")
-    .file(".cargo/config", r#"
+    .file(".baler/config", r#"
         [build]
         jobs = -1
     "#);
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(101).with_stderr("\
 [ERROR] build.jobs must be positive, but found -1 in [..]
 "));
 }
 
 #[test]
-fn default_cargo_config_jobs() {
+fn default_baler_config_jobs() {
     let foo = project("foo")
     .file("Cargo.toml", r#"
         [package]
@@ -163,16 +163,16 @@ fn default_cargo_config_jobs() {
         authors = []
     "#)
     .file("src/lib.rs", "")
-    .file(".cargo/config", r#"
+    .file(".baler/config", r#"
         [build]
         jobs = 1
     "#);
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(0));
 }
 
 #[test]
-fn good_cargo_config_jobs() {
+fn good_baler_config_jobs() {
     let foo = project("foo")
     .file("Cargo.toml", r#"
         [package]
@@ -181,11 +181,11 @@ fn good_cargo_config_jobs() {
         authors = []
     "#)
     .file("src/lib.rs", "")
-    .file(".cargo/config", r#"
+    .file(".baler/config", r#"
         [build]
         jobs = 4
     "#);
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(0));
 }
 
@@ -201,10 +201,10 @@ fn invalid_global_config() {
         [dependencies]
         foo = "0.1.0"
     "#)
-    .file(".cargo/config", "4")
+    .file(".baler/config", "4")
     .file("src/lib.rs", "");
 
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(101).with_stderr("\
 [ERROR] Couldn't load Cargo configuration
 
@@ -220,7 +220,7 @@ Caused by:
 }
 
 #[test]
-fn bad_cargo_lock() {
+fn bad_baler_lock() {
     let foo = project("foo")
     .file("Cargo.toml", r#"
         [package]
@@ -231,7 +231,7 @@ fn bad_cargo_lock() {
     .file("Cargo.lock", "[[package]]\nfoo = 92")
     .file("src/lib.rs", "");
 
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse lock file at: [..]Cargo.lock
 
@@ -241,7 +241,7 @@ Caused by:
 }
 
 #[test]
-fn duplicate_packages_in_cargo_lock() {
+fn duplicate_packages_in_baler_lock() {
     Package::new("foo", "0.1.0").publish();
 
     let p = project("bar")
@@ -275,7 +275,7 @@ fn duplicate_packages_in_cargo_lock() {
         "#);
     p.build();
 
-    assert_that(p.cargo("build").arg("--verbose"),
+    assert_that(p.baler("build").arg("--verbose"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse lock file at: [..]
 
@@ -285,7 +285,7 @@ Caused by:
 }
 
 #[test]
-fn bad_source_in_cargo_lock() {
+fn bad_source_in_baler_lock() {
     Package::new("foo", "0.1.0").publish();
 
     let p = project("bar")
@@ -314,7 +314,7 @@ fn bad_source_in_cargo_lock() {
         "#);
     p.build();
 
-    assert_that(p.cargo("build").arg("--verbose"),
+    assert_that(p.baler("build").arg("--verbose"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse lock file at: [..]
 
@@ -343,7 +343,7 @@ fn bad_dependency_in_lockfile() {
         "#);
     p.build();
 
-    assert_that(p.cargo("build").arg("--verbose"),
+    assert_that(p.baler("build").arg("--verbose"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse lock file at: [..]
 
@@ -367,7 +367,7 @@ fn bad_git_dependency() {
     "#)
     .file("src/lib.rs", "");
 
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(101).with_stderr("\
 [UPDATING] git repository `file:///`
 [ERROR] failed to load source for a dependency on `foo`
@@ -397,7 +397,7 @@ fn bad_crate_type() {
     "#)
     .file("src/lib.rs", "");
 
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(101).with_stderr_contains("\
 error: failed to run `rustc` to learn about target-specific information
 "));
@@ -419,7 +419,7 @@ fn malformed_override() {
     "#)
     .file("src/lib.rs", "");
 
-    assert_that(foo.cargo_process("build"),
+    assert_that(foo.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse manifest at `[..]`
 
@@ -451,7 +451,7 @@ fn duplicate_binary_names() {
     .file("a.rs", r#"fn main() -> () {}"#)
     .file("b.rs", r#"fn main() -> () {}"#);
 
-    assert_that(foo.cargo_process("build"),
+    assert_that(foo.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse manifest at `[..]`
 
@@ -480,7 +480,7 @@ fn duplicate_example_names() {
     .file("examples/ex.rs", r#"fn main () -> () {}"#)
     .file("examples/ex2.rs", r#"fn main () -> () {}"#);
 
-    assert_that(foo.cargo_process("build").arg("--example").arg("ex"),
+    assert_that(foo.baler_process("build").arg("--example").arg("ex"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse manifest at `[..]`
 
@@ -509,7 +509,7 @@ fn duplicate_bench_names() {
     .file("benches/ex.rs", r#"fn main () {}"#)
     .file("benches/ex2.rs", r#"fn main () {}"#);
 
-    assert_that(foo.cargo_process("bench"),
+    assert_that(foo.baler_process("bench"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse manifest at `[..]`
 
@@ -553,7 +553,7 @@ fn duplicate_deps() {
     "#)
     .file("src/main.rs", r#"fn main () {}"#);
 
-    assert_that(foo.cargo_process("build"),
+    assert_that(foo.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse manifest at `[..]`
 
@@ -598,7 +598,7 @@ fn duplicate_deps_diff_sources() {
     "#)
     .file("src/main.rs", r#"fn main () {}"#);
 
-    assert_that(foo.cargo_process("build"),
+    assert_that(foo.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse manifest at `[..]`
 
@@ -622,7 +622,7 @@ fn unused_keys() {
         "#)
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr("\
 warning: unused manifest key: target.foo.bar
 [COMPILING] foo v0.1.0 (file:///[..])
@@ -642,7 +642,7 @@ warning: unused manifest key: target.foo.bar
         .file("src/lib.rs", r#"
             pub fn foo() {}
         "#);
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0)
                     .with_stderr("\
 warning: unused manifest key: project.bulid
@@ -665,7 +665,7 @@ warning: unused manifest key: project.bulid
         .file("src/lib.rs", r#"
             pub fn foo() {}
         "#);
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0)
                     .with_stderr("\
 warning: unused manifest key: lib.build
@@ -691,7 +691,7 @@ fn empty_dependencies() {
 
     Package::new("foo", "0.0.1").publish();
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr_contains("\
 warning: dependency (foo) specified without providing a local path, Git repository, or version \
 to use. This will be considered an error in future versions
@@ -707,12 +707,12 @@ fn invalid_toml_historically_allowed_is_warned() {
         version = "0.0.0"
         authors = []
     "#)
-    .file(".cargo/config", r#"
+    .file(".baler/config", r#"
         [foo] bar = 2
     "#)
     .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr("\
 warning: TOML file found which contains invalid syntax and will soon not parse
 at `[..]config`.
@@ -742,7 +742,7 @@ fn ambiguous_git_reference() {
     "#)
     .file("src/lib.rs", "");
 
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_stderr_contains("\
 [WARNING] dependency (bar) specification is ambiguous. \
 Only one of `branch`, `tag` or `rev` is allowed. \
@@ -760,11 +760,11 @@ fn bad_source_config1() {
             authors = []
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [source.foo]
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: no source URL specified for `source.foo`, need [..]
 "));
@@ -783,13 +783,13 @@ fn bad_source_config2() {
             bar = "*"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [source.crates-io]
             registry = 'http://example.com'
             replace-with = 'bar'
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: failed to load source for a dependency on `bar`
 
@@ -815,13 +815,13 @@ fn bad_source_config3() {
             bar = "*"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [source.crates-io]
             registry = 'http://example.com'
             replace-with = 'crates-io'
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: failed to load source for a dependency on `bar`
 
@@ -846,7 +846,7 @@ fn bad_source_config4() {
             bar = "*"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [source.crates-io]
             registry = 'http://example.com'
             replace-with = 'bar'
@@ -856,7 +856,7 @@ fn bad_source_config4() {
             replace-with = 'crates-io'
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: failed to load source for a dependency on `bar`
 
@@ -882,7 +882,7 @@ fn bad_source_config5() {
             bar = "*"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [source.crates-io]
             registry = 'http://example.com'
             replace-with = 'bar'
@@ -891,7 +891,7 @@ fn bad_source_config5() {
             registry = 'not a url'
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: configuration key `source.bar.registry` specified an invalid URL (in [..])
 
@@ -915,7 +915,7 @@ fn both_git_and_path_specified() {
     "#)
         .file("src/lib.rs", "");
 
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_stderr_contains("\
 [WARNING] dependency (bar) specification is ambiguous. \
 Only one of `git` or `path` is allowed. \
@@ -936,13 +936,13 @@ fn bad_source_config6() {
             bar = "*"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [source.crates-io]
             registry = 'http://example.com'
             replace-with = ['not', 'a', 'string']
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: expected a string, but found a array for `source.crates-io.replace-with` in [..]
 "));
@@ -963,7 +963,7 @@ fn ignored_git_revision() {
     "#)
         .file("src/lib.rs", "");
 
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_stderr_contains("\
 [WARNING] key `branch` is ignored for dependency (bar). \
 This will be considered an error in future versions"));
@@ -982,7 +982,7 @@ fn bad_source_config7() {
             bar = "*"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [source.foo]
             registry = 'http://example.com'
             local-registry = 'file:///another/file'
@@ -990,7 +990,7 @@ fn bad_source_config7() {
 
     Package::new("bar", "0.1.0").publish();
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: more than one source URL specified for `source.foo`
 "));
@@ -1010,7 +1010,7 @@ fn bad_dependency() {
         "#)
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: failed to parse manifest at `[..]`
 
@@ -1033,7 +1033,7 @@ fn bad_debuginfo() {
         "#)
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: failed to parse manifest at `[..]`
 
@@ -1054,7 +1054,7 @@ fn bad_opt_level() {
         "#)
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 error: failed to parse manifest at `[..]`
 

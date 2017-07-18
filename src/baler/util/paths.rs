@@ -156,7 +156,7 @@ impl<'a> PathAncestors<'a> {
     fn new(path: &Path) -> PathAncestors {
         PathAncestors {
             current: Some(path),
-            //HACK: avoid reading `~/.cargo/config` when testing Cargo itself.
+            //HACK: avoid reading `~/.baler/config` when testing Cargo itself.
             stop_at: env::var("__CARGO_TEST_ROOT").ok().map(PathBuf::from),
         }
     }

@@ -448,11 +448,11 @@ impl<'a, 'cfg> Context<'a, 'cfg> {
         // This environment variable should not be relied on! It's
         // just here for rustbuild. We need a more principled method
         // doing this eventually.
-        let __cargo_default_lib_metadata = env::var("__CARGO_DEFAULT_LIB_METADATA");
+        let __baler_default_lib_metadata = env::var("__CARGO_DEFAULT_LIB_METADATA");
         if !unit.profile.test &&
             (unit.target.is_dylib() || unit.target.is_cdylib()) &&
             unit.pkg.package_id().source_id().is_path() &&
-            !__cargo_default_lib_metadata.is_ok() {
+            !__baler_default_lib_metadata.is_ok() {
             return None;
         }
 
@@ -494,7 +494,7 @@ impl<'a, 'cfg> Context<'a, 'cfg> {
 
         // Seed the contents of __CARGO_DEFAULT_LIB_METADATA to the hasher if present.
         // This should be the release channel, to get a different hash for each channel.
-        if let Ok(ref channel) = __cargo_default_lib_metadata {
+        if let Ok(ref channel) = __baler_default_lib_metadata {
             channel.hash(&mut hasher);
         }
 
@@ -954,7 +954,7 @@ impl<'a, 'cfg> Context<'a, 'cfg> {
                 // Only enable incremental compilation for sources the user can modify.
                 // For things that change infrequently, non-incremental builds yield
                 // better performance.
-                // (see also https://github.com/rust-lang/cargo/issues/3972)
+                // (see also https://github.com/rust-lang/baler/issues/3972)
                 return Ok(vec![format!("-Zincremental={}",
                                        self.layout(unit.kind).incremental().display())]);
             } else {

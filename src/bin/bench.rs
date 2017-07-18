@@ -1,7 +1,7 @@
-use cargo::core::Workspace;
-use cargo::ops::{self, MessageFormat, Packages};
-use cargo::util::{CliResult, CliError, Config, CargoErrorKind};
-use cargo::util::important_paths::{find_root_manifest_for_wd};
+use baler::core::Workspace;
+use baler::ops::{self, MessageFormat, Packages};
+use baler::util::{CliResult, CliError, Config, CargoErrorKind};
+use baler::util::important_paths::{find_root_manifest_for_wd};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -38,7 +38,7 @@ pub const USAGE: &'static str = "
 Execute all benchmarks of a local package
 
 Usage:
-    cargo bench [options] [--] [<args>...]
+    baler bench [options] [--] [<args>...]
 
 Options:
     -h, --help                   Print this message
@@ -76,7 +76,7 @@ run.
 If the --package argument is given, then SPEC is a package id specification
 which indicates which package should be benchmarked. If it is not given, then
 the current package is benchmarked. For more information on SPEC and its format,
-see the `cargo help pkgid` command.
+see the `baler help pkgid` command.
 
 All packages in the workspace are benchmarked if the `--all` flag is supplied. The
 `--all` flag may be supplied in the presence of a virtual manifest.

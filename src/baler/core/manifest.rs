@@ -44,7 +44,7 @@ pub struct VirtualManifest {
 ///
 /// Note that many of these fields can contain invalid values such as the
 /// homepage, repository, documentation, or license. These fields are not
-/// validated by cargo itself, but rather it is up to the registry when uploaded
+/// validated by baler itself, but rather it is up to the registry when uploaded
 /// to validate these fields. Cargo will itself accept any valid TOML
 /// specification for these values.
 #[derive(PartialEq, Clone, Debug)]

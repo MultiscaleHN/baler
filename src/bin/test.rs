@@ -1,7 +1,7 @@
-use cargo::core::Workspace;
-use cargo::ops::{self, MessageFormat, Packages};
-use cargo::util::{CliResult, CliError, Config, CargoErrorKind};
-use cargo::util::important_paths::find_root_manifest_for_wd;
+use baler::core::Workspace;
+use baler::ops::{self, MessageFormat, Packages};
+use baler::util::{CliResult, CliError, Config, CargoErrorKind};
+use baler::util::important_paths::find_root_manifest_for_wd;
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -40,7 +40,7 @@ pub const USAGE: &'static str = "
 Execute all unit and integration tests of a local package
 
 Usage:
-    cargo test [options] [--] [<args>...]
+    baler test [options] [--] [<args>...]
 
 Options:
     -h, --help                   Print this message
@@ -77,12 +77,12 @@ All of the trailing arguments are passed to the test binaries generated for
 filtering tests and generally providing options configuring how they run. For
 example, this will run all tests with the name `foo` in their name:
 
-    cargo test foo
+    baler test foo
 
 If the --package argument is given, then SPEC is a package id specification
 which indicates which package should be tested. If it is not given, then the
 current package is tested. For more information on SPEC and its format, see the
-`cargo help pkgid` command.
+`baler help pkgid` command.
 
 All packages in the workspace are tested if the `--all` flag is supplied. The
 `--all` flag may be supplied in the presence of a virtual manifest.
@@ -93,7 +93,7 @@ for the --jobs argument is the number of CPUs. If you want to control the
 number of simultaneous running test cases, pass the `--test-threads` option
 to the test binaries:
 
-  cargo test -- --test-threads=1
+  baler test -- --test-threads=1
 
 Compilation can be configured via the `test` profile in the manifest.
 
@@ -101,11 +101,11 @@ By default the rust test harness hides output from test execution to
 keep results readable. Test output can be recovered (e.g. for debugging)
 by passing `--nocapture` to the test binaries:
 
-  cargo test -- --nocapture
+  baler test -- --nocapture
 
 To get the list of all options available for the test binaries use this:
 
-  cargo test -- --help
+  baler test -- --help
 ";
 
 pub fn execute(options: Options, config: &Config) -> CliResult {

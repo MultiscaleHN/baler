@@ -5,7 +5,7 @@ use std::path::{Path, PathBuf};
 use url::Url;
 use git2;
 
-use cargo::util::ProcessError;
+use baler::util::ProcessError;
 use support::{ProjectBuilder, project, path2url};
 
 pub struct RepoBuilder {

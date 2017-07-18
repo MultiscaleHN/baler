@@ -771,11 +771,11 @@ fn activation_error(cx: &Context,
                               versions);
 
         // If we have a path dependency with a locked version, then this may
-        // indicate that we updated a sub-package and forgot to run `cargo
+        // indicate that we updated a sub-package and forgot to run `baler
         // update`. In this case try to print a helpful error!
         if dep.source_id().is_path()
            && dep.version_req().to_string().starts_with("=") {
-            msg.push_str("\nconsider running `cargo update` to update \
+            msg.push_str("\nconsider running `baler update` to update \
                           a path dependency's locked version");
         }
 

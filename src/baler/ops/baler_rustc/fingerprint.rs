@@ -33,7 +33,7 @@ pub type Preparation = (Freshness, Work, Work);
 
 /// Prepare the necessary work for the fingerprint for a specific target.
 ///
-/// When dealing with fingerprints, cargo gets to choose what granularity
+/// When dealing with fingerprints, baler gets to choose what granularity
 /// "freshness" is considered at. One option is considering freshness at the
 /// package level. This means that if anything in a package changes, the entire
 /// package is rebuilt, unconditionally. This simplicity comes at a cost,
@@ -42,7 +42,7 @@ pub type Preparation = (Freshness, Work, Work);
 ///
 /// The cost was deemed high enough that fingerprints are now calculated at the
 /// layer of a target rather than a package. Each target can then be kept track
-/// of separately and only rebuilt as necessary. This requires cargo to
+/// of separately and only rebuilt as necessary. This requires baler to
 /// understand what the inputs are to a target, so we drive rustc with the
 /// --dep-info flag to learn about all input files to a unit of compilation.
 ///

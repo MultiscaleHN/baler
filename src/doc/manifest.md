@@ -222,7 +222,7 @@ configuration available to them. Listed below is the configuration available,
 along with the defaults for each profile.
 
 ```toml
-# The development profile, used for `cargo build`.
+# The development profile, used for `baler build`.
 [profile.dev]
 opt-level = 0      # controls the `--opt-level` the compiler builds with
 debug = true       # controls whether the compiler passes `-C debuginfo`
@@ -234,7 +234,7 @@ codegen-units = 1  # controls whether the compiler passes `-C codegen-units`
                    # `codegen-units` is ignored when `lto = true`
 panic = 'unwind'   # panic strategy (`-C panic=...`), can also be 'abort'
 
-# The release profile, used for `cargo build --release`.
+# The release profile, used for `baler build --release`.
 [profile.release]
 opt-level = 3
 debug = false
@@ -244,7 +244,7 @@ debug-assertions = false
 codegen-units = 1
 panic = 'unwind'
 
-# The testing profile, used for `cargo test`.
+# The testing profile, used for `baler test`.
 [profile.test]
 opt-level = 0
 debug = 2
@@ -254,7 +254,7 @@ debug-assertions = true
 codegen-units = 1
 panic = 'unwind'
 
-# The benchmarking profile, used for `cargo bench`.
+# The benchmarking profile, used for `baler bench`.
 [profile.bench]
 opt-level = 3
 debug = false
@@ -264,7 +264,7 @@ debug-assertions = false
 codegen-units = 1
 panic = 'unwind'
 
-# The documentation profile, used for `cargo doc`.
+# The documentation profile, used for `baler doc`.
 [profile.doc]
 opt-level = 0
 debug = 2
@@ -368,7 +368,7 @@ In that case, Servo will describe features in its `Cargo.toml` and they can be
 enabled using command-line flags:
 
 ```
-$ cargo build --release --features "shumway pdf"
+$ baler build --release --features "shumway pdf"
 ```
 
 Default features could be excluded using `--no-default-features`.
@@ -429,7 +429,7 @@ properties:
 * The `[replace]` section in `Cargo.toml` is only recognized at the workspace
   root crate, it's ignored in member crates' manifests.
 
-[RFC 1525]: https://github.com/rust-lang/rfcs/blob/master/text/1525-cargo-workspace.md
+[RFC 1525]: https://github.com/rust-lang/rfcs/blob/master/text/1525-baler-workspace.md
 
 The root crate of a workspace, indicated by the presence of `[workspace]` in its
 manifest, is responsible for defining the entire workspace. All `path`
@@ -452,8 +452,8 @@ A crate may either specify `package.workspace` or specify `[workspace]`. That
 is, a crate cannot both be a root crate in a workspace (contain `[workspace]`)
 and also be a member crate of another workspace (contain `package.workspace`).
 
-Most of the time workspaces will not need to be dealt with as `cargo new` and
-`cargo init` will handle workspace configuration automatically.
+Most of the time workspaces will not need to be dealt with as `baler new` and
+`baler init` will handle workspace configuration automatically.
 
 # The project layout
 
@@ -499,7 +499,7 @@ the library. When compiled, they are placed in the `target/examples` directory.
 They can compile either as executables (with a `main()` function) or libraries and pull in the library by using `extern crate <library-name>`. They are compiled when you run
 your tests to protect them from bitrotting.
 
-You can run individual executable examples with the command `cargo run --example
+You can run individual executable examples with the command `baler run --example
 <example-name>`.
 
 Specify `crate-type` to make an example be compiled as a library:
@@ -510,11 +510,11 @@ name = "foo"
 crate-type = ["staticlib"]
 ```
 
-You can build individual library examples with the command `cargo build --example <example-name>`.
+You can build individual library examples with the command `baler build --example <example-name>`.
 
 # Tests
 
-When you run `cargo test`, Cargo will:
+When you run `baler test`, Cargo will:
 
 * compile and run your library’s unit tests, which are in the files reachable
   from `lib.rs` (naturally, any sections marked with `#[cfg(test)]` will be
@@ -526,7 +526,7 @@ When you run `cargo test`, Cargo will:
 
 ## Integration tests
 
-Each file in `tests/*.rs` is an integration test. When you run `cargo test`,
+Each file in `tests/*.rs` is an integration test. When you run `baler test`,
 Cargo will compile each of these files as a separate crate. The crate can link
 to your library by using `extern crate <library-name>`, like any other code that
 depends on it.
@@ -563,18 +563,18 @@ name = "foo"
 # This field points at where the crate is located, relative to the `Cargo.toml`.
 path = "src/lib.rs"
 
-# A flag for enabling unit tests for this target. This is used by `cargo test`.
+# A flag for enabling unit tests for this target. This is used by `baler test`.
 test = true
 
 # A flag for enabling documentation tests for this target. This is only relevant
 # for libraries, it has no effect on other sections. This is used by
-# `cargo test`.
+# `baler test`.
 doctest = true
 
-# A flag for enabling benchmarks for this target. This is used by `cargo bench`.
+# A flag for enabling benchmarks for this target. This is used by `baler bench`.
 bench = true
 
-# A flag for enabling documentation of this target. This is used by `cargo doc`.
+# A flag for enabling documentation of this target. This is used by `baler doc`.
 doc = true
 
 # If the target is meant to be a compiler plugin, this field must be set to true
@@ -585,7 +585,7 @@ plugin = false
 # be set to true.
 proc-macro = false
 
-# If set to false, `cargo test` will omit the `--test` flag to rustc, which
+# If set to false, `baler test` will omit the `--test` flag to rustc, which
 # stops it from generating a test harness. This is useful when the binary being
 # built manages the test runner itself.
 harness = true

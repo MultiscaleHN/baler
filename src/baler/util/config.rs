@@ -22,7 +22,7 @@ use util::errors::{CargoResult, CargoResultExt, CargoError, internal};
 use util::paths;
 use util::{Filesystem, LazyCell};
 
-use util::toml as cargo_toml;
+use util::toml as baler_toml;
 
 use self::ConfigValue as CV;
 
@@ -32,7 +32,7 @@ pub struct Config {
     rustc: LazyCell<Rustc>,
     values: LazyCell<HashMap<String, ConfigValue>>,
     cwd: PathBuf,
-    cargo_exe: LazyCell<PathBuf>,
+    baler_exe: LazyCell<PathBuf>,
     rustdoc: LazyCell<PathBuf>,
     extra_verbose: Cell<bool>,
     frozen: Cell<bool>,
@@ -61,7 +61,7 @@ impl Config {
             rustc: LazyCell::new(),
             cwd: cwd,
             values: LazyCell::new(),
-            cargo_exe: LazyCell::new(),
+            baler_exe: LazyCell::new(),
             rustdoc: LazyCell::new(),
             extra_verbose: Cell::new(false),
             frozen: Cell::new(false),
@@ -119,10 +119,10 @@ impl Config {
                                                  self.maybe_get_tool("rustc_wrapper")?))
     }
 
-    pub fn cargo_exe(&self) -> CargoResult<&Path> {
-        self.cargo_exe.get_or_try_init(||
+    pub fn baler_exe(&self) -> CargoResult<&Path> {
+        self.baler_exe.get_or_try_init(||
             env::current_exe().and_then(|path| path.canonicalize())
-            .chain_err(|| "couldn't get the path to cargo executable")
+            .chain_err(|| "couldn't get the path to baler executable")
         ).map(AsRef::as_ref)
     }
 
@@ -435,7 +435,7 @@ impl Config {
                 format!("failed to read configuration file `{}`",
                               path.display())
             })?;
-            let toml = cargo_toml::parse(&contents,
+            let toml = baler_toml::parse(&contents,
                                          &path,
                                          self).chain_err(|| {
                 format!("could not parse TOML configuration in `{}`",
@@ -471,7 +471,7 @@ impl Config {
             format!("failed to read configuration file `{}`", credentials.display())
         })?;
 
-        let toml = cargo_toml::parse(&contents,
+        let toml = baler_toml::parse(&contents,
                                      &credentials,
                                      self).chain_err(|| {
             format!("could not parse TOML configuration in `{}`", credentials.display())
@@ -757,24 +757,24 @@ impl fmt::Display for Definition {
 }
 
 pub fn homedir(cwd: &Path) -> Option<PathBuf> {
-    let cargo_home = env::var_os("CARGO_HOME").map(|home| {
+    let baler_home = env::var_os("CARGO_HOME").map(|home| {
         cwd.join(home)
     });
-    if cargo_home.is_some() {
-        return cargo_home
+    if baler_home.is_some() {
+        return baler_home
     }
 
     // If `CARGO_HOME` wasn't defined then we want to fall back to
-    // `$HOME/.cargo`. Note that currently, however, the implementation of
+    // `$HOME/.baler`. Note that currently, however, the implementation of
     // `env::home_dir()` uses the $HOME environment variable *on all platforms*.
     // Platforms like Windows then have *another* fallback based on system APIs
     // if this isn't set.
     //
     // Specifically on Windows this can lead to some weird behavior where if you
-    // invoke cargo inside an MSYS shell it'll have $HOME defined and it'll
+    // invoke baler inside an MSYS shell it'll have $HOME defined and it'll
     // place output there by default. If, however, you run in another shell
     // (like cmd.exe or powershell) it'll place output in
-    // `C:\Users\$user\.cargo` by default.
+    // `C:\Users\$user\.baler` by default.
     //
     // This snippet is meant to handle this case to ensure that on Windows we
     // always place output in the same location, regardless of the shell we were
@@ -782,12 +782,12 @@ pub fn homedir(cwd: &Path) -> Option<PathBuf> {
     // environment, and then afterwards we remove `$HOME` and call it again to
     // see what happened. If they both returned success then on Windows we only
     // return the first (with the $HOME in place) if it already exists. This
-    // should help existing installs of Cargo continue using the same cargo home
+    // should help existing installs of Cargo continue using the same baler home
     // directory.
-    let home_dir_with_env = env::home_dir().map(|p| p.join(".cargo"));
+    let home_dir_with_env = env::home_dir().map(|p| p.join(".baler"));
     let home_dir = env::var_os("HOME");
     env::remove_var("HOME");
-    let home_dir_without_env = env::home_dir().map(|p| p.join(".cargo"));
+    let home_dir_without_env = env::home_dir().map(|p| p.join(".baler"));
     if let Some(home_dir) = home_dir {
         env::set_var("HOME", home_dir);
     }
@@ -812,7 +812,7 @@ fn walk_tree<F>(pwd: &Path, mut walk: F) -> CargoResult<()>
     let mut stash: HashSet<PathBuf> = HashSet::new();
 
     for current in paths::ancestors(pwd) {
-        let possible = current.join(".cargo").join("config");
+        let possible = current.join(".baler").join("config");
         if fs::metadata(&possible).is_ok() {
             walk(&possible)?;
             stash.insert(possible);
@@ -847,7 +847,7 @@ pub fn save_credentials(cfg: &Config,
         format!("failed to read configuration file `{}`",
                       file.path().display())
     })?;
-    let mut toml = cargo_toml::parse(&contents, file.path(), cfg)?;
+    let mut toml = baler_toml::parse(&contents, file.path(), cfg)?;
     toml.as_table_mut()
         .unwrap()
         .insert("token".to_string(),

@@ -1,15 +1,15 @@
 use std::env;
 
-use cargo::core::Workspace;
-use cargo::ops::{self, CompileOptions, MessageFormat, Packages};
-use cargo::util::{CliResult, Config};
-use cargo::util::important_paths::find_root_manifest_for_wd;
+use baler::core::Workspace;
+use baler::ops::{self, CompileOptions, MessageFormat, Packages};
+use baler::util::{CliResult, Config};
+use baler::util::important_paths::find_root_manifest_for_wd;
 
 pub const USAGE: &'static str = "
 Check a local package and all of its dependencies for errors
 
 Usage:
-    cargo check [options]
+    baler check [options]
 
 Options:
     -h, --help                   Print this message
@@ -42,7 +42,7 @@ Options:
 If the --package argument is given, then SPEC is a package id specification
 which indicates which package should be built. If it is not given, then the
 current package is built. For more information on SPEC and its format, see the
-`cargo help pkgid` command.
+`baler help pkgid` command.
 
 Compilation can be configured via the use of profiles which are configured in
 the manifest. The default profile for this command is `dev`, but passing
@@ -79,7 +79,7 @@ pub struct Options {
 }
 
 pub fn execute(options: Options, config: &Config) -> CliResult {
-    debug!("executing; cmd=cargo-check; args={:?}",
+    debug!("executing; cmd=baler-check; args={:?}",
            env::args().collect::<Vec<_>>());
 
     config.configure(options.flag_verbose,

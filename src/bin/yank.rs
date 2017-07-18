@@ -1,5 +1,5 @@
-use cargo::ops;
-use cargo::util::{CliResult, Config};
+use baler::ops;
+use baler::util::{CliResult, Config};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -19,7 +19,7 @@ pub static USAGE: &'static str = "
 Remove a pushed crate from the index
 
 Usage:
-    cargo yank [options] [<crate>]
+    baler yank [options] [<crate>]
 
 Options:
     -h, --help          Print this message

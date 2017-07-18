@@ -6,8 +6,8 @@ use support::paths;
 
 pub use self::InstalledExe as has_installed_exe;
 
-pub fn cargo_home() -> PathBuf {
-    paths::home().join(".cargo")
+pub fn baler_home() -> PathBuf {
+    paths::home().join(".baler")
 }
 
 pub struct InstalledExe(pub &'static str);

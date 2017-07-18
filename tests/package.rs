@@ -1,18 +1,18 @@
 #[macro_use]
-extern crate cargotest;
+extern crate balertest;
 extern crate flate2;
 extern crate git2;
 extern crate hamcrest;
 extern crate tar;
-extern crate cargo;
+extern crate baler;
 
 use std::fs::File;
 use std::io::prelude::*;
 use std::path::{Path, PathBuf};
 
-use cargotest::{cargo_process, process};
-use cargotest::support::{project, execs, paths, git, path2url, cargo_exe};
-use cargotest::support::registry::Package;
+use balertest::{baler_process, process};
+use balertest::support::{project, execs, paths, git, path2url, baler_exe};
+use balertest::support::registry::Package;
 use flate2::read::GzDecoder;
 use hamcrest::{assert_that, existing_file, contains, equal_to};
 use tar::Archive;
@@ -34,7 +34,7 @@ fn simple() {
         "#)
         .file("src/bar.txt", ""); // should be ignored when packaging
 
-    assert_that(p.cargo_process("package"),
+    assert_that(p.baler_process("package"),
                 execs().with_status(0).with_stderr(&format!("\
 [WARNING] manifest has no documentation[..]
 See [..]
@@ -45,12 +45,12 @@ See [..]
 ",
         dir = p.url())));
     assert_that(&p.root().join("target/package/foo-0.0.1.crate"), existing_file());
-    assert_that(p.cargo("package").arg("-l"),
+    assert_that(p.baler("package").arg("-l"),
                 execs().with_status(0).with_stdout("\
 Cargo.toml
 src[/]main.rs
 "));
-    assert_that(p.cargo("package"),
+    assert_that(p.baler("package"),
                 execs().with_status(0).with_stdout(""));
 
     let f = File::open(&p.root().join("target/package/foo-0.0.1.crate")).unwrap();
@@ -81,7 +81,7 @@ fn metadata_warning() {
         .file("src/main.rs", r#"
             fn main() {}
         "#);
-    assert_that(p.cargo_process("package"),
+    assert_that(p.baler_process("package"),
                 execs().with_status(0).with_stderr(&format!("\
 warning: manifest has no description, license, license-file, documentation, \
 homepage or repository.
@@ -104,7 +104,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
         .file("src/main.rs", r#"
             fn main() {}
         "#);
-    assert_that(p.cargo_process("package"),
+    assert_that(p.baler_process("package"),
                 execs().with_status(0).with_stderr(&format!("\
 warning: manifest has no description, documentation, homepage or repository.
 See http://doc.crates.io/manifest.html#package-metadata for more info.
@@ -128,7 +128,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
         .file("src/main.rs", r#"
             fn main() {}
         "#);
-    assert_that(p.cargo_process("package"),
+    assert_that(p.baler_process("package"),
                 execs().with_status(0).with_stderr(&format!("\
 [PACKAGING] foo v0.0.1 ({dir})
 [VERIFYING] foo v0.0.1 ({dir})
@@ -159,12 +159,12 @@ fn package_verbose() {
         "#)
         .file("a/src/lib.rs", "");
     p.build();
-    let mut cargo = cargo_process();
-    cargo.cwd(p.root());
-    assert_that(cargo.clone().arg("build"), execs().with_status(0));
+    let mut baler = baler_process();
+    baler.cwd(p.root());
+    assert_that(baler.clone().arg("build"), execs().with_status(0));
 
     println!("package main repo");
-    assert_that(cargo.clone().arg("package").arg("-v").arg("--no-verify"),
+    assert_that(baler.clone().arg("package").arg("-v").arg("--no-verify"),
                 execs().with_status(0).with_stderr("\
 [WARNING] manifest has no description[..]
 See http://doc.crates.io/manifest.html#package-metadata for more info.
@@ -174,7 +174,7 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
 "));
 
     println!("package sub-repo");
-    assert_that(cargo.arg("package").arg("-v").arg("--no-verify")
+    assert_that(baler.arg("package").arg("-v").arg("--no-verify")
                      .cwd(p.root().join("a")),
                 execs().with_status(0).with_stderr("\
 [WARNING] manifest has no description[..]
@@ -197,9 +197,9 @@ fn package_verification() {
         .file("src/main.rs", r#"
             fn main() {}
         "#);
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0));
-    assert_that(p.cargo("package"),
+    assert_that(p.baler("package"),
                 execs().with_status(0).with_stderr(&format!("\
 [WARNING] manifest has no description[..]
 See http://doc.crates.io/manifest.html#package-metadata for more info.
@@ -234,7 +234,7 @@ fn path_dependency_no_version() {
         "#)
         .file("bar/src/lib.rs", "");
 
-    assert_that(p.cargo_process("package"),
+    assert_that(p.baler_process("package"),
                 execs().with_status(101).with_stderr("\
 [WARNING] manifest has no documentation, homepage or repository.
 See http://doc.crates.io/manifest.html#package-metadata for more info.
@@ -310,7 +310,7 @@ fn exclude() {
         .file("some_dir/dir_deep_5/some_dir/file", "")
         ;
 
-    assert_that(p.cargo_process("package").arg("--no-verify").arg("-v"),
+    assert_that(p.baler_process("package").arg("--no-verify").arg("-v"),
                 execs().with_status(0).with_stdout("").with_stderr("\
 [WARNING] manifest has no description[..]
 See http://doc.crates.io/manifest.html#package-metadata for more info.
@@ -356,7 +356,7 @@ See [..]
 
     assert_that(&p.root().join("target/package/foo-0.0.1.crate"), existing_file());
 
-    assert_that(p.cargo("package").arg("-l"),
+    assert_that(p.baler("package").arg("-l"),
                 execs().with_status(0).with_stdout("\
 Cargo.toml
 dir_root_1[/]some_dir[/]file
@@ -397,7 +397,7 @@ fn include() {
         "#)
         .file("src/bar.txt", ""); // should be ignored when packaging
 
-    assert_that(p.cargo_process("package").arg("--no-verify").arg("-v"),
+    assert_that(p.baler_process("package").arg("--no-verify").arg("-v"),
                 execs().with_status(0).with_stderr("\
 [WARNING] manifest has no description[..]
 See http://doc.crates.io/manifest.html#package-metadata for more info.
@@ -423,7 +423,7 @@ fn package_lib_with_bin() {
         "#)
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("package").arg("-v"),
+    assert_that(p.baler_process("package").arg("-v"),
                 execs().with_status(0));
 }
 
@@ -454,7 +454,7 @@ fn package_git_submodule() {
     repository.reset(&repository.revparse_single("HEAD").unwrap(),
                      git2::ResetType::Hard, None).unwrap();
 
-    assert_that(cargo_process().arg("package").cwd(project.root())
+    assert_that(baler_process().arg("package").cwd(project.root())
                  .arg("--no-verify").arg("-v"),
                 execs().with_status(0).with_stderr_contains("[ARCHIVING] bar/Makefile"));
 }
@@ -476,10 +476,10 @@ fn no_duplicates_from_modified_tracked_files() {
     File::create(p.root().join("src/main.rs")).unwrap().write_all(br#"
             fn main() { println!("A change!"); }
         "#).unwrap();
-    let mut cargo = cargo_process();
-    cargo.cwd(p.root());
-    assert_that(cargo.clone().arg("build"), execs().with_status(0));
-    assert_that(cargo.arg("package").arg("--list"),
+    let mut baler = baler_process();
+    baler.cwd(p.root());
+    assert_that(baler.clone().arg("build"), execs().with_status(0));
+    assert_that(baler.arg("package").arg("--list"),
                 execs().with_status(0).with_stdout("\
 Cargo.toml
 src/main.rs
@@ -488,7 +488,7 @@ src/main.rs
 
 #[test]
 fn ignore_nested() {
-    let cargo_toml = r#"
+    let baler_toml = r#"
             [project]
             name = "nested"
             version = "0.0.1"
@@ -500,14 +500,14 @@ fn ignore_nested() {
             fn main() { println!("hello"); }
         "#;
     let p = project("nested")
-        .file("Cargo.toml", cargo_toml)
+        .file("Cargo.toml", baler_toml)
         .file("src/main.rs", main_rs)
         // If a project happens to contain a copy of itself, we should
         // ignore it.
-        .file("a_dir/nested/Cargo.toml", cargo_toml)
+        .file("a_dir/nested/Cargo.toml", baler_toml)
         .file("a_dir/nested/src/main.rs", main_rs);
 
-    assert_that(p.cargo_process("package"),
+    assert_that(p.baler_process("package"),
                 execs().with_status(0).with_stderr(&format!("\
 [WARNING] manifest has no documentation[..]
 See http://doc.crates.io/manifest.html#package-metadata for more info.
@@ -518,12 +518,12 @@ See http://doc.crates.io/manifest.html#package-metadata for more info.
 ",
         dir = p.url())));
     assert_that(&p.root().join("target/package/nested-0.0.1.crate"), existing_file());
-    assert_that(p.cargo("package").arg("-l"),
+    assert_that(p.baler("package").arg("-l"),
                 execs().with_status(0).with_stdout("\
 Cargo.toml
 src[..]main.rs
 "));
-    assert_that(p.cargo("package"),
+    assert_that(p.baler("package"),
                 execs().with_status(0).with_stdout(""));
 
     let f = File::open(&p.root().join("target/package/nested-0.0.1.crate")).unwrap();
@@ -557,7 +557,7 @@ fn package_weird_characters() {
         "#)
         .file("src/:foo", "");
 
-    assert_that(p.cargo_process("package"),
+    assert_that(p.baler_process("package"),
                 execs().with_status(101).with_stderr("\
 warning: [..]
 See [..]
@@ -582,7 +582,7 @@ fn repackage_on_source_change() {
             fn main() { println!("hello"); }
         "#);
 
-    assert_that(p.cargo_process("package"),
+    assert_that(p.baler_process("package"),
                 execs().with_status(0));
 
     // Add another source file
@@ -595,10 +595,10 @@ fn repackage_on_source_change() {
     "#).unwrap();
     std::mem::drop(file);
 
-    let mut pro = process(&cargo_exe());
+    let mut pro = process(&baler_exe());
     pro.arg("package").cwd(p.root());
 
-    // Check that cargo rebuilds the tarball
+    // Check that baler rebuilds the tarball
     assert_that(pro, execs().with_status(0).with_stderr(&format!("\
 [WARNING] [..]
 See [..]
@@ -645,7 +645,7 @@ fn broken_symlink() {
     p.build();
     t!(fs::symlink("nowhere", &p.root().join("src/foo.rs")));
 
-    assert_that(p.cargo("package").arg("-v"),
+    assert_that(p.baler("package").arg("-v"),
                 execs().with_status(101)
                        .with_stderr_contains("\
 error: failed to prepare local package for uploading
@@ -691,7 +691,7 @@ fn do_not_package_if_repository_is_dirty() {
             # change
     "#);
 
-    assert_that(p.cargo("package"),
+    assert_that(p.baler("package"),
                 execs().with_status(101)
                        .with_stderr("\
 error: 1 files in the working directory contain changes that were not yet \
@@ -732,7 +732,7 @@ fn generated_manifest() {
         "#)
         .file("bar/src/lib.rs", "");
 
-    assert_that(p.cargo_process("package").arg("--no-verify"),
+    assert_that(p.baler_process("package").arg("--no-verify"),
                 execs().with_status(0));
 
     let f = File::open(&p.root().join("target/package/foo-0.0.1.crate")).unwrap();
@@ -755,7 +755,7 @@ r#"# THIS FILE IS AUTOMATICALLY GENERATED BY CARGO
 # to registry (e.g. crates.io) dependencies
 #
 # If you believe there's an error in this file please file an
-# issue against the rust-lang/cargo repository. If you're
+# issue against the rust-lang/baler repository. If you're
 # editing this file be aware that the upstream Cargo.toml
 # will likely look very different (and much more reasonable)
 
@@ -800,7 +800,7 @@ fn ignore_workspace_specifier() {
         .file("bar/src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("package").arg("--no-verify").cwd(p.root().join("bar")),
+    assert_that(p.baler("package").arg("--no-verify").cwd(p.root().join("bar")),
                 execs().with_status(0));
 
     let f = File::open(&p.root().join("target/package/bar-0.1.0.crate")).unwrap();
@@ -823,7 +823,7 @@ r#"# THIS FILE IS AUTOMATICALLY GENERATED BY CARGO
 # to registry (e.g. crates.io) dependencies
 #
 # If you believe there's an error in this file please file an
-# issue against the rust-lang/cargo repository. If you're
+# issue against the rust-lang/baler repository. If you're
 # editing this file be aware that the upstream Cargo.toml
 # will likely look very different (and much more reasonable)
 
@@ -851,6 +851,6 @@ fn package_two_kinds_of_deps() {
         "#)
         .file("src/main.rs", "");
 
-    assert_that(p.cargo_process("package").arg("--no-verify"),
+    assert_that(p.baler_process("package").arg("--no-verify"),
                 execs().with_status(0));
 }

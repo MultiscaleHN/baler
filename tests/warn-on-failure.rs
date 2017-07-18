@@ -1,8 +1,8 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::{project, execs, ProjectBuilder};
-use cargotest::support::registry::Package;
+use balertest::support::{project, execs, ProjectBuilder};
+use balertest::support::registry::Package;
 use hamcrest::assert_that;
 
 static WARNING1: &'static str = "Hello! I'm a warning. :)";
@@ -20,10 +20,10 @@ fn make_lib(lib_src: &str) {
         .file("build.rs", &format!(r#"
             fn main() {{
                 use std::io::Write;
-                println!("cargo:warning={{}}", "{}");
+                println!("baler:warning={{}}", "{}");
                 println!("hidden stdout");
                 write!(&mut ::std::io::stderr(), "hidden stderr");
-                println!("cargo:warning={{}}", "{}");
+                println!("baler:warning={{}}", "{}");
             }}
         "#, WARNING1, WARNING2))
         .file("src/lib.rs", &format!("fn f() {{ {} }}", lib_src))
@@ -48,7 +48,7 @@ fn make_upstream(main_src: &str) -> ProjectBuilder {
 fn no_warning_on_success() {
     make_lib("");
     let upstream = make_upstream("");
-    assert_that(upstream.cargo_process("build"),
+    assert_that(upstream.baler_process("build"),
                 execs().with_status(0)
                        .with_stderr("\
 [UPDATING] registry `[..]`
@@ -63,7 +63,7 @@ fn no_warning_on_success() {
 fn no_warning_on_bin_failure() {
     make_lib("");
     let upstream = make_upstream("hi()");
-    assert_that(upstream.cargo_process("build"),
+    assert_that(upstream.baler_process("build"),
                 execs().with_status(101)
                        .with_stdout_does_not_contain("hidden stdout")
                        .with_stderr_does_not_contain("hidden stderr")
@@ -79,7 +79,7 @@ fn no_warning_on_bin_failure() {
 fn warning_on_lib_failure() {
     make_lib("err()");
     let upstream = make_upstream("");
-    assert_that(upstream.cargo_process("build"),
+    assert_that(upstream.baler_process("build"),
                 execs().with_status(101)
                        .with_stdout_does_not_contain("hidden stdout")
                        .with_stderr_does_not_contain("hidden stderr")

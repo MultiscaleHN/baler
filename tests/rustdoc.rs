@@ -1,7 +1,7 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::{execs, project};
+use balertest::support::{execs, project};
 use hamcrest::{assert_that};
 
 #[test]
@@ -15,7 +15,7 @@ fn rustdoc_simple() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustdoc").arg("-v"),
+    assert_that(p.baler_process("rustdoc").arg("-v"),
                 execs()
                 .with_status(0)
                 .with_stderr(format!("\
@@ -38,7 +38,7 @@ fn rustdoc_args() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustdoc").arg("-v").arg("--").arg("--no-defaults"),
+    assert_that(p.baler_process("rustdoc").arg("-v").arg("--").arg("--no-defaults"),
                 execs()
                 .with_status(0)
                 .with_stderr(format!("\
@@ -81,7 +81,7 @@ fn rustdoc_foo_with_bar_dependency() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo_process("rustdoc").arg("-v").arg("--").arg("--no-defaults"),
+    assert_that(foo.baler_process("rustdoc").arg("-v").arg("--").arg("--no-defaults"),
                 execs()
                 .with_status(0)
                 .with_stderr(format!("\
@@ -127,7 +127,7 @@ fn rustdoc_only_bar_dependency() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo_process("rustdoc").arg("-v").arg("-p").arg("bar")
+    assert_that(foo.baler_process("rustdoc").arg("-v").arg("-p").arg("bar")
                                             .arg("--").arg("--no-defaults"),
                 execs()
                 .with_status(0)
@@ -156,7 +156,7 @@ fn rustdoc_same_name_err() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustdoc").arg("-v")
+    assert_that(p.baler_process("rustdoc").arg("-v")
                  .arg("--").arg("--no-defaults"),
                 execs()
                 .with_status(101)

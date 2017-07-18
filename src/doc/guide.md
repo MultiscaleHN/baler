@@ -17,10 +17,10 @@ To accomplish this goal, Cargo does four things:
 
 # Creating a new project
 
-To start a new project with Cargo, use `cargo new`:
+To start a new project with Cargo, use `baler new`:
 
 ```shell
-$ cargo new hello_world --bin
+$ baler new hello_world --bin
 ```
 
 We’re passing `--bin` because we’re making a binary program: if we
@@ -40,7 +40,7 @@ $ tree .
 1 directory, 2 files
 ```
 
-If we had just used `cargo new hello_world` without the `--bin` flag, then
+If we had just used `baler new hello_world` without the `--bin` flag, then
 we would have a `lib.rs` instead of a `main.rs`. For now, however, this is all
 we need to get started. First, let’s check out `Cargo.toml`:
 
@@ -64,7 +64,7 @@ fn main() {
 
 Cargo generated a “hello world” for us. Let’s compile it:
 
-<pre><code class="language-shell"><span class="gp">$</span> cargo build
+<pre><code class="language-shell"><span class="gp">$</span> baler build
 <span style="font-weight: bold"
 class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello_world)</code></pre>
 
@@ -75,11 +75,11 @@ $ ./target/debug/hello_world
 Hello, world!
 ```
 
-We can also use `cargo run` to compile and then run it, all in one step (You
+We can also use `baler run` to compile and then run it, all in one step (You
 won't see the `Compiling` line if you have not made any changes since you last
 compiled):
 
-<pre><code class="language-shell"><span class="gp">$</span> cargo run
+<pre><code class="language-shell"><span class="gp">$</span> baler run
 <span style="font-weight: bold"
 class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello_world)
 <span style="font-weight: bold"
@@ -89,13 +89,13 @@ Hello, world!</code></pre>
 You’ll now notice a new file, `Cargo.lock`. It contains information about our
 dependencies. Since we don’t have any yet, it’s not very interesting.
 
-Once you’re ready for release, you can use `cargo build --release` to compile your files with optimizations turned on:
+Once you’re ready for release, you can use `baler build --release` to compile your files with optimizations turned on:
 
-<pre><code class="language-shell"><span class="gp">$</span> cargo build --release
+<pre><code class="language-shell"><span class="gp">$</span> baler build --release
 <span style="font-weight: bold"
 class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello_world)</code></pre>
 
-`cargo build --release` puts the resulting binary in
+`baler build --release` puts the resulting binary in
 `target/release` instead of `target/debug`.
 
 Compiling in debug mode is the default for development-- compilation time is
@@ -115,9 +115,9 @@ $ git clone https://github.com/rust-lang-nursery/rand.git
 $ cd rand
 ```
 
-To build, use `cargo build`:
+To build, use `baler build`:
 
-<pre><code class="language-shell"><span class="gp">$</span> cargo build
+<pre><code class="language-shell"><span class="gp">$</span> baler build
 <span style="font-weight: bold" class="s1">   Compiling</span> rand v0.1.0 (file:///path/to/project/rand)</code></pre>
 
 This will fetch all of the dependencies and then build them, along with the
@@ -126,7 +126,7 @@ project.
 # Adding dependencies from crates.io
 
 [crates.io] is the Rust community's central repository that serves
-as a location to discover and download packages. `cargo` is configured to use
+as a location to discover and download packages. `baler` is configured to use
 it by default to find requested packages.
 
 To depend on a library hosted on [crates.io], add it to your `Cargo.toml`.
@@ -166,10 +166,10 @@ time = "0.1.12"
 regex = "0.1.41"
 ```
 
-Re-run `cargo build`, and Cargo will fetch the new dependencies and all of
+Re-run `baler build`, and Cargo will fetch the new dependencies and all of
 their dependencies, compile them all, and update the `Cargo.lock`:
 
-<pre><code class="language-shell"><span class="gp">$</span> cargo build
+<pre><code class="language-shell"><span class="gp">$</span> baler build
 <span style="font-weight: bold" class="s1">    Updating</span> registry `https://github.com/rust-lang/crates.io-index`
 <span style="font-weight: bold" class="s1"> Downloading</span> memchr v0.1.5
 <span style="font-weight: bold" class="s1"> Downloading</span> libc v0.1.10
@@ -189,7 +189,7 @@ Our `Cargo.lock` contains the exact information about which revision of all of
 these dependencies we used.
 
 Now, if `regex` gets updated, we will still build with the same revision until
-we choose to `cargo update`.
+we choose to `baler update`.
 
 You can now use the `regex` library using `extern crate` in `main.rs`.
 
@@ -206,7 +206,7 @@ fn main() {
 
 Running it will show:
 
-<pre><code class="language-shell"><span class="gp">$</span> cargo run
+<pre><code class="language-shell"><span class="gp">$</span> baler run
 <span style="font-weight: bold" class="s1">     Running</span> `target/hello_world`
 Did our date match? true</code></pre>
 
@@ -257,7 +257,7 @@ If you’re building a library that other projects will depend on, put
 command-line tool or an application, check `Cargo.lock` into `git`. If you're
 curious about why that is, see ["Why do binaries have `Cargo.lock` in version
 control, but not libraries?" in the
-FAQ](faq.html#why-do-binaries-have-cargolock-in-version-control-but-not-libraries).
+FAQ](faq.html#why-do-binaries-have-balerlock-in-version-control-but-not-libraries).
 
 Let’s dig in a little bit more.
 
@@ -338,27 +338,27 @@ When we’re ready to opt in to a new version of the library, Cargo can
 re-calculate the dependencies and update things for us:
 
 ```shell
-$ cargo update           # updates all dependencies
-$ cargo update -p rand  # updates just “rand”
+$ baler update           # updates all dependencies
+$ baler update -p rand  # updates just “rand”
 ```
 
 This will write out a new `Cargo.lock` with the new version information. Note
-that the argument to `cargo update` is actually a
+that the argument to `baler update` is actually a
 [Package ID Specification](pkgid-spec.html) and `rand` is just a short
 specification.
 
 # Tests
 
-Cargo can run your tests with the `cargo test` command. Cargo looks for tests
+Cargo can run your tests with the `baler test` command. Cargo looks for tests
 to run in two places: in each of your `src` files and any tests in `tests/`.
 Tests in your `src` files should be unit tests, and tests in `tests/` should be
 integration-style tests. As such, you’ll need to import your crates into
 the files in `tests`.
 
-Here's an example of running `cargo test` in our project, which currently has
+Here's an example of running `baler test` in our project, which currently has
 no tests:
 
-<pre><code class="language-shell"><span class="gp">$</span> cargo test
+<pre><code class="language-shell"><span class="gp">$</span> baler test
 <span style="font-weight: bold"
 class="s1">   Compiling</span> rand v0.1.0 (https://github.com/rust-lang-nursery/rand.git#9f35b8e)
 <span style="font-weight: bold"
@@ -376,12 +376,12 @@ tests.
 
 You can also run a specific test by passing a filter:
 
-<pre><code class="language-shell"><span class="gp">$</span> cargo test foo
+<pre><code class="language-shell"><span class="gp">$</span> baler test foo
 </code></pre>
 
 This will run any test with `foo` in its name.
 
-`cargo test` runs additional checks as well. For example, it will compile any
+`baler test` runs additional checks as well. For example, it will compile any
 examples you’ve included and will also test the examples in your
 documentation. Please see the [testing guide][testing] in the Rust
 documentation for more details.
@@ -410,7 +410,7 @@ information.
 
 # Further reading
 
-Now that you have an overview of how to use cargo and have created your first crate, you may be interested in:
+Now that you have an overview of how to use baler and have created your first crate, you may be interested in:
 
 * [Publishing your crate on crates.io](crates-io.html)
 * [Reading about all the possible ways of specifying dependencies](specifying-dependencies.html)

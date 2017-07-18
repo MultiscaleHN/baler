@@ -1,5 +1,5 @@
-extern crate cargo;
-extern crate cargotest;
+extern crate baler;
+extern crate balertest;
 extern crate hamcrest;
 
 use std::env;
@@ -7,9 +7,9 @@ use std::process::Command;
 use std::sync::{Once, ONCE_INIT};
 use std::sync::atomic::{AtomicBool, ATOMIC_BOOL_INIT, Ordering};
 
-use cargo::util::process;
-use cargotest::{is_nightly, rustc_host};
-use cargotest::support::{project, execs, main_file, basic_bin_manifest};
+use baler::util::process;
+use balertest::{is_nightly, rustc_host};
+use balertest::support::{project, execs, main_file, basic_bin_manifest};
 use hamcrest::{assert_that, existing_file};
 
 fn disabled() -> bool {
@@ -41,7 +41,7 @@ fn disabled() -> bool {
             .file("Cargo.toml", &basic_bin_manifest("cross_test"))
             .file("src/cross_test.rs", &main_file(r#""testing!""#, &[]));
 
-        let result = p.cargo_process("build")
+        let result = p.baler_process("build")
             .arg("--target").arg(&cross_target)
             .exec_with_output();
 
@@ -161,7 +161,7 @@ fn simple_cross() {
         "#, alternate_arch()));
 
     let target = alternate();
-    assert_that(p.cargo_process("build").arg("--target").arg(&target).arg("-v"),
+    assert_that(p.baler_process("build").arg("--target").arg(&target).arg("-v"),
                 execs().with_status(0));
     assert_that(&p.target_bin(&target, "foo"), existing_file());
 
@@ -174,7 +174,7 @@ fn simple_cross_config() {
     if disabled() { return }
 
     let p = project("foo")
-        .file(".cargo/config", &format!(r#"
+        .file(".baler/config", &format!(r#"
             [build]
             target = "{}"
         "#, alternate()))
@@ -198,7 +198,7 @@ fn simple_cross_config() {
         "#, alternate_arch()));
 
     let target = alternate();
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(0));
     assert_that(&p.target_bin(&target, "foo"), existing_file());
 
@@ -235,7 +235,7 @@ fn simple_deps() {
     p2.build();
 
     let target = alternate();
-    assert_that(p.cargo_process("build").arg("--target").arg(&target),
+    assert_that(p.baler_process("build").arg("--target").arg(&target),
                 execs().with_status(0));
     assert_that(&p.target_bin(&target, "foo"), existing_file());
 
@@ -313,7 +313,7 @@ fn plugin_deps() {
     baz.build();
 
     let target = alternate();
-    assert_that(foo.cargo_process("build").arg("--target").arg(&target),
+    assert_that(foo.baler_process("build").arg("--target").arg(&target),
                 execs().with_status(0));
     assert_that(&foo.target_bin(&target, "foo"), existing_file());
 
@@ -395,10 +395,10 @@ fn plugin_to_the_max() {
     baz.build();
 
     let target = alternate();
-    assert_that(foo.cargo_process("build").arg("--target").arg(&target).arg("-v"),
+    assert_that(foo.baler_process("build").arg("--target").arg(&target).arg("-v"),
                 execs().with_status(0));
     println!("second");
-    assert_that(foo.cargo("build").arg("-v")
+    assert_that(foo.baler("build").arg("-v")
                    .arg("--target").arg(&target),
                 execs().with_status(0));
     assert_that(&foo.target_bin(&target, "foo"), existing_file());
@@ -413,7 +413,7 @@ fn linker_and_ar() {
 
     let target = alternate();
     let p = project("foo")
-        .file(".cargo/config", &format!(r#"
+        .file(".baler/config", &format!(r#"
             [target.{}]
             ar = "my-ar-tool"
             linker = "my-linker-tool"
@@ -426,7 +426,7 @@ fn linker_and_ar() {
             }}
         "#, alternate_arch()));
 
-    assert_that(p.cargo_process("build").arg("--target").arg(&target)
+    assert_that(p.baler_process("build").arg("--target").arg(&target)
                                               .arg("-v"),
                 execs().with_status(101)
                        .with_stderr_contains(&format!("\
@@ -510,7 +510,7 @@ fn plugin_with_extra_dylib_dep() {
     baz.build();
 
     let target = alternate();
-    assert_that(foo.cargo_process("build").arg("--target").arg(&target),
+    assert_that(foo.baler_process("build").arg("--target").arg(&target),
                 execs().with_status(0));
 }
 
@@ -543,7 +543,7 @@ fn cross_tests() {
         "#, alternate_arch()));
 
     let target = alternate();
-    assert_that(p.cargo_process("test").arg("--target").arg(&target),
+    assert_that(p.baler_process("test").arg("--target").arg(&target),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] foo v0.0.0 ({foo})
@@ -581,13 +581,13 @@ fn no_cross_doctests() {
 ", foo = p.url());
 
     println!("a");
-    assert_that(p.cargo("test"),
+    assert_that(p.baler("test"),
                 execs().with_status(0)
                        .with_stderr(&host_output));
 
     println!("b");
     let target = host();
-    assert_that(p.cargo("test").arg("--target").arg(&target),
+    assert_that(p.baler("test").arg("--target").arg(&target),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] foo v0.0.0 ({foo})
@@ -598,7 +598,7 @@ fn no_cross_doctests() {
 
     println!("c");
     let target = alternate();
-    assert_that(p.cargo("test").arg("--target").arg(&target),
+    assert_that(p.baler("test").arg("--target").arg(&target),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] foo v0.0.0 ({foo})
@@ -608,7 +608,7 @@ fn no_cross_doctests() {
 }
 
 #[test]
-fn simple_cargo_run() {
+fn simple_baler_run() {
     if disabled() { return }
 
     let p = project("foo")
@@ -626,7 +626,7 @@ fn simple_cargo_run() {
         "#, alternate_arch()));
 
     let target = alternate();
-    assert_that(p.cargo_process("run").arg("--target").arg(&target),
+    assert_that(p.baler_process("run").arg("--target").arg(&target),
                 execs().with_status(0));
 }
 
@@ -665,7 +665,7 @@ fn cross_with_a_build_script() {
         "#, target))
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("build").arg("--target").arg(&target).arg("-v"),
+    assert_that(p.baler_process("build").arg("--target").arg(&target).arg("-v"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] foo v0.0.0 (file://[..])
@@ -719,7 +719,7 @@ fn build_script_needed_for_host_and_target() {
             use std::env;
             fn main() {
                 let target = env::var("TARGET").unwrap();
-                println!("cargo:rustc-flags=-L /path/to/{}", target);
+                println!("baler:rustc-flags=-L /path/to/{}", target);
             }
         "#)
         .file("d2/Cargo.toml", r#"
@@ -736,7 +736,7 @@ fn build_script_needed_for_host_and_target() {
             pub fn d2() { d1::d1(); }
         ");
 
-    assert_that(p.cargo_process("build").arg("--target").arg(&target).arg("-v"),
+    assert_that(p.baler_process("build").arg("--target").arg(&target).arg("-v"),
                 execs().with_status(0)
                        .with_stderr_contains(&format!("\
 [COMPILING] d1 v0.0.0 ({url}/d1)", url = p.url()))
@@ -801,7 +801,7 @@ fn build_deps_for_the_right_arch() {
         .file("d2/src/lib.rs", "");
 
     let target = alternate();
-    assert_that(p.cargo_process("build").arg("--target").arg(&target).arg("-v"),
+    assert_that(p.baler_process("build").arg("--target").arg(&target).arg("-v"),
                 execs().with_status(0));
 }
 
@@ -843,7 +843,7 @@ fn build_script_only_host() {
         "#);
 
     let target = alternate();
-    assert_that(p.cargo_process("build").arg("--target").arg(&target).arg("-v"),
+    assert_that(p.baler_process("build").arg("--target").arg(&target).arg("-v"),
                 execs().with_status(0));
 }
 
@@ -865,7 +865,7 @@ fn plugin_build_script_right_arch() {
         .file("build.rs", "fn main() {}")
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build").arg("-v").arg("--target").arg(alternate()),
+    assert_that(p.baler_process("build").arg("-v").arg("--target").arg(alternate()),
                 execs().with_status(0)
                        .with_stderr("\
 [COMPILING] foo v0.0.1 ([..])
@@ -913,7 +913,7 @@ fn build_script_with_platform_specific_dependencies() {
         "#)
         .file("d2/src/lib.rs", "");
 
-    assert_that(p.cargo_process("build").arg("-v").arg("--target").arg(&target),
+    assert_that(p.baler_process("build").arg("-v").arg("--target").arg(&target),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] d2 v0.0.0 ([..])
@@ -968,7 +968,7 @@ fn platform_specific_dependencies_do_not_leak() {
         "#)
         .file("d2/src/lib.rs", "");
 
-    assert_that(p.cargo_process("build").arg("-v").arg("--target").arg(&target),
+    assert_that(p.baler_process("build").arg("-v").arg("--target").arg(&target),
                 execs().with_status(101)
                        .with_stderr_contains("\
 [..] can't find crate for `d2`[..]"));
@@ -1021,7 +1021,7 @@ fn platform_specific_variables_reflected_in_build_scripts() {
             build = "build.rs"
         "#)
         .file("d1/build.rs", r#"
-            fn main() { println!("cargo:val=1") }
+            fn main() { println!("baler:val=1") }
         "#)
         .file("d1/src/lib.rs", "")
         .file("d2/Cargo.toml", r#"
@@ -1033,13 +1033,13 @@ fn platform_specific_variables_reflected_in_build_scripts() {
             build = "build.rs"
         "#)
         .file("d2/build.rs", r#"
-            fn main() { println!("cargo:val=1") }
+            fn main() { println!("baler:val=1") }
         "#)
         .file("d2/src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("build").arg("-v"), execs().with_status(0));
-    assert_that(p.cargo("build").arg("-v").arg("--target").arg(&target),
+    assert_that(p.baler("build").arg("-v"), execs().with_status(0));
+    assert_that(p.baler("build").arg("-v").arg("--target").arg(&target),
                 execs().with_status(0));
 }
 
@@ -1094,7 +1094,7 @@ fn cross_test_dylib() {
             }}
         "#, alternate_arch()));
 
-    assert_that(p.cargo_process("test").arg("--target").arg(&target),
+    assert_that(p.baler_process("test").arg("--target").arg(&target),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] bar v0.0.1 ({dir}/bar)

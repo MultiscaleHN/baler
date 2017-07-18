@@ -1,5 +1,5 @@
-use cargo::ops;
-use cargo::util::{CliResult, Config};
+use baler::ops;
+use baler::util::{CliResult, Config};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -20,7 +20,7 @@ pub const USAGE: &'static str = "
 Manage the owners of a crate on the registry
 
 Usage:
-    cargo owner [options] [<crate>]
+    baler owner [options] [<crate>]
 
 Options:
     -h, --help               Print this message
@@ -40,7 +40,7 @@ default). Note that owners of a package can upload new versions, yank old
 versions. Explicitly named owners can also modify the set of owners, so take
 caution!
 
-See http://doc.crates.io/crates-io.html#cargo-owner for detailed documentation
+See http://doc.crates.io/crates-io.html#baler-owner for detailed documentation
 and troubleshooting.
 ";
 

@@ -1,7 +1,7 @@
-use cargo::core::Workspace;
-use cargo::ops;
-use cargo::util::{CliResult, Config};
-use cargo::util::important_paths::find_root_manifest_for_wd;
+use baler::core::Workspace;
+use baler::ops;
+use baler::util::{CliResult, Config};
+use baler::util::important_paths::find_root_manifest_for_wd;
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -24,7 +24,7 @@ pub const USAGE: &'static str = "
 Upload a package to the registry
 
 Usage:
-    cargo publish [options]
+    baler publish [options]
 
 Options:
     -h, --help               Print this message
@@ -70,7 +70,7 @@ pub fn execute(options: Options, config: &Config) -> CliResult {
     // remove once it has been decided --host can be removed
     // We may instead want to repurpose the host flag, as
     // mentioned in this issue
-    // https://github.com/rust-lang/cargo/issues/4208
+    // https://github.com/rust-lang/baler/issues/4208
     let msg = "The flag '--host' is no longer valid.
 
 Previous versions of Cargo accepted this flag, but it is being

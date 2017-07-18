@@ -102,7 +102,7 @@ impl<'cfg> PathSource<'cfg> {
     ///
     /// 3) Drop the old strategy and no mor warnings.
     ///
-    /// See <https://github.com/rust-lang/cargo/issues/4268> for more info.
+    /// See <https://github.com/rust-lang/baler/issues/4268> for more info.
     pub fn list_files(&self, pkg: &Package) -> CargoResult<Vec<PathBuf>> {
         let root = pkg.root();
         let no_include_option = pkg.manifest().include().is_empty();
@@ -198,7 +198,7 @@ impl<'cfg> PathSource<'cfg> {
                             .warn(format!(
                                 "Pattern matching for Cargo's include/exclude fields is changing and \
                                 file `{}` WILL be excluded in the next Cargo version.\n\
-                                See https://github.com/rust-lang/cargo/issues/4268 for more info",
+                                See https://github.com/rust-lang/baler/issues/4268 for more info",
                                 relative_path.display()
                             ))?;
                     } else {
@@ -207,7 +207,7 @@ impl<'cfg> PathSource<'cfg> {
                             .warn(format!(
                                 "Pattern matching for Cargo's include/exclude fields is changing and \
                                 file `{}` WILL NOT be included in the next Cargo version.\n\
-                                See https://github.com/rust-lang/cargo/issues/4268 for more info",
+                                See https://github.com/rust-lang/baler/issues/4268 for more info",
                                 relative_path.display()
                             ))?;
                     }
@@ -218,7 +218,7 @@ impl<'cfg> PathSource<'cfg> {
                             .warn(format!(
                                 "Pattern matching for Cargo's include/exclude fields is changing and \
                                 file `{}` WILL NOT be excluded in the next Cargo version.\n\
-                                See https://github.com/rust-lang/cargo/issues/4268 for more info",
+                                See https://github.com/rust-lang/baler/issues/4268 for more info",
                                 relative_path.display()
                             ))?;
                     } else {
@@ -227,7 +227,7 @@ impl<'cfg> PathSource<'cfg> {
                             .warn(format!(
                                 "Pattern matching for Cargo's include/exclude fields is changing and \
                                 file `{}` WILL be included in the next Cargo version.\n\
-                                See https://github.com/rust-lang/cargo/issues/4268 for more info",
+                                See https://github.com/rust-lang/baler/issues/4268 for more info",
                                 relative_path.display()
                             ))?;
                     }
@@ -238,7 +238,7 @@ impl<'cfg> PathSource<'cfg> {
             Ok(glob_should_package)
         };
 
-        // attempt git-prepopulate only if no `include` (rust-lang/cargo#4135)
+        // attempt git-prepopulate only if no `include` (rust-lang/baler#4135)
         if no_include_option {
             if let Some(result) = self.discover_git_and_list_files(pkg, root, &mut filter) {
                 return result;
@@ -439,8 +439,8 @@ impl<'cfg> PathSource<'cfg> {
         // be able to match stdout warnings in the same order.
         //
         // TODO: Drop collect and sort after transition period and dropping wraning tests.
-        // See <https://github.com/rust-lang/cargo/issues/4268>
-        // and <https://github.com/rust-lang/cargo/pull/4270>
+        // See <https://github.com/rust-lang/baler/issues/4268>
+        // and <https://github.com/rust-lang/baler/pull/4270>
         let mut entries: Vec<fs::DirEntry> = fs::read_dir(path)?.map(|e| e.unwrap()).collect();
         entries.sort_by(|a, b| a.path().as_os_str().cmp(b.path().as_os_str()));
         for entry in entries {
@@ -450,7 +450,7 @@ impl<'cfg> PathSource<'cfg> {
             if name.map(|s| s.starts_with('.')) == Some(true) {
                 continue
             } else if is_root {
-                // Skip cargo artifacts
+                // Skip baler artifacts
                 match name {
                     Some("target") | Some("Cargo.lock") => continue,
                     _ => {}

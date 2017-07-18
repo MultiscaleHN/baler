@@ -14,9 +14,9 @@
 //!
 //! One of the major difficulties with a registry is that hosting so many
 //! packages may quickly run into performance problems when dealing with
-//! dependency graphs. It's infeasible for cargo to download the entire contents
+//! dependency graphs. It's infeasible for baler to download the entire contents
 //! of the registry just to resolve one package's dependencies, for example. As
-//! a result, cargo needs some efficient method of querying what packages are
+//! a result, baler needs some efficient method of querying what packages are
 //! available on a registry, what versions are available, and what the
 //! dependencies for each version is.
 //!
@@ -128,16 +128,16 @@
 //!
 //! # Filesystem Hierarchy
 //!
-//! Overall, the `$HOME/.cargo` looks like this when talking about the registry:
+//! Overall, the `$HOME/.baler` looks like this when talking about the registry:
 //!
 //! ```notrust
 //! # A folder under which all registry metadata is hosted (similar to
-//! # $HOME/.cargo/git)
-//! $HOME/.cargo/registry/
+//! # $HOME/.baler/git)
+//! $HOME/.baler/registry/
 //!
-//!     # For each registry that cargo knows about (keyed by hostname + hash)
+//!     # For each registry that baler knows about (keyed by hostname + hash)
 //!     # there is a folder which is the checked out version of the index for
-//!     # the registry in this location. Note that this is done so cargo can
+//!     # the registry in this location. Note that this is done so baler can
 //!     # support multiple registries simultaneously
 //!     index/
 //!         registry1-<hash>/
@@ -176,7 +176,7 @@ use util::{CargoResult, Config, internal, FileLock, Filesystem};
 use util::errors::CargoResultExt;
 use util::hex;
 
-const INDEX_LOCK: &'static str = ".cargo-index-lock";
+const INDEX_LOCK: &'static str = ".baler-index-lock";
 pub static CRATES_IO: &'static str = "https://github.com/rust-lang/crates.io-index";
 
 pub struct RegistrySource<'cfg> {
@@ -306,7 +306,7 @@ impl<'cfg> RegistrySource<'cfg> {
         // implies a lock on the unpacked destination as well, so this access
         // via `into_path_unlocked` should be ok.
         let dst = dst.into_path_unlocked();
-        let ok = dst.join(".cargo-ok");
+        let ok = dst.join(".baler-ok");
         if ok.exists() {
             return Ok(dst)
         }
@@ -369,7 +369,7 @@ impl<'cfg> Source for RegistrySource<'cfg> {
         //
         // If we have a precise version, then we'll update lazily during the
         // querying phase. Note that precise in this case is only
-        // `Some("locked")` as other `Some` values indicate a `cargo update
+        // `Some("locked")` as other `Some` values indicate a `baler update
         // --precise` request
         if self.source_id.precise() != Some("locked") {
             self.do_update()?;
@@ -451,7 +451,7 @@ impl<'de> de::Deserialize<'de> for DependencyList {
     }
 }
 
-/// Converts an encoded dependency in the registry to a cargo dependency
+/// Converts an encoded dependency in the registry to a baler dependency
 fn parse_registry_dependency(dep: RegistryDependency)
                              -> CargoResult<Dependency> {
     let RegistryDependency {
@@ -472,7 +472,7 @@ fn parse_registry_dependency(dep: RegistryDependency)
         None => None,
     };
 
-    // Unfortunately older versions of cargo and/or the registry ended up
+    // Unfortunately older versions of baler and/or the registry ended up
     // publishing lots of entries where the features array contained the
     // empty feature, "", inside. This confuses the resolution process much
     // later on and these features aren't actually valid, so filter them all

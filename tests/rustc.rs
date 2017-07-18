@@ -1,7 +1,7 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::{execs, project};
+use balertest::support::{execs, project};
 use hamcrest::assert_that;
 
 const CARGO_RUSTC_ERROR: &'static str =
@@ -22,7 +22,7 @@ fn build_lib_for_foo() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustc").arg("--lib").arg("-v"),
+    assert_that(p.baler_process("rustc").arg("--lib").arg("-v"),
                 execs()
                 .with_status(0)
                 .with_stderr(format!("\
@@ -50,7 +50,7 @@ fn lib() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustc").arg("--lib").arg("-v")
+    assert_that(p.baler_process("rustc").arg("--lib").arg("-v")
                 .arg("--").arg("-C").arg("debug-assertions=off"),
                 execs()
                 .with_status(0)
@@ -80,7 +80,7 @@ fn build_main_and_allow_unstable_options() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustc").arg("-v").arg("--bin").arg("foo")
+    assert_that(p.baler_process("rustc").arg("-v").arg("--bin").arg("foo")
                 .arg("--").arg("-C").arg("debug-assertions"),
                 execs()
                 .with_status(0)
@@ -118,7 +118,7 @@ fn fails_when_trying_to_build_main_and_lib_with_args() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustc").arg("-v")
+    assert_that(p.baler_process("rustc").arg("-v")
                 .arg("--").arg("-C").arg("debug-assertions"),
                 execs()
                 .with_status(101)
@@ -145,7 +145,7 @@ fn build_with_args_to_one_of_multiple_binaries() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustc").arg("-v").arg("--bin").arg("bar")
+    assert_that(p.baler_process("rustc").arg("-v").arg("--bin").arg("bar")
                 .arg("--").arg("-C").arg("debug-assertions"),
                 execs()
                 .with_status(0)
@@ -180,7 +180,7 @@ fn fails_with_args_to_all_binaries() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustc").arg("-v")
+    assert_that(p.baler_process("rustc").arg("-v")
                 .arg("--").arg("-C").arg("debug-assertions"),
                 execs()
                 .with_status(101)
@@ -201,7 +201,7 @@ fn build_with_args_to_one_of_multiple_tests() {
         .file("tests/baz.rs", r#" "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("rustc").arg("-v").arg("--test").arg("bar")
+    assert_that(p.baler_process("rustc").arg("-v").arg("--test").arg("bar")
                 .arg("--").arg("-C").arg("debug-assertions"),
                 execs()
                 .with_status(0)
@@ -246,7 +246,7 @@ fn build_foo_with_bar_dependency() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo_process("rustc").arg("-v").arg("--").arg("-C").arg("debug-assertions"),
+    assert_that(foo.baler_process("rustc").arg("-v").arg("--").arg("-C").arg("debug-assertions"),
                 execs()
                 .with_status(0)
                 .with_stderr(format!("\
@@ -288,7 +288,7 @@ fn build_only_bar_dependency() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo_process("rustc").arg("-v").arg("-p").arg("bar")
+    assert_that(foo.baler_process("rustc").arg("-v").arg("-p").arg("bar")
                 .arg("--").arg("-C").arg("debug-assertions"),
                 execs()
                 .with_status(0)
@@ -347,13 +347,13 @@ fn fail_with_multiple_packages() {
         "#);
     baz.build();
 
-    assert_that(foo.cargo("rustc").arg("-v").arg("-p").arg("bar")
+    assert_that(foo.baler("rustc").arg("-v").arg("-p").arg("bar")
                                           .arg("-p").arg("baz"),
                 execs().with_status(1).with_stderr("\
 [ERROR] Invalid arguments.
 
 Usage:
-    cargo rustc [options] [--] [<opts>...]"));
+    baler rustc [options] [--] [<opts>...]"));
 }
 
 #[test]
@@ -383,6 +383,6 @@ fn rustc_with_other_profile() {
         .file("a/src/lib.rs", "");
     foo.build();
 
-    assert_that(foo.cargo("rustc").arg("--profile").arg("test"),
+    assert_that(foo.baler("rustc").arg("--profile").arg("test"),
                 execs().with_status(0));
 }

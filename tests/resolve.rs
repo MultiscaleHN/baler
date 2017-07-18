@@ -1,17 +1,17 @@
 #![deny(warnings)]
 
 extern crate hamcrest;
-extern crate cargo;
+extern crate baler;
 
 use std::collections::HashMap;
 
 use hamcrest::{assert_that, equal_to, contains, not};
 
-use cargo::core::source::{SourceId, GitReference};
-use cargo::core::dependency::Kind::{self, Development};
-use cargo::core::{Dependency, PackageId, Summary, Registry};
-use cargo::util::{CargoResult, ToUrl};
-use cargo::core::resolver::{self, Method};
+use baler::core::source::{SourceId, GitReference};
+use baler::core::dependency::Kind::{self, Development};
+use baler::core::{Dependency, PackageId, Summary, Registry};
+use baler::util::{CargoResult, ToUrl};
+use baler::core::resolver::{self, Method};
 
 fn resolve(pkg: PackageId, deps: Vec<Dependency>, registry: &[Summary])
     -> CargoResult<Vec<PackageId>>

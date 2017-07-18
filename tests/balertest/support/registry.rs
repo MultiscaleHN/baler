@@ -12,7 +12,7 @@ use url::Url;
 
 use support::paths;
 use support::git::repo;
-use cargo::util::Sha256;
+use baler::util::Sha256;
 
 pub fn registry_path() -> PathBuf { paths::root().join("registry") }
 pub fn registry() -> Url { Url::from_file_path(&*registry_path()).ok().unwrap() }
@@ -38,7 +38,7 @@ struct Dependency {
 }
 
 pub fn init() {
-    let config = paths::home().join(".cargo/config");
+    let config = paths::home().join(".baler/config");
     t!(fs::create_dir_all(config.parent().unwrap()));
     if fs::metadata(&config).is_ok() {
         return

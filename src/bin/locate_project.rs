@@ -1,6 +1,6 @@
-use cargo;
-use cargo::util::{CliResult, CliError, Config};
-use cargo::util::important_paths::{find_root_manifest_for_wd};
+use baler;
+use baler::util::{CliResult, CliError, Config};
+use baler::util::important_paths::{find_root_manifest_for_wd};
 
 #[derive(Deserialize)]
 pub struct LocateProjectFlags {
@@ -11,7 +11,7 @@ pub const USAGE: &'static str = "
 Print a JSON representation of a Cargo.toml file's location
 
 Usage:
-    cargo locate-project [options]
+    baler locate-project [options]
 
 Options:
     --manifest-path PATH    Path to the manifest to locate
@@ -34,6 +34,6 @@ pub fn execute(flags: LocateProjectFlags,
                       .map_err(|e| CliError::new(e, 1))?;
 
     let location = ProjectLocation { root: string.to_string() };
-    cargo::print_json(&location);
+    baler::print_json(&location);
     Ok(())
 }

@@ -1,4 +1,4 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate libc;
 
 use std::fs;
@@ -8,7 +8,7 @@ use std::process::{Stdio, Child};
 use std::thread;
 use std::time::Duration;
 
-use cargotest::support::project;
+use balertest::support::project;
 
 #[cfg(unix)]
 fn enabled() -> bool {
@@ -80,12 +80,12 @@ fn ctrl_c_kills_everyone() {
         "#, addr));
     p.build();
 
-    let mut cargo = p.cargo("build").build_command();
-    cargo.stdin(Stdio::piped())
+    let mut baler = p.baler("build").build_command();
+    baler.stdin(Stdio::piped())
          .stdout(Stdio::piped())
          .stderr(Stdio::piped())
          .env("__CARGO_TEST_SETSID_PLEASE_DONT_USE_ELSEWHERE", "1");
-    let mut child = cargo.spawn().unwrap();
+    let mut child = baler.spawn().unwrap();
 
     let mut sock = listener.accept().unwrap().0;
     ctrl_c(&mut child);
@@ -96,8 +96,8 @@ fn ctrl_c_kills_everyone() {
         Err(e) => assert_eq!(e.kind(), io::ErrorKind::ConnectionReset),
     }
 
-    // Ok so what we just did was spawn cargo that spawned a build script, then
-    // we killed cargo in hopes of it killing the build script as well. If all
+    // Ok so what we just did was spawn baler that spawned a build script, then
+    // we killed baler in hopes of it killing the build script as well. If all
     // went well the build script is now dead. On Windows, however, this is
     // enforced with job objects which means that it may actually be in the
     // *process* of being torn down at this point.

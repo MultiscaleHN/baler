@@ -1,9 +1,9 @@
 use std::env;
 
-use cargo::core::Workspace;
-use cargo::ops::{self, CompileOptions, CompileMode, MessageFormat, Packages};
-use cargo::util::important_paths::{find_root_manifest_for_wd};
-use cargo::util::{CliResult, CliError, Config};
+use baler::core::Workspace;
+use baler::ops::{self, CompileOptions, CompileMode, MessageFormat, Packages};
+use baler::util::important_paths::{find_root_manifest_for_wd};
+use baler::util::{CliResult, CliError, Config};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -38,7 +38,7 @@ pub const USAGE: &'static str = "
 Compile a package and all of its dependencies
 
 Usage:
-    cargo rustc [options] [--] [<opts>...]
+    baler rustc [options] [--] [<opts>...]
 
 Options:
     -h, --help               Print this message
@@ -82,7 +82,7 @@ processes spawned by Cargo, use the $RUSTFLAGS environment variable or the
 ";
 
 pub fn execute(options: Options, config: &Config) -> CliResult {
-    debug!("executing; cmd=cargo-rustc; args={:?}",
+    debug!("executing; cmd=baler-rustc; args={:?}",
            env::args().collect::<Vec<_>>());
     config.configure(options.flag_verbose,
                      options.flag_quiet,

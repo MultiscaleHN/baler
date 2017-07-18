@@ -1,5 +1,5 @@
 #[macro_use]
-extern crate cargotest;
+extern crate balertest;
 extern crate flate2;
 extern crate hamcrest;
 extern crate tar;
@@ -10,9 +10,9 @@ use std::fs::{self, File};
 use std::io::SeekFrom;
 use std::path::PathBuf;
 
-use cargotest::support::git::repo;
-use cargotest::support::paths;
-use cargotest::support::{project, execs};
+use balertest::support::git::repo;
+use balertest::support::paths;
+use balertest::support::{project, execs};
 use flate2::read::GzDecoder;
 use hamcrest::assert_that;
 use tar::Archive;
@@ -24,7 +24,7 @@ fn upload_path() -> PathBuf { paths::root().join("upload") }
 fn upload() -> Url { Url::from_file_path(&*upload_path()).ok().unwrap() }
 
 fn setup() {
-    let config = paths::root().join(".cargo/config");
+    let config = paths::root().join(".baler/config");
     t!(fs::create_dir_all(config.parent().unwrap()));
     t!(t!(File::create(&config)).write_all(br#"
         [registry]
@@ -55,7 +55,7 @@ fn simple() {
         "#)
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("publish").arg("--no-verify")
+    assert_that(p.baler_process("publish").arg("--no-verify")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(0).with_stderr(&format!("\
 [UPDATING] registry `{reg}`
@@ -111,7 +111,7 @@ fn simple_with_host() {
         "#)
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("publish").arg("--no-verify")
+    assert_that(p.baler_process("publish").arg("--no-verify")
                  .arg("--host").arg(registry().to_string()),
                 execs().with_status(0).with_stderr(&format!("\
 [WARNING] The flag '--host' is no longer valid.
@@ -177,7 +177,7 @@ fn simple_with_index_and_host() {
         "#)
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("publish").arg("--no-verify")
+    assert_that(p.baler_process("publish").arg("--no-verify")
                  .arg("--index").arg(registry().to_string())
                  .arg("--host").arg(registry().to_string()),
                 execs().with_status(0).with_stderr(&format!("\
@@ -245,7 +245,7 @@ fn git_deps() {
         "#)
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("publish").arg("-v").arg("--no-verify")
+    assert_that(p.baler_process("publish").arg("-v").arg("--no-verify")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(101).with_stderr("\
 [UPDATING] registry [..]
@@ -282,7 +282,7 @@ fn path_dependency_no_version() {
         "#)
         .file("bar/src/lib.rs", "");
 
-    assert_that(p.cargo_process("publish")
+    assert_that(p.baler_process("publish")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(101).with_stderr("\
 [UPDATING] registry [..]
@@ -307,7 +307,7 @@ fn unpublishable_crate() {
         "#)
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("publish")
+    assert_that(p.baler_process("publish")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(101).with_stderr("\
 [ERROR] some crates cannot be published.
@@ -337,7 +337,7 @@ fn dont_publish_dirty() {
         .file("src/main.rs", "fn main() {}")
         .build();
 
-    assert_that(p.cargo("publish")
+    assert_that(p.baler("publish")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(101).with_stderr("\
 [UPDATING] registry `[..]`
@@ -372,7 +372,7 @@ fn publish_clean() {
         .file("src/main.rs", "fn main() {}")
         .build();
 
-    assert_that(p.cargo("publish")
+    assert_that(p.baler("publish")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(0));
 }
@@ -400,7 +400,7 @@ fn publish_in_sub_repo() {
         .file("bar/src/main.rs", "fn main() {}")
         .build();
 
-    assert_that(p.cargo("publish").cwd(p.root().join("bar"))
+    assert_that(p.baler("publish").cwd(p.root().join("bar"))
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(0));
 }
@@ -429,7 +429,7 @@ fn publish_when_ignored() {
         .file(".gitignore", "baz")
         .build();
 
-    assert_that(p.cargo("publish")
+    assert_that(p.baler("publish")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(0));
 }
@@ -456,7 +456,7 @@ fn ignore_when_crate_ignored() {
             repository = "foo"
         "#)
         .nocommit_file("bar/src/main.rs", "fn main() {}");
-    assert_that(p.cargo("publish").cwd(p.root().join("bar"))
+    assert_that(p.baler("publish").cwd(p.root().join("bar"))
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(0));
 }
@@ -482,7 +482,7 @@ fn new_crate_rejected() {
             repository = "foo"
         "#)
         .nocommit_file("src/main.rs", "fn main() {}");
-    assert_that(p.cargo("publish")
+    assert_that(p.baler("publish")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(101));
 }
@@ -502,7 +502,7 @@ fn dry_run() {
         "#)
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("publish").arg("--dry-run")
+    assert_that(p.baler_process("publish").arg("--dry-run")
                  .arg("--index").arg(registry().to_string()),
                 execs().with_status(0).with_stderr(&format!("\
 [UPDATING] registry `[..]`

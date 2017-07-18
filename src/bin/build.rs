@@ -1,9 +1,9 @@
 use std::env;
 
-use cargo::core::Workspace;
-use cargo::ops::{self, CompileOptions, MessageFormat, Packages};
-use cargo::util::important_paths::{find_root_manifest_for_wd};
-use cargo::util::{CliResult, Config};
+use baler::core::Workspace;
+use baler::ops::{self, CompileOptions, MessageFormat, Packages};
+use baler::util::important_paths::{find_root_manifest_for_wd};
+use baler::util::{CliResult, Config};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -38,7 +38,7 @@ pub const USAGE: &'static str = "
 Compile a local package and all of its dependencies
 
 Usage:
-    cargo build [options]
+    baler build [options]
 
 Options:
     -h, --help                   Print this message
@@ -71,7 +71,7 @@ Options:
 If the --package argument is given, then SPEC is a package id specification
 which indicates which package should be built. If it is not given, then the
 current package is built. For more information on SPEC and its format, see the
-`cargo help pkgid` command.
+`baler help pkgid` command.
 
 All packages in the workspace are built if the `--all` flag is supplied. The
 `--all` flag may be supplied in the presence of a virtual manifest.
@@ -83,7 +83,7 @@ the --release flag will use the `release` profile instead.
 ";
 
 pub fn execute(options: Options, config: &Config) -> CliResult {
-    debug!("executing; cmd=cargo-build; args={:?}",
+    debug!("executing; cmd=baler-build; args={:?}",
            env::args().collect::<Vec<_>>());
     config.configure(options.flag_verbose,
                      options.flag_quiet,

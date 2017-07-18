@@ -1,8 +1,8 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::is_nightly;
-use cargotest::support::{project, execs};
+use balertest::is_nightly;
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 #[test]
@@ -55,9 +55,9 @@ fn noop() {
         "#);
     noop.build();
 
-    assert_that(client.cargo_process("build"),
+    assert_that(client.baler_process("build"),
                 execs().with_status(0));
-    assert_that(client.cargo("build"),
+    assert_that(client.baler("build"),
                 execs().with_status(0));
 }
 
@@ -132,9 +132,9 @@ fn impl_and_derive() {
         "#);
     transmogrify.build();
 
-    assert_that(client.cargo_process("build"),
+    assert_that(client.baler_process("build"),
                 execs().with_status(0));
-    assert_that(client.cargo("run"),
+    assert_that(client.baler("run"),
                 execs().with_status(0).with_stdout("X { success: true }"));
 }
 
@@ -175,7 +175,7 @@ fn plugin_and_proc_macro() {
         "#);
 
     let msg = "  lib.plugin and lib.proc-macro cannot both be true";
-    assert_that(questionable.cargo_process("build"),
+    assert_that(questionable.baler_process("build"),
                 execs().with_status(101).with_stderr_contains(msg));
 }
 
@@ -215,7 +215,7 @@ fn a() {
 }
 "#);
 
-    assert_that(foo.cargo_process("test"),
+    assert_that(foo.baler_process("test"),
                 execs().with_status(0)
                        .with_stdout_contains("test a ... ok")
                        .with_stdout_contains_n("test [..] ... ok", 2));

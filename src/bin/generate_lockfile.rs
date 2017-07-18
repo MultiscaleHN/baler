@@ -1,9 +1,9 @@
 use std::env;
 
-use cargo::core::Workspace;
-use cargo::ops;
-use cargo::util::{CliResult, Config};
-use cargo::util::important_paths::find_root_manifest_for_wd;
+use baler::core::Workspace;
+use baler::ops;
+use baler::util::{CliResult, Config};
+use baler::util::important_paths::find_root_manifest_for_wd;
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -19,7 +19,7 @@ pub const USAGE: &'static str = "
 Generate the lockfile for a project
 
 Usage:
-    cargo generate-lockfile [options]
+    baler generate-lockfile [options]
 
 Options:
     -h, --help               Print this message
@@ -32,7 +32,7 @@ Options:
 ";
 
 pub fn execute(options: Options, config: &Config) -> CliResult {
-    debug!("executing; cmd=cargo-generate-lockfile; args={:?}", env::args().collect::<Vec<_>>());
+    debug!("executing; cmd=baler-generate-lockfile; args={:?}", env::args().collect::<Vec<_>>());
     config.configure(options.flag_verbose,
                      options.flag_quiet,
                      &options.flag_color,

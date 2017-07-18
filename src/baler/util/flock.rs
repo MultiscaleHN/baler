@@ -263,7 +263,7 @@ fn acquire(config: &Config,
     // should avoid calling any `flock` functions at all, and it wouldn't work
     // there anyway.
     //
-    // [1]: https://github.com/rust-lang/cargo/issues/2615
+    // [1]: https://github.com/rust-lang/baler/issues/2615
     if is_on_nfs_mount(path) {
         return Ok(())
     }

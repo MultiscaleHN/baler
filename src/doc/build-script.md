@@ -44,22 +44,22 @@ the source directory of the build script’s package.
 
 ## Outputs of the Build Script
 
-All the lines printed to stdout by a build script are written to a file like `target/debug/build/<pkg>/output` (the precise location may depend on your configuration). Any line that starts with `cargo:` is interpreted directly by Cargo. This line must be of the form `cargo:key=value`, like the examples below:
+All the lines printed to stdout by a build script are written to a file like `target/debug/build/<pkg>/output` (the precise location may depend on your configuration). Any line that starts with `baler:` is interpreted directly by Cargo. This line must be of the form `baler:key=value`, like the examples below:
 
 ```notrust
 # specially recognized by Cargo
-cargo:rustc-link-lib=static=foo
-cargo:rustc-link-search=native=/path/to/foo
-cargo:rustc-cfg=foo
-cargo:rustc-env=FOO=bar
+baler:rustc-link-lib=static=foo
+baler:rustc-link-search=native=/path/to/foo
+baler:rustc-cfg=foo
+baler:rustc-env=FOO=bar
 # arbitrary user-defined metadata
-cargo:root=/path/to/foo
-cargo:libdir=/path/to/foo/lib
-cargo:include=/path/to/foo/include
+baler:root=/path/to/foo
+baler:libdir=/path/to/foo/lib
+baler:include=/path/to/foo/include
 ```
 
 On the other hand, lines printed to stderr are written to a file like
-`target/debug/build/<pkg>/stderr` but are not interpreted by cargo.
+`target/debug/build/<pkg>/stderr` but are not interpreted by baler.
 
 There are a few special keys that Cargo recognizes, some affecting how the
 crate is built:
@@ -95,7 +95,7 @@ crate is built:
   another line for everything inside it, recursively.)
   Note that if the build script itself (or one of its dependencies) changes,
   then it's rebuilt and rerun unconditionally, so
-  `cargo:rerun-if-changed=build.rs` is almost always redundant (unless you
+  `baler:rerun-if-changed=build.rs` is almost always redundant (unless you
   want to ignore changes in all other files except for `build.rs`).
 * `rerun-if-env-changed=VAR` is the name of an environment variable which
   indicates that if the environment variable's value changes the build script
@@ -340,8 +340,8 @@ fn main() {
                       .current_dir(&Path::new(&out_dir))
                       .status().unwrap();
 
-    println!("cargo:rustc-link-search=native={}", out_dir);
-    println!("cargo:rustc-link-lib=static=hello");
+    println!("baler:rustc-link-search=native={}", out_dir);
+    println!("baler:rustc-link-lib=static=hello");
 }
 ```
 
@@ -535,7 +535,7 @@ doing so that we need to take into account, however:
   optional dependency of libssh2. We’re sure we’ve already built it (it’s a
   Cargo dependency), we just need to communicate this information. To do this
   we leverage the metadata format to communicate information between build
-  scripts. In this example the libssh2 package printed out `cargo:root=...` to
+  scripts. In this example the libssh2 package printed out `baler:root=...` to
   tell us where libssh2 is installed at, and we can then pass this along to
   cmake with the `CMAKE_PREFIX_PATH` environment variable.
 

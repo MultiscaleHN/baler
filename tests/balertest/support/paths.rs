@@ -34,9 +34,9 @@ fn global_root() -> PathBuf {
     path.pop(); // chop off exe name
     path.pop(); // chop off 'debug'
 
-    // If `cargo test` is run manually then our path looks like
+    // If `baler test` is run manually then our path looks like
     // `target/debug/foo`, in which case our `path` is already pointing at
-    // `target`. If, however, `cargo test --target $target` is used then the
+    // `target`. If, however, `baler test --target $target` is used then the
     // output is `target/$target/debug/foo`, so our path is pointing at
     // `target/$target`. Here we conditionally pop the `$target` name.
     if path.file_name().and_then(|s| s.to_str()) != Some("target") {

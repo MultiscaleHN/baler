@@ -1,5 +1,5 @@
-extern crate cargo;
-extern crate cargotest;
+extern crate baler;
+extern crate balertest;
 extern crate git2;
 extern crate hamcrest;
 
@@ -7,14 +7,14 @@ use std::fs::{self, File};
 use std::io::prelude::*;
 use std::path::Path;
 
-use cargo::util::process;
-use cargotest::sleep_ms;
-use cargotest::support::paths::{self, CargoPathExt};
-use cargotest::support::{git, project, execs, main_file, path2url};
+use baler::util::process;
+use balertest::sleep_ms;
+use balertest::support::paths::{self, CargoPathExt};
+use balertest::support::{git, project, execs, main_file, path2url};
 use hamcrest::{assert_that,existing_file};
 
 #[test]
-fn cargo_compile_simple_git_dep() {
+fn baler_compile_simple_git_dep() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
@@ -53,7 +53,7 @@ fn cargo_compile_simple_git_dep() {
     let root = project.root();
     let git_root = git_project.root();
 
-    assert_that(project.cargo_process("build"),
+    assert_that(project.baler_process("build"),
         execs()
         .with_stderr(&format!("[UPDATING] git repository `{}`\n\
                               [COMPILING] dep1 v0.5.0 ({}#[..])\n\
@@ -71,7 +71,7 @@ fn cargo_compile_simple_git_dep() {
 }
 
 #[test]
-fn cargo_compile_git_dep_branch() {
+fn baler_compile_git_dep_branch() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
@@ -118,7 +118,7 @@ fn cargo_compile_git_dep_branch() {
     let root = project.root();
     let git_root = git_project.root();
 
-    assert_that(project.cargo_process("build"),
+    assert_that(project.baler_process("build"),
         execs()
         .with_stderr(&format!("[UPDATING] git repository `{}`\n\
                               [COMPILING] dep1 v0.5.0 ({}?branch=branchy#[..])\n\
@@ -136,7 +136,7 @@ fn cargo_compile_git_dep_branch() {
 }
 
 #[test]
-fn cargo_compile_git_dep_tag() {
+fn baler_compile_git_dep_tag() {
     let project = project("foo");
     let git_project = git::new("dep1", |project| {
         project
@@ -185,7 +185,7 @@ fn cargo_compile_git_dep_tag() {
     let root = project.root();
     let git_root = git_project.root();
 
-    assert_that(project.cargo_process("build"),
+    assert_that(project.baler_process("build"),
         execs()
         .with_stderr(&format!("[UPDATING] git repository `{}`\n\
                               [COMPILING] dep1 v0.5.0 ({}?tag=v0.1.0#[..])\n\
@@ -200,12 +200,12 @@ fn cargo_compile_git_dep_tag() {
     assert_that(process(&project.bin("foo")),
                 execs().with_stdout("hello world\n"));
 
-    assert_that(project.cargo("build"),
+    assert_that(project.baler("build"),
                 execs().with_status(0));
 }
 
 #[test]
-fn cargo_compile_with_nested_paths() {
+fn baler_compile_with_nested_paths() {
     let git_project = git::new("dep1", |project| {
         project
             .file("Cargo.toml", r#"
@@ -269,7 +269,7 @@ fn cargo_compile_with_nested_paths() {
         .file("src/parent.rs",
               &main_file(r#""{}", dep1::hello()"#, &["dep1"]));
 
-    p.cargo_process("build")
+    p.baler_process("build")
         .exec_with_output()
         .unwrap();
 
@@ -280,7 +280,7 @@ fn cargo_compile_with_nested_paths() {
 }
 
 #[test]
-fn cargo_compile_with_malformed_nested_paths() {
+fn baler_compile_with_malformed_nested_paths() {
     let git_project = git::new("dep1", |project| {
         project
             .file("Cargo.toml", r#"
@@ -324,7 +324,7 @@ fn cargo_compile_with_malformed_nested_paths() {
         .file("src/parent.rs",
               &main_file(r#""{}", dep1::hello()"#, &["dep1"]));
 
-    p.cargo_process("build")
+    p.baler_process("build")
         .exec_with_output()
         .unwrap();
 
@@ -335,7 +335,7 @@ fn cargo_compile_with_malformed_nested_paths() {
 }
 
 #[test]
-fn cargo_compile_with_meta_package() {
+fn baler_compile_with_meta_package() {
     let git_project = git::new("meta-dep", |project| {
         project
             .file("dep1/Cargo.toml", r#"
@@ -397,7 +397,7 @@ fn cargo_compile_with_meta_package() {
         .file("src/parent.rs",
               &main_file(r#""{} {}", dep1::hello(), dep2::hello()"#, &["dep1", "dep2"]));
 
-    p.cargo_process("build")
+    p.baler_process("build")
         .exec_with_output()
         .unwrap();
 
@@ -408,7 +408,7 @@ fn cargo_compile_with_meta_package() {
 }
 
 #[test]
-fn cargo_compile_with_short_ssh_git() {
+fn baler_compile_with_short_ssh_git() {
     let url = "git@github.com:a/dep";
 
     let project = project("project")
@@ -429,7 +429,7 @@ fn cargo_compile_with_short_ssh_git() {
         "#, url))
         .file("src/foo.rs", &main_file(r#""{}", dep1::hello()"#, &["dep1"]));
 
-    assert_that(project.cargo_process("build"),
+    assert_that(project.baler_process("build"),
         execs()
         .with_stdout("")
         .with_stderr(&format!("\
@@ -504,7 +504,7 @@ fn two_revs_same_deps() {
 
     baz.build();
 
-    assert_that(foo.cargo_process("build").arg("-v"),
+    assert_that(foo.baler_process("build").arg("-v"),
                 execs().with_status(0));
     assert_that(&foo.bin("foo"), existing_file());
     assert_that(foo.process(&foo.bin("foo")), execs().with_status(0));
@@ -546,7 +546,7 @@ fn recompilation() {
               &main_file(r#""{:?}", bar::bar()"#, &["bar"]));
 
     // First time around we should compile both foo and bar
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_stderr(&format!("[UPDATING] git repository `{}`\n\
                                              [COMPILING] bar v0.5.0 ({}#[..])\n\
                                              [COMPILING] foo v0.5.0 ({})\n\
@@ -557,7 +557,7 @@ fn recompilation() {
                                             p.url())));
 
     // Don't recompile the second time
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_stdout(""));
 
     // Modify a file manually, shouldn't trigger a recompile
@@ -565,14 +565,14 @@ fn recompilation() {
         pub fn bar() { println!("hello!"); }
     "#).unwrap();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_stdout(""));
 
-    assert_that(p.cargo("update"),
+    assert_that(p.baler("update"),
                 execs().with_stderr(&format!("[UPDATING] git repository `{}`",
                                             git_project.url())));
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_stdout(""));
 
     // Commit the changes and make sure we don't trigger a recompile because the
@@ -582,18 +582,18 @@ fn recompilation() {
     git::commit(&repo);
 
     println!("compile after commit");
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_stdout(""));
     p.root().move_into_the_past();
 
     // Update the dependency and carry on!
-    assert_that(p.cargo("update"),
+    assert_that(p.baler("update"),
                 execs().with_stderr(&format!("[UPDATING] git repository `{}`\n\
                                               [UPDATING] bar v0.5.0 ([..]) -> #[..]\n\
                                              ",
                                             git_project.url())));
     println!("going for the last compile");
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_stderr(&format!("[COMPILING] bar v0.5.0 ({}#[..])\n\
                                              [COMPILING] foo v0.5.0 ({})\n\
                                              [FINISHED] dev [unoptimized + debuginfo] target(s) \
@@ -602,10 +602,10 @@ fn recompilation() {
                                             p.url())));
 
     // Make sure clean only cleans one dep
-    assert_that(p.cargo("clean")
+    assert_that(p.baler("clean")
                  .arg("-p").arg("foo"),
                 execs().with_stdout(""));
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_stderr(&format!("[COMPILING] foo v0.5.0 ({})\n\
                                               [FINISHED] dev [unoptimized + debuginfo] target(s) \
                                               in [..]\n",
@@ -672,7 +672,7 @@ fn update_with_shared_deps() {
         .file("dep2/src/lib.rs", "");
 
     // First time around we should compile both foo and bar
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_stderr(&format!("\
 [UPDATING] git repository `{git}`
 [COMPILING] bar v0.5.0 ({git}#[..])
@@ -695,13 +695,13 @@ git = git_project.url(), dir = p.url())));
 
     // By default, not transitive updates
     println!("dep1 update");
-    assert_that(p.cargo("update")
+    assert_that(p.baler("update")
                  .arg("-p").arg("dep1"),
                 execs().with_stdout(""));
 
     // Don't do anything bad on a weird --precise argument
     println!("bar bad precise update");
-    assert_that(p.cargo("update")
+    assert_that(p.baler("update")
                  .arg("-p").arg("bar")
                  .arg("--precise").arg("0.1.2"),
                 execs().with_status(101).with_stderr("\
@@ -714,14 +714,14 @@ To learn more, run the command again with --verbose.
     // Specifying a precise rev to the old rev shouldn't actually update
     // anything because we already have the rev in the db.
     println!("bar precise update");
-    assert_that(p.cargo("update")
+    assert_that(p.baler("update")
                  .arg("-p").arg("bar")
                  .arg("--precise").arg(&old_head.to_string()),
                 execs().with_stdout(""));
 
     // Updating aggressively should, however, update the repo.
     println!("dep1 aggressive update");
-    assert_that(p.cargo("update")
+    assert_that(p.baler("update")
                  .arg("-p").arg("dep1")
                  .arg("--aggressive"),
                 execs().with_stderr(&format!("[UPDATING] git repository `{}`\n\
@@ -730,7 +730,7 @@ To learn more, run the command again with --verbose.
 
     // Make sure we still only compile one version of the git repo
     println!("build");
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_stderr(&format!("\
 [COMPILING] bar v0.5.0 ({git}#[..])
 [COMPILING] [..] v0.5.0 ({dir}[..]dep[..])
@@ -740,7 +740,7 @@ To learn more, run the command again with --verbose.
                     git = git_project.url(), dir = p.url())));
 
     // We should be able to update transitive deps
-    assert_that(p.cargo("update").arg("-p").arg("bar"),
+    assert_that(p.baler("update").arg("-p").arg("bar"),
                 execs().with_stderr(&format!("[UPDATING] git repository `{}`",
                                             git_project.url())));
 }
@@ -783,7 +783,7 @@ fn dep_with_submodule() {
             pub fn foo() { dep1::dep() }
         ");
 
-    assert_that(project.cargo_process("build"),
+    assert_that(project.baler_process("build"),
                 execs().with_stderr("\
 [UPDATING] git repository [..]
 [COMPILING] dep1 [..]
@@ -854,7 +854,7 @@ Caused by:
 
 To learn more, run the command again with --verbose.\n", path2url(git_project.root()));
 
-    assert_that(project.cargo_process("build"),
+    assert_that(project.baler_process("build"),
                 execs().with_stderr(expected).with_status(101));
 }
 
@@ -897,7 +897,7 @@ fn two_deps_only_update_one() {
         "#, git1.url(), git2.url()))
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(project.cargo_process("build"),
+    assert_that(project.baler_process("build"),
         execs()
         .with_stderr(&format!("[UPDATING] git repository `[..]`\n\
                               [UPDATING] git repository `[..]`\n\
@@ -914,7 +914,7 @@ fn two_deps_only_update_one() {
     git::add(&repo);
     git::commit(&repo);
 
-    assert_that(project.cargo("update")
+    assert_that(project.baler("update")
                        .arg("-p").arg("dep1"),
         execs()
         .with_stderr(&format!("[UPDATING] git repository `{}`\n\
@@ -952,7 +952,7 @@ fn stale_cached_version() {
             fn main() { assert_eq!(bar::bar(), 1) }
         "#);
 
-    assert_that(foo.cargo_process("build"), execs().with_status(0));
+    assert_that(foo.baler_process("build"), execs().with_status(0));
     assert_that(foo.process(&foo.bin("foo")), execs().with_status(0));
 
     // Update the repo, and simulate someone else updating the lockfile and then
@@ -983,7 +983,7 @@ fn stale_cached_version() {
     "#, url = bar.url(), hash = rev).as_bytes()).unwrap();
 
     // Now build!
-    assert_that(foo.cargo("build"),
+    assert_that(foo.baler("build"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [UPDATING] git repository `{bar}`
@@ -1037,7 +1037,7 @@ fn dep_with_changed_submodule() {
         ");
 
     println!("first run");
-    assert_that(project.cargo_process("run"), execs()
+    assert_that(project.baler_process("run"), execs()
                 .with_stderr("[UPDATING] git repository `[..]`\n\
                                       [COMPILING] dep1 v0.5.0 ([..])\n\
                                       [COMPILING] foo v0.5.0 ([..])\n\
@@ -1072,7 +1072,7 @@ fn dep_with_changed_submodule() {
     sleep_ms(1000);
     // Update the dependency and carry on!
     println!("update");
-    assert_that(project.cargo("update").arg("-v"),
+    assert_that(project.baler("update").arg("-v"),
                 execs()
                 .with_stderr("")
                 .with_stderr(&format!("[UPDATING] git repository `{}`\n\
@@ -1080,7 +1080,7 @@ fn dep_with_changed_submodule() {
                                       ", git_project.url())));
 
     println!("last run");
-    assert_that(project.cargo("run"), execs()
+    assert_that(project.baler("run"), execs()
                 .with_stderr("[COMPILING] dep1 v0.5.0 ([..])\n\
                                       [COMPILING] foo v0.5.0 ([..])\n\
                                       [FINISHED] dev [unoptimized + debuginfo] target(s) in \
@@ -1128,7 +1128,7 @@ fn dev_deps_with_testing() {
 
     // Generate a lockfile which did not use `bar` to compile, but had to update
     // `bar` to generate the lockfile
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
         execs().with_stderr(&format!("\
 [UPDATING] git repository `{bar}`
 [COMPILING] foo v0.5.0 ({url})
@@ -1137,7 +1137,7 @@ fn dev_deps_with_testing() {
 
     // Make sure we use the previous resolution of `bar` instead of updating it
     // a second time.
-    assert_that(p.cargo("test"),
+    assert_that(p.baler("test"),
                 execs().with_stderr("\
 [COMPILING] [..] v0.5.0 ([..])
 [COMPILING] [..] v0.5.0 ([..]
@@ -1166,7 +1166,7 @@ fn git_build_cmd_freshness() {
 
     sleep_ms(1000);
 
-    assert_that(foo.cargo("build"),
+    assert_that(foo.baler("build"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] foo v0.0.0 ({url})
@@ -1175,14 +1175,14 @@ fn git_build_cmd_freshness() {
 
     // Smoke test to make sure it doesn't compile again
     println!("first pass");
-    assert_that(foo.cargo("build"),
+    assert_that(foo.baler("build"),
                 execs().with_status(0)
                        .with_stdout(""));
 
     // Modify an ignored file and make sure we don't rebuild
     println!("second pass");
     File::create(&foo.root().join("src/bar.rs")).unwrap();
-    assert_that(foo.cargo("build"),
+    assert_that(foo.baler("build"),
                 execs().with_status(0)
                        .with_stdout(""));
 }
@@ -1220,7 +1220,7 @@ fn git_name_not_always_needed() {
 
     // Generate a lockfile which did not use `bar` to compile, but had to update
     // `bar` to generate the lockfile
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
         execs().with_stderr(&format!("\
 [UPDATING] git repository `{bar}`
 [COMPILING] foo v0.5.0 ({url})
@@ -1255,7 +1255,7 @@ fn git_repo_changing_no_rebuild() {
         .file("build.rs", "fn main() {}");
     p1.build();
     p1.root().move_into_the_past();
-    assert_that(p1.cargo("build"),
+    assert_that(p1.baler("build"),
                 execs().with_stderr(&format!("\
 [UPDATING] git repository `{bar}`
 [COMPILING] [..]
@@ -1282,7 +1282,7 @@ fn git_repo_changing_no_rebuild() {
             git = '{}'
         "#, bar.url()))
         .file("src/main.rs", "fn main() {}");
-    assert_that(p2.cargo_process("build"),
+    assert_that(p2.baler_process("build"),
                 execs().with_stderr(&format!("\
 [UPDATING] git repository `{bar}`
 [COMPILING] [..]
@@ -1292,7 +1292,7 @@ fn git_repo_changing_no_rebuild() {
 
     // And now for the real test! Make sure that p1 doesn't get rebuilt
     // even though the git repo has changed.
-    assert_that(p1.cargo("build"),
+    assert_that(p1.baler("build"),
                 execs().with_stdout(""));
 }
 
@@ -1342,7 +1342,7 @@ fn git_dep_build_cmd() {
 
     p.root().join("bar").move_into_the_past();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
 
     assert_that(process(&p.bin("foo")),
@@ -1352,7 +1352,7 @@ fn git_dep_build_cmd() {
     fs::File::create(&p.root().join("bar/src/bar.rs.in")).unwrap()
              .write_all(b"pub fn gimme() -> i32 { 1 }").unwrap();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
 
     assert_that(process(&p.bin("foo")),
@@ -1381,12 +1381,12 @@ fn fetch_downloads() {
             git = '{}'
         "#, bar.url()))
         .file("src/main.rs", "fn main() {}");
-    assert_that(p.cargo_process("fetch"),
+    assert_that(p.baler_process("fetch"),
                 execs().with_status(0).with_stderr(&format!("\
 [UPDATING] git repository `{url}`
 ", url = bar.url())));
 
-    assert_that(p.cargo("fetch"),
+    assert_that(p.baler("fetch"),
                 execs().with_status(0).with_stdout(""));
 }
 
@@ -1413,7 +1413,7 @@ fn warnings_in_git_dep() {
         "#, bar.url()))
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
         execs()
         .with_stderr(&format!("[UPDATING] git repository `{}`\n\
                               [COMPILING] bar v0.5.0 ({}#[..])\n\
@@ -1470,8 +1470,8 @@ fn update_ambiguous() {
         "#, foo1.url(), bar.url()))
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("generate-lockfile"), execs().with_status(0));
-    assert_that(p.cargo("update")
+    assert_that(p.baler_process("generate-lockfile"), execs().with_status(0));
+    assert_that(p.baler("update")
                  .arg("-p").arg("foo"),
                 execs().with_status(101)
                        .with_stderr("\
@@ -1516,8 +1516,8 @@ fn update_one_dep_in_repo_with_many_deps() {
         "#, foo.url(), foo.url()))
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("generate-lockfile"), execs().with_status(0));
-    assert_that(p.cargo("update")
+    assert_that(p.baler_process("generate-lockfile"), execs().with_status(0));
+    assert_that(p.baler("update")
                  .arg("-p").arg("foo"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
@@ -1573,7 +1573,7 @@ fn switch_deps_does_not_update_transitive() {
         .file("src/main.rs", "fn main() {}");
 
     p.build();
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [UPDATING] git repository `{}`
@@ -1595,7 +1595,7 @@ fn switch_deps_does_not_update_transitive() {
             git = '{}'
     "#, dep2.url()).as_bytes()).unwrap();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [UPDATING] git repository `{}`
@@ -1639,7 +1639,7 @@ fn update_one_source_updates_all_packages_in_that_git_source() {
         .file("src/main.rs", "fn main() {}");
 
     p.build();
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0));
 
     let repo = git2::Repository::open(&dep.root()).unwrap();
@@ -1652,7 +1652,7 @@ fn update_one_source_updates_all_packages_in_that_git_source() {
     git::add(&repo);
     git::commit(&repo);
 
-    assert_that(p.cargo("update").arg("-p").arg("dep"),
+    assert_that(p.baler("update").arg("-p").arg("dep"),
                 execs().with_status(0));
     let mut lockfile = String::new();
     File::open(&p.root().join("Cargo.lock")).unwrap()
@@ -1703,7 +1703,7 @@ fn switch_sources() {
         .file("b/src/lib.rs", "pub fn main() {}");
 
     p.build();
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0)
                        .with_stderr("\
 [UPDATING] git repository `file://[..]a1`
@@ -1722,7 +1722,7 @@ fn switch_sources() {
         git = '{}'
     "#, a2.url()).as_bytes()).unwrap();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(0)
                        .with_stderr("\
 [UPDATING] git repository `file://[..]a2`
@@ -1760,7 +1760,7 @@ fn dont_require_submodules_are_checked_out() {
     let dst = paths::home().join("foo");
     git2::Repository::clone(&url, &dst).unwrap();
 
-    assert_that(git1.cargo("build").arg("-v").cwd(&dst),
+    assert_that(git1.baler("build").arg("-v").cwd(&dst),
                 execs().with_status(0));
 }
 
@@ -1803,7 +1803,7 @@ fn doctest_same_name() {
             extern crate a;
         "#);
 
-    assert_that(p.cargo_process("test").arg("-v"),
+    assert_that(p.baler_process("test").arg("-v"),
                 execs().with_status(0));
 }
 
@@ -1833,7 +1833,7 @@ fn lints_are_suppressed() {
         "#, a.url()))
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr("\
 [UPDATING] git repository `[..]`
 [COMPILING] a v0.5.0 ([..])
@@ -1869,7 +1869,7 @@ fn denied_lints_are_allowed() {
         "#, a.url()))
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr("\
 [UPDATING] git repository `[..]`
 [COMPILING] a v0.5.0 ([..])
@@ -1910,7 +1910,7 @@ fn add_a_git_dep() {
         "#)
         .file("a/src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"), execs().with_status(0));
+    assert_that(p.baler_process("build"), execs().with_status(0));
 
     File::create(p.root().join("a/Cargo.toml")).unwrap().write_all(format!(r#"
         [package]
@@ -1922,7 +1922,7 @@ fn add_a_git_dep() {
         git = {{ git = '{}' }}
     "#, git.url()).as_bytes()).unwrap();
 
-    assert_that(p.cargo("build"), execs().with_status(0));
+    assert_that(p.baler("build"), execs().with_status(0));
 }
 
 #[test]
@@ -1966,8 +1966,8 @@ fn two_at_rev_instead_of_tag() {
         "#, git.url()))
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("generate-lockfile"), execs().with_status(0));
-    assert_that(p.cargo("build").arg("-v"), execs().with_status(0));
+    assert_that(p.baler_process("generate-lockfile"), execs().with_status(0));
+    assert_that(p.baler("build").arg("-v"), execs().with_status(0));
 }
 
 #[test]
@@ -2024,7 +2024,7 @@ fn include_overrides_gitignore() {
     }).unwrap();
 
     println!("build 1: all is new");
-    assert_that(p.cargo("build").arg("-v"),
+    assert_that(p.baler("build").arg("-v"),
                 execs().with_status(0)
                        .with_stderr("\
 [UPDATING] registry `[..]`
@@ -2042,7 +2042,7 @@ fn include_overrides_gitignore() {
 "));
 
     println!("build 2: nothing changed; file timestamps reset by build script");
-    assert_that(p.cargo("build").arg("-v"),
+    assert_that(p.baler("build").arg("-v"),
                 execs().with_status(0)
                        .with_stderr("\
 [FRESH] libc [..]
@@ -2055,7 +2055,7 @@ fn include_overrides_gitignore() {
     sleep_ms(1000);
     File::create(p.root().join("src").join("not_incl.rs")).unwrap();
 
-    assert_that(p.cargo("build").arg("-v"),
+    assert_that(p.baler("build").arg("-v"),
                 execs().with_status(0)
                        .with_stderr("\
 [FRESH] libc [..]
@@ -2065,14 +2065,14 @@ fn include_overrides_gitignore() {
 [FINISHED] dev [unoptimized + debuginfo] target(s) in [..]
 "));
 
-    // This final case models the bug from rust-lang/cargo#4135: an
+    // This final case models the bug from rust-lang/baler#4135: an
     // explicitly included file should cause a build-script re-run,
     // even if that same file is matched by `.gitignore`.
     println!("build 4: touch `src/incl.rs`; expect build script re-run");
     sleep_ms(1000);
     File::create(p.root().join("src").join("incl.rs")).unwrap();
 
-    assert_that(p.cargo("build").arg("-v"),
+    assert_that(p.baler("build").arg("-v"),
                 execs().with_status(0)
                        .with_stderr("\
 [FRESH] libc [..]

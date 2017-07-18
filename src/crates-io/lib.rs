@@ -42,7 +42,7 @@ body:
                 display("unauthorized API access")
             }
             TokenMissing{
-                display("no upload token found, please run `cargo login`")
+                display("no upload token found, please run `baler login`")
             }
             NotFound {
                 display("cannot find crate")

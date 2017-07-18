@@ -1,10 +1,10 @@
 use std::io::prelude::*;
 use std::io;
 
-use cargo::ops;
-use cargo::core::{SourceId, Source};
-use cargo::sources::RegistrySource;
-use cargo::util::{CliResult, CargoResultExt, Config};
+use baler::ops;
+use baler::core::{SourceId, Source};
+use baler::sources::RegistrySource;
+use baler::util::{CliResult, CargoResultExt, Config};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -21,7 +21,7 @@ pub const USAGE: &'static str = "
 Save an api token from the registry locally
 
 Usage:
-    cargo login [options] [<token>]
+    baler login [options] [<token>]
 
 Options:
     -h, --help               Print this message

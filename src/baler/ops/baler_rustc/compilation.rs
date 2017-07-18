@@ -149,8 +149,8 @@ impl<'cfg> Compilation<'cfg> {
 
         let metadata = pkg.manifest().metadata();
 
-        let cargo_exe = self.config.cargo_exe()?;
-        cmd.env(::CARGO_ENV, cargo_exe);
+        let baler_exe = self.config.baler_exe()?;
+        cmd.env(::CARGO_ENV, baler_exe);
 
         // When adding new environment variables depending on
         // crate properties which might require rebuild upon change

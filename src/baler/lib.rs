@@ -79,13 +79,13 @@ pub struct VersionInfo {
     pub patch: String,
     pub pre_release: Option<String>,
     // Information that's only available when we were built with
-    // configure/make, rather than cargo itself.
+    // configure/make, rather than baler itself.
     pub cfg_info: Option<CfgInfo>,
 }
 
 impl fmt::Display for VersionInfo {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "cargo {}.{}.{}",
+        write!(f, "baler {}.{}.{}",
                self.major, self.minor, self.patch)?;
         if let Some(channel) = self.cfg_info.as_ref().map(|ci| &ci.release_channel) {
             if channel != "stable" {
@@ -164,7 +164,7 @@ pub fn handle_error(err: CargoError, shell: &mut Shell) {
     handle_cause(err, shell);
 }
 
-fn handle_cause<E, EKind>(cargo_err: E, shell: &mut Shell) -> bool
+fn handle_cause<E, EKind>(baler_err: E, shell: &mut Shell) -> bool
     where E: ChainedError<ErrorKind=EKind> + 'static
 {
     fn print(error: String, shell: &mut Shell) {
@@ -189,13 +189,13 @@ fn handle_cause<E, EKind>(cargo_err: E, shell: &mut Shell) -> bool
     if verbose == Verbose {
         //The first error has already been printed to the shell
         //Print all remaining errors
-        for err in cargo_err.iter().skip(1) {
+        for err in baler_err.iter().skip(1) {
             print(err.to_string(), shell);
         }
     } else {
         //The first error has already been printed to the shell
         //Print remaining errors until one marked as Internal appears
-        for err in cargo_err.iter().skip(1) {
+        for err in baler_err.iter().skip(1) {
             let err = unsafe { extend_lifetime(err) };
             if let Some(&CargoError(CargoErrorKind::Internal(..), ..)) =
                 err.downcast_ref::<CargoError>() {

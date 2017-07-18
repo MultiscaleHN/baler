@@ -1,5 +1,5 @@
-use cargo::ops;
-use cargo::util::{CliResult, Config};
+use baler::ops;
+use baler::util::{CliResult, Config};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -18,8 +18,8 @@ pub const USAGE: &'static str = "
 Remove a Rust binary
 
 Usage:
-    cargo uninstall [options] <spec>
-    cargo uninstall (-h | --help)
+    baler uninstall [options] <spec>
+    baler uninstall (-h | --help)
 
 Options:
     -h, --help                Print this message
@@ -31,7 +31,7 @@ Options:
     --frozen                  Require Cargo.lock and cache are up to date
     --locked                  Require Cargo.lock is up to date
 
-The argument SPEC is a package id specification (see `cargo help pkgid`) to
+The argument SPEC is a package id specification (see `baler help pkgid`) to
 specify which crate should be uninstalled. By default all binaries are
 uninstalled for a crate but the `--bin` and `--example` flags can be used to
 only uninstall particular binaries.

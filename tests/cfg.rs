@@ -1,14 +1,14 @@
-extern crate cargo;
-extern crate cargotest;
+extern crate baler;
+extern crate balertest;
 extern crate hamcrest;
 
 use std::str::FromStr;
 use std::fmt;
 
-use cargo::util::{Cfg, CfgExpr};
-use cargotest::rustc_host;
-use cargotest::support::registry::Package;
-use cargotest::support::{project, execs};
+use baler::util::{Cfg, CfgExpr};
+use balertest::rustc_host;
+use balertest::support::registry::Package;
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 macro_rules! c {
@@ -158,7 +158,7 @@ fn cfg_easy() {
             authors = []
         "#)
         .file("b/src/lib.rs", "");
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(0));
 }
 
@@ -183,7 +183,7 @@ fn dont_include() {
             authors = []
         "#)
         .file("b/src/lib.rs", "");
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr("\
 [COMPILING] a v0.0.1 ([..])
 [FINISHED] dev [unoptimized + debuginfo] target(s) in [..]
@@ -210,7 +210,7 @@ fn works_through_the_registry() {
         "#)
         .file("src/lib.rs", "extern crate bar;");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr("\
 [UPDATING] registry [..]
 [DOWNLOADING] [..]
@@ -244,7 +244,7 @@ fn ignore_version_from_other_platform() {
         "#, this_family, other_family))
         .file("src/lib.rs", "extern crate foo;");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr("\
 [UPDATING] registry [..]
 [DOWNLOADING] [..]
@@ -268,7 +268,7 @@ fn bad_target_spec() {
         "#)
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse manifest at `[..]`
 
@@ -294,7 +294,7 @@ fn bad_target_spec2() {
         "#)
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to parse manifest at `[..]`
 
@@ -337,7 +337,7 @@ fn multiple_match_ok() {
             authors = []
         "#)
         .file("b/src/lib.rs", "");
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(0));
 }
 
@@ -361,6 +361,6 @@ fn any_ok() {
             authors = []
         "#)
         .file("b/src/lib.rs", "");
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(0));
 }

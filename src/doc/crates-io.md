@@ -13,15 +13,15 @@ limit to the number of versions which can be published, however.
 First thing’s first, you’ll need an account on [crates.io] to acquire
 an API token. To do so, [visit the home page][crates.io] and log in via a GitHub
 account (required for now). After this, visit your [Account
-Settings](https://crates.io/me) page and run the `cargo login` command
+Settings](https://crates.io/me) page and run the `baler login` command
 specified.
 
 ```notrust
-$ cargo login abcdefghijklmnopqrstuvwxyz012345
+$ baler login abcdefghijklmnopqrstuvwxyz012345
 ```
 
 This command will inform Cargo of your API token and store it locally in your
-`~/.cargo/credentials` (previously it was `~/.cargo/config`).
+`~/.baler/credentials` (previously it was `~/.baler/config`).
 Note that this token is a **secret** and should not be shared
 with anyone else. If it leaks for any reason, you should regenerate it
 immediately.
@@ -34,12 +34,12 @@ serve basis. Once a crate name is taken, it cannot be used for another crate.
 ## Packaging a crate
 
 The next step is to package up your crate into a format that can be uploaded to
-[crates.io]. For this we’ll use the `cargo package` subcommand. This will take
+[crates.io]. For this we’ll use the `baler package` subcommand. This will take
 our entire crate and package it all up into a `*.crate` file in the
 `target/package` directory.
 
 ```notrust
-$ cargo package
+$ baler package
 ```
 
 As an added bonus, the `*.crate` will be verified independently of the current
@@ -85,14 +85,14 @@ include = [
 ## Uploading the crate
 
 Now that we’ve got a `*.crate` file ready to go, it can be uploaded to
-[crates.io] with the `cargo publish` command. And that’s it, you’ve now published
+[crates.io] with the `baler publish` command. And that’s it, you’ve now published
 your first crate!
 
 ```notrust
-$ cargo publish
+$ baler publish
 ```
 
-If you’d like to skip the `cargo package` step, the `cargo publish` subcommand
+If you’d like to skip the `baler package` step, the `baler publish` subcommand
 will automatically package up the local crate if a copy isn’t found already.
 
 Be sure to check out the [metadata you can
@@ -103,17 +103,17 @@ more easily!
 
 In order to release a new version, change the `version` value specified in your
 `Cargo.toml` manifest. Keep in mind [the semver
-rules](manifest.html#the-version-field). Then optionally run `cargo package` if
+rules](manifest.html#the-version-field). Then optionally run `baler package` if
 you want to inspect the `*.crate` file for the new version before publishing,
-and run `cargo publish` to upload the new version.
+and run `baler publish` to upload the new version.
 
 # Managing a crates.io-based crate
 
-Management of crates is primarily done through the command line `cargo` tool
+Management of crates is primarily done through the command line `baler` tool
 rather than the [crates.io] web interface. For this, there are a few subcommands
 to manage a crate.
 
-## `cargo yank`
+## `baler yank`
 
 Occasions may arise where you publish a version of a crate that actually ends up
 being broken for one reason or another (syntax error, forgot to include a file,
@@ -121,8 +121,8 @@ etc.). For situations such as this, Cargo supports a “yank” of a version of 
 crate.
 
 ```notrust
-$ cargo yank --vers 1.0.1
-$ cargo yank --vers 1.0.1 --undo
+$ baler yank --vers 1.0.1
+$ baler yank --vers 1.0.1 --undo
 ```
 
 A yank **does not** delete any code. This feature is not intended for deleting
@@ -137,17 +137,17 @@ goal. Essentially a yank means that all projects with a `Cargo.lock` will not
 break, while any future `Cargo.lock` files generated will not list the yanked
 version.
 
-## `cargo owner`
+## `baler owner`
 
 A crate is often developed by more than one person, or the primary maintainer
 may change over time! The owner of a crate is the only person allowed to publish
 new versions of the crate, but an owner may designate additional owners.
 
 ```notrust
-$ cargo owner --add my-buddy
-$ cargo owner --remove my-buddy
-$ cargo owner --add github:rust-lang:owners
-$ cargo owner --remove github:rust-lang:owners
+$ baler owner --add my-buddy
+$ baler owner --remove my-buddy
+$ baler owner --add github:rust-lang:owners
+$ baler owner --remove github:rust-lang:owners
 ```
 
 The owner IDs given to these commands must be GitHub user names or GitHub teams.

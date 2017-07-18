@@ -256,8 +256,8 @@ fn add_overrides<'a>(registry: &mut PackageRegistry<'a>,
 
     let paths = paths.val.iter().map(|&(ref s, ref p)| {
         // The path listed next to the string is the config file in which the
-        // key was located, so we want to pop off the `.cargo/config` component
-        // to get the directory containing the `.cargo` folder.
+        // key was located, so we want to pop off the `.baler/config` component
+        // to get the directory containing the `.baler` folder.
         (p.parent().unwrap().parent().unwrap().join(s), p)
     });
 

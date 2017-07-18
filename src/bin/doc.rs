@@ -1,7 +1,7 @@
-use cargo::core::Workspace;
-use cargo::ops::{self, MessageFormat, Packages};
-use cargo::util::{CliResult, Config};
-use cargo::util::important_paths::{find_root_manifest_for_wd};
+use baler::core::Workspace;
+use baler::ops::{self, MessageFormat, Packages};
+use baler::util::{CliResult, Config};
+use baler::util::important_paths::{find_root_manifest_for_wd};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -31,7 +31,7 @@ pub const USAGE: &'static str = "
 Build a package's documentation
 
 Usage:
-    cargo doc [options]
+    baler doc [options]
 
 Options:
     -h, --help                   Print this message
@@ -65,7 +65,7 @@ All packages in the workspace are documented if the `--all` flag is supplied. Th
 If the --package argument is given, then SPEC is a package id specification
 which indicates which package should be documented. If it is not given, then the
 current package is documented. For more information on SPEC and its format, see
-the `cargo help pkgid` command.
+the `baler help pkgid` command.
 ";
 
 pub fn execute(options: Options, config: &Config) -> CliResult {

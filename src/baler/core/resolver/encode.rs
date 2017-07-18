@@ -166,7 +166,7 @@ impl EncodableResolve {
 
 fn build_path_deps(ws: &Workspace) -> HashMap<String, SourceId> {
     // If a crate is *not* a path source, then we're probably in a situation
-    // such as `cargo install` with a lock file from a remote dependency. In
+    // such as `baler install` with a lock file from a remote dependency. In
     // that case we don't need to fixup any path dependencies (as they're not
     // actually path dependencies any more), so we ignore them.
     let members = ws.members().filter(|p| {

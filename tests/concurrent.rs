@@ -1,5 +1,5 @@
-extern crate cargo;
-extern crate cargotest;
+extern crate baler;
+extern crate balertest;
 extern crate git2;
 extern crate hamcrest;
 
@@ -12,10 +12,10 @@ use std::thread;
 use std::sync::mpsc::channel;
 use std::time::Duration;
 
-use cargotest::install::{has_installed_exe, cargo_home};
-use cargotest::support::git;
-use cargotest::support::registry::Package;
-use cargotest::support::{execs, project};
+use balertest::install::{has_installed_exe, baler_home};
+use balertest::support::git;
+use balertest::support::registry::Package;
+use balertest::support::{execs, project};
 use hamcrest::{assert_that, existing_file};
 
 fn pkg(name: &str, vers: &str) {
@@ -43,8 +43,8 @@ fn multiple_installs() {
         .file("b/src/main.rs", "fn main() {}");
     p.build();
 
-    let mut a = p.cargo("install").cwd(p.root().join("a")).build_command();
-    let mut b = p.cargo("install").cwd(p.root().join("b")).build_command();
+    let mut a = p.baler("install").cwd(p.root().join("a")).build_command();
+    let mut b = p.baler("install").cwd(p.root().join("b")).build_command();
 
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
@@ -58,8 +58,8 @@ fn multiple_installs() {
     assert_that(a, execs().with_status(0));
     assert_that(b, execs().with_status(0));
 
-    assert_that(cargo_home(), has_installed_exe("foo"));
-    assert_that(cargo_home(), has_installed_exe("bar"));
+    assert_that(baler_home(), has_installed_exe("foo"));
+    assert_that(baler_home(), has_installed_exe("bar"));
 }
 
 #[test]
@@ -69,8 +69,8 @@ fn concurrent_installs() {
     pkg("foo", "0.0.1");
     pkg("bar", "0.0.1");
 
-    let mut a = cargotest::cargo_process().arg("install").arg("foo").build_command();
-    let mut b = cargotest::cargo_process().arg("install").arg("bar").build_command();
+    let mut a = balertest::baler_process().arg("install").arg("foo").build_command();
+    let mut b = balertest::baler_process().arg("install").arg("bar").build_command();
 
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
@@ -87,8 +87,8 @@ fn concurrent_installs() {
     assert_that(a, execs().with_status(0));
     assert_that(b, execs().with_status(0));
 
-    assert_that(cargo_home(), has_installed_exe("foo"));
-    assert_that(cargo_home(), has_installed_exe("bar"));
+    assert_that(baler_home(), has_installed_exe("foo"));
+    assert_that(baler_home(), has_installed_exe("bar"));
 }
 
 #[test]
@@ -110,8 +110,8 @@ fn one_install_should_be_bad() {
         .file("b/src/main.rs", "fn main() {}");
     p.build();
 
-    let mut a = p.cargo("install").cwd(p.root().join("a")).build_command();
-    let mut b = p.cargo("install").cwd(p.root().join("b")).build_command();
+    let mut a = p.baler("install").cwd(p.root().join("a")).build_command();
+    let mut b = p.baler("install").cwd(p.root().join("b")).build_command();
 
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
@@ -130,7 +130,7 @@ fn one_install_should_be_bad() {
 warning: be sure to add `[..]` to your PATH [..]
 "));
 
-    assert_that(cargo_home(), has_installed_exe("foo"));
+    assert_that(baler_home(), has_installed_exe("foo"));
 }
 
 #[test]
@@ -166,8 +166,8 @@ fn multiple_registry_fetches() {
         .file("b/src/main.rs", "fn main() {}");
     p.build();
 
-    let mut a = p.cargo("build").cwd(p.root().join("a")).build_command();
-    let mut b = p.cargo("build").cwd(p.root().join("b")).build_command();
+    let mut a = p.baler("build").cwd(p.root().join("a")).build_command();
+    let mut b = p.baler("build").cwd(p.root().join("b")).build_command();
 
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
@@ -231,8 +231,8 @@ fn git_same_repo_different_tags() {
         .file("b/src/main.rs", "extern crate dep; fn main() { dep::tag2(); }");
     p.build();
 
-    let mut a = p.cargo("build").arg("-v").cwd(p.root().join("a")).build_command();
-    let mut b = p.cargo("build").arg("-v").cwd(p.root().join("b")).build_command();
+    let mut a = p.baler("build").arg("-v").cwd(p.root().join("a")).build_command();
+    let mut b = p.baler("build").arg("-v").cwd(p.root().join("b")).build_command();
 
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
@@ -283,7 +283,7 @@ fn git_same_branch_different_revs() {
 
     // Generate a Cargo.lock pointing at the current rev, then clear out the
     // target directory
-    assert_that(p.cargo("build").cwd(p.root().join("a")),
+    assert_that(p.baler("build").cwd(p.root().join("a")),
                 execs().with_status(0));
     fs::remove_dir_all(p.root().join("a/target")).unwrap();
 
@@ -296,8 +296,8 @@ fn git_same_branch_different_revs() {
 
     // Now run both builds in parallel. The build of `b` should pick up the
     // newest commit while the build of `a` should use the locked old commit.
-    let mut a = p.cargo("build").cwd(p.root().join("a")).build_command();
-    let mut b = p.cargo("build").cwd(p.root().join("b")).build_command();
+    let mut a = p.baler("build").cwd(p.root().join("a")).build_command();
+    let mut b = p.baler("build").cwd(p.root().join("b")).build_command();
 
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
@@ -325,8 +325,8 @@ fn same_project() {
         .file("src/lib.rs", "");
     p.build();
 
-    let mut a = p.cargo("build").build_command();
-    let mut b = p.cargo("build").build_command();
+    let mut a = p.baler("build").build_command();
+    let mut b = p.baler("build").build_command();
 
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
@@ -346,7 +346,7 @@ fn same_project() {
 // older win versions don't support job objects, so skip test there
 #[test]
 #[cfg_attr(target_os = "windows", ignore)]
-fn killing_cargo_releases_the_lock() {
+fn killing_baler_releases_the_lock() {
     let p = project("foo")
         .file("Cargo.toml", r#"
             [package]
@@ -373,8 +373,8 @@ fn killing_cargo_releases_the_lock() {
     // it's started  and that's how we know that `a` will have the lock
     // when we kill it.
     let l = TcpListener::bind("127.0.0.1:0").unwrap();
-    let mut a = p.cargo("build").build_command();
-    let mut b = p.cargo("build").build_command();
+    let mut a = p.baler("build").build_command();
+    let mut b = p.baler("build").build_command();
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
     a.env("ADDR", l.local_addr().unwrap().to_string()).env("A", "a");
@@ -410,11 +410,11 @@ fn debug_release_ok() {
         .file("src/main.rs", "fn main() {}");
     p.build();
 
-    assert_that(p.cargo("build"), execs().with_status(0));
+    assert_that(p.baler("build"), execs().with_status(0));
     fs::remove_dir_all(p.root().join("target")).unwrap();
 
-    let mut a = p.cargo("build").build_command();
-    let mut b = p.cargo("build").arg("--release").build_command();
+    let mut a = p.baler("build").build_command();
+    let mut b = p.baler("build").arg("--release").build_command();
     a.stdout(Stdio::piped()).stderr(Stdio::piped());
     b.stdout(Stdio::piped()).stderr(Stdio::piped());
     let a = a.spawn().unwrap();
@@ -471,7 +471,7 @@ fn no_deadlock_with_git_dependencies() {
 
     let (tx, rx) = channel();
     for _ in 0..n_concurrent_builds {
-        let cmd = p.cargo("build").build_command()
+        let cmd = p.baler("build").build_command()
             .stdout(Stdio::piped())
             .stderr(Stdio::piped())
             .spawn();

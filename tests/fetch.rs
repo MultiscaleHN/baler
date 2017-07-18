@@ -1,7 +1,7 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::{project, execs};
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 #[test]
@@ -18,6 +18,6 @@ fn no_deps() {
         "#)
         .file("src/a.rs", "");
 
-    assert_that(p.cargo_process("fetch"),
+    assert_that(p.baler_process("fetch"),
                 execs().with_status(0).with_stdout(""));
 }

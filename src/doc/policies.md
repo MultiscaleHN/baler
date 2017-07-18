@@ -60,7 +60,7 @@ There are two important, related aspects:
 
 Cargo and crates.io are projects that are governed by the Rust Programming 
 Language Team. Safety is one of the core principles of Rust, and to that end,
-we would like to ensure that cargo and crates.io have secure implementations.
+we would like to ensure that baler and crates.io have secure implementations.
 To learn more about disclosing security vulnerabilities, please reference the 
 [Rust Security policy] for more details.
 

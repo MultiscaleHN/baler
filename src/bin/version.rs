@@ -1,7 +1,7 @@
 use std::env;
 
-use cargo;
-use cargo::util::{CliResult, Config};
+use baler;
+use baler::util::{CliResult, Config};
 
 #[derive(Deserialize)]
 pub struct Options {}
@@ -10,7 +10,7 @@ pub const USAGE: &'static str = "
 Show version information
 
 Usage:
-    cargo version [options]
+    baler version [options]
 
 Options:
     -h, --help               Print this message
@@ -19,9 +19,9 @@ Options:
 ";
 
 pub fn execute(_: Options, _: &Config) -> CliResult {
-    debug!("executing; cmd=cargo-version; args={:?}", env::args().collect::<Vec<_>>());
+    debug!("executing; cmd=baler-version; args={:?}", env::args().collect::<Vec<_>>());
 
-    println!("{}", cargo::version());
+    println!("{}", baler::version());
 
     Ok(())
 }

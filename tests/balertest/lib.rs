@@ -1,7 +1,7 @@
 #![deny(warnings)]
 
 extern crate bufstream;
-extern crate cargo;
+extern crate baler;
 extern crate filetime;
 extern crate flate2;
 extern crate git2;
@@ -20,7 +20,7 @@ extern crate url;
 use std::ffi::OsStr;
 use std::time::Duration;
 
-use cargo::util::Rustc;
+use baler::util::Rustc;
 use std::path::PathBuf;
 
 pub mod support;
@@ -39,16 +39,16 @@ pub fn is_nightly() -> bool {
     })
 }
 
-pub fn process<T: AsRef<OsStr>>(t: T) -> cargo::util::ProcessBuilder {
+pub fn process<T: AsRef<OsStr>>(t: T) -> baler::util::ProcessBuilder {
     _process(t.as_ref())
 }
 
-fn _process(t: &OsStr) -> cargo::util::ProcessBuilder {
-    let mut p = cargo::util::process(t);
+fn _process(t: &OsStr) -> baler::util::ProcessBuilder {
+    let mut p = baler::util::process(t);
     p.cwd(&support::paths::root())
      .env_remove("CARGO_HOME")
      .env("HOME", support::paths::home())
-     .env("CARGO_HOME", support::paths::home().join(".cargo"))
+     .env("CARGO_HOME", support::paths::home().join(".baler"))
      .env("__CARGO_TEST_ROOT", support::paths::root())
      .env_remove("__CARGO_DEFAULT_LIB_METADATA")
      .env_remove("RUSTC")
@@ -71,8 +71,8 @@ fn _process(t: &OsStr) -> cargo::util::ProcessBuilder {
     return p
 }
 
-pub fn cargo_process() -> cargo::util::ProcessBuilder {
-    process(&support::cargo_exe())
+pub fn baler_process() -> baler::util::ProcessBuilder {
+    process(&support::baler_exe())
 }
 
 pub fn sleep_ms(ms: u64) {

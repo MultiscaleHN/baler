@@ -13,16 +13,16 @@ This will get you the current stable release of Rust for your platform along
 with the latest Cargo.
 
 If you are on Windows, you can directly download the latest 32bit ([Rust](https://static.rust-lang.org/dist/rust-1.0.0-i686-pc-windows-gnu.msi)
-and [Cargo](https://static.rust-lang.org/cargo-dist/cargo-nightly-i686-pc-windows-gnu.tar.gz)) or 64bit ([Rust](https://static.rust-lang.org/dist/rust-1.0.0-x86_64-pc-windows-gnu.msi) and [Cargo](https://static.rust-lang.org/cargo-dist/cargo-nightly-x86_64-pc-windows-gnu.tar.gz)) Rust stable releases or Cargo nightlies.
+and [Cargo](https://static.rust-lang.org/baler-dist/baler-nightly-i686-pc-windows-gnu.tar.gz)) or 64bit ([Rust](https://static.rust-lang.org/dist/rust-1.0.0-x86_64-pc-windows-gnu.msi) and [Cargo](https://static.rust-lang.org/baler-dist/baler-nightly-x86_64-pc-windows-gnu.tar.gz)) Rust stable releases or Cargo nightlies.
 
 Alternatively, you can build Cargo from source.
 
 # Let’s get started
 
-To start a new project with Cargo, use `cargo new`:
+To start a new project with Cargo, use `baler new`:
 
 ```shell
-$ cargo new hello_world --bin
+$ baler new hello_world --bin
 ```
 
 We’re passing `--bin` because we’re making a binary program: if we
@@ -63,7 +63,7 @@ fn main() {
 
 Cargo generated a “hello world” for us. Let’s compile it:
 
-<pre><code class="language-shell">$ cargo build
+<pre><code class="language-shell">$ baler build
 <span style="font-weight: bold"
 class="s1">   Compiling</span> hello_world v0.1.0 (file:///path/to/project/hello_world)</code></pre>
 
@@ -74,9 +74,9 @@ $ ./target/debug/hello_world
 Hello, world!
 ```
 
-We can also use `cargo run` to compile and then run it, all in one step:
+We can also use `baler run` to compile and then run it, all in one step:
 
-<pre><code class="language-shell">$ cargo run
+<pre><code class="language-shell">$ baler run
 <span style="font-weight: bold"
 class="s1">     Fresh</span> hello_world v0.1.0 (file:///path/to/project/hello_world)
 <span style="font-weight: bold"

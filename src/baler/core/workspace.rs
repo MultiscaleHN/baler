@@ -20,7 +20,7 @@ use util::toml::read_manifest;
 pub struct Workspace<'cfg> {
     config: &'cfg Config,
 
-    // This path is a path to where the current cargo subcommand was invoked
+    // This path is a path to where the current baler subcommand was invoked
     // from. That is, this is the `--manifest-path` argument to Cargo, and
     // points to the "main crate" that we're going to worry about.
     current_manifest: PathBuf,
@@ -45,12 +45,12 @@ pub struct Workspace<'cfg> {
     members: Vec<PathBuf>,
 
     // True, if this is a temporary workspace created for the purposes of
-    // cargo install or cargo package.
+    // baler install or baler package.
     is_ephemeral: bool,
 
     // True if this workspace should enforce optional dependencies even when
     // not needed; false if this workspace should only enforce dependencies
-    // needed by the current configuration (such as in cargo install).
+    // needed by the current configuration (such as in baler install).
     require_optional_deps: bool,
 }
 
@@ -125,8 +125,8 @@ impl<'cfg> Workspace<'cfg> {
     /// in-memory workspace. That is, all configuration is ignored, it's just
     /// intended for that one package.
     ///
-    /// This is currently only used in niche situations like `cargo install` or
-    /// `cargo package`.
+    /// This is currently only used in niche situations like `baler install` or
+    /// `baler package`.
     pub fn ephemeral(package: Package,
                      config: &'cfg Config,
                      target_dir: Option<Filesystem>,

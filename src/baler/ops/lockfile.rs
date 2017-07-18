@@ -6,7 +6,7 @@ use core::{Resolve, resolver, Workspace};
 use core::resolver::WorkspaceResolve;
 use util::Filesystem;
 use util::errors::{CargoResult, CargoResultExt};
-use util::toml as cargo_toml;
+use util::toml as baler_toml;
 
 pub fn load_pkg_lockfile(ws: &Workspace) -> CargoResult<Option<Resolve>> {
     if !ws.root().join("Cargo.lock").exists() {
@@ -22,7 +22,7 @@ pub fn load_pkg_lockfile(ws: &Workspace) -> CargoResult<Option<Resolve>> {
     })?;
 
     (|| -> CargoResult<Option<Resolve>> {
-        let resolve : toml::Value = cargo_toml::parse(&s, f.path(), ws.config())?;
+        let resolve : toml::Value = baler_toml::parse(&s, f.path(), ws.config())?;
         let v: resolver::EncodableResolve = resolve.try_into()?;
         Ok(Some(v.into_resolve(ws)?))
     })().chain_err(|| {

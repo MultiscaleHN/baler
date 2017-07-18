@@ -206,7 +206,7 @@ pub fn registry(config: &Config,
     Ok((Registry::new_handle(api_host, token, handle), sid))
 }
 
-/// Create a new HTTP handle with appropriate global configuration for cargo.
+/// Create a new HTTP handle with appropriate global configuration for baler.
 pub fn http_handle(config: &Config) -> CargoResult<Easy> {
     if !config.network_allowed() {
         bail!("attempting to make an HTTP request, but --frozen was \
@@ -240,7 +240,7 @@ pub fn http_handle(config: &Config) -> CargoResult<Easy> {
 
 /// Find an explicit HTTP proxy if one is available.
 ///
-/// Favor cargo's `http.proxy`, then git's `http.proxy`. Proxies specified
+/// Favor baler's `http.proxy`, then git's `http.proxy`. Proxies specified
 /// via environment variables are picked up by libcurl.
 fn http_proxy(config: &Config) -> CargoResult<Option<String>> {
     if let Some(s) = config.get_string("http.proxy")? {
@@ -258,7 +258,7 @@ fn http_proxy(config: &Config) -> CargoResult<Option<String>> {
 ///
 /// Checks the following for existence, in order:
 ///
-/// * cargo's `http.proxy`
+/// * baler's `http.proxy`
 /// * git's `http.proxy`
 /// * http_proxy env var
 /// * HTTP_PROXY env var

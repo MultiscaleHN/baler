@@ -1,11 +1,11 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
 use std::fs;
 use std::env;
 
-use cargotest::{is_nightly, rustc_host};
-use cargotest::support::{project, execs};
+use balertest::{is_nightly, rustc_host};
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 #[test]
@@ -80,9 +80,9 @@ fn plugin_to_the_max() {
     bar.build();
     baz.build();
 
-    assert_that(foo.cargo_process("build"),
+    assert_that(foo.baler_process("build"),
                 execs().with_status(0));
-    assert_that(foo.cargo("doc"),
+    assert_that(foo.baler("doc"),
                 execs().with_status(0));
 }
 
@@ -147,7 +147,7 @@ fn plugin_with_dynamic_native_dependency() {
 
             fn main() {
                 let src = PathBuf::from(env::var("SRC").unwrap());
-                println!("cargo:rustc-flags=-L {}/deps", src.parent().unwrap().display());
+                println!("baler:rustc-flags=-L {}/deps", src.parent().unwrap().display());
             }
         "#)
         .file("bar/src/lib.rs", r#"
@@ -167,7 +167,7 @@ fn plugin_with_dynamic_native_dependency() {
         "#);
     foo.build();
 
-    assert_that(build.cargo("build"),
+    assert_that(build.baler("build"),
                 execs().with_status(0));
 
     let src = workspace.root().join("target/debug");
@@ -177,7 +177,7 @@ fn plugin_with_dynamic_native_dependency() {
             lib.ends_with(env::consts::DLL_SUFFIX)
     }).unwrap();
 
-    assert_that(foo.cargo("build").env("SRC", &lib).arg("-v"),
+    assert_that(foo.baler("build").env("SRC", &lib).arg("-v"),
                 execs().with_status(0));
 }
 
@@ -200,7 +200,7 @@ fn plugin_integration() {
         .file("src/lib.rs", "")
         .file("tests/it_works.rs", "");
 
-    assert_that(p.cargo_process("test").arg("-v"),
+    assert_that(p.baler_process("test").arg("-v"),
                 execs().with_status(0));
 }
 
@@ -234,7 +234,7 @@ fn doctest_a_plugin() {
             pub fn bar() {}
         "#);
 
-    assert_that(p.cargo_process("test").arg("-v"),
+    assert_that(p.baler_process("test").arg("-v"),
                 execs().with_status(0));
 }
 
@@ -266,14 +266,14 @@ fn native_plugin_dependency_with_custom_ar_linker() {
             path = "../foo"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", &format!(r#"
+        .file(".baler/config", &format!(r#"
             [target.{}]
             ar = "nonexistent-ar"
             linker = "nonexistent-linker"
         "#, target));
 
     foo.build();
-    assert_that(bar.cargo_process("build").arg("--verbose"),
+    assert_that(bar.baler_process("build").arg("--verbose"),
                 execs().with_stderr_contains("\
 [COMPILING] foo v0.0.1 ([..])
 [RUNNING] `rustc [..] -C ar=nonexistent-ar -C linker=nonexistent-linker [..]`
@@ -315,7 +315,7 @@ fn panic_abort_plugins() {
             extern crate syntax;
         "#);
 
-    assert_that(bar.cargo_process("build"),
+    assert_that(bar.baler_process("build"),
                 execs().with_status(0));
 }
 
@@ -367,6 +367,6 @@ fn shared_panic_abort_plugins() {
         "#)
         .file("bar/src/lib.rs", "");
 
-    assert_that(bar.cargo_process("build"),
+    assert_that(bar.baler_process("build"),
                 execs().with_status(0));
 }

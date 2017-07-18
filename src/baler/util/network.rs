@@ -23,8 +23,8 @@ fn maybe_spurious<E, EKind>(err: &E) -> bool
 
     for e in err.iter() {
         let e = unsafe { extend_lifetime(e) };
-        if let Some(cargo_err) = e.downcast_ref::<CargoError>() {
-            match cargo_err.kind() {
+        if let Some(baler_err) = e.downcast_ref::<CargoError>() {
+            match baler_err.kind() {
                 &CargoErrorKind::Git(ref git_err) => {
                     match git_err.class() {
                         git2::ErrorClass::Net |
@@ -61,7 +61,7 @@ fn maybe_spurious<E, EKind>(err: &E) -> bool
 ///
 /// ```ignore
 /// use util::network;
-/// cargo_result = network.with_retry(&config, || something.download());
+/// baler_result = network.with_retry(&config, || something.download());
 /// ```
 pub fn with_retry<T, F>(config: &Config, mut callback: F) -> CargoResult<T>
     where F: FnMut() -> CargoResult<T>

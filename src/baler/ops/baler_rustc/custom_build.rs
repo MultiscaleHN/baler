@@ -353,8 +353,8 @@ impl BuildOutput {
                 Err(..) => continue,
             };
             let mut iter = line.splitn(2, ':');
-            if iter.next() != Some("cargo") {
-                // skip this line since it doesn't start with "cargo:"
+            if iter.next() != Some("baler") {
+                // skip this line since it doesn't start with "baler:"
                 continue;
             }
             let data = match iter.next() {
@@ -368,7 +368,7 @@ impl BuildOutput {
             let value = iter.next();
             let (key, value) = match (key, value) {
                 (Some(a), Some(b)) => (a, b.trim_right()),
-                // line started with `cargo:` but didn't match `key=value`
+                // line started with `baler:` but didn't match `key=value`
                 _ => bail!("Wrong output in {}: `{}`", whence, line),
             };
 

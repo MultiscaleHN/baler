@@ -89,7 +89,7 @@ We support environments through the use of [profiles][profile] to support:
   and `--opt-level=3` for production).
 * environment-specific dependencies (like `hamcrest` for test assertions).
 * environment-specific `#[cfg]`
-* a `cargo test` command
+* a `baler test` command
 
 # Does Cargo work on Windows?
 
@@ -99,7 +99,7 @@ All commits to Cargo are required to pass the local test suite on Windows.
 If, however, you find a Windows issue, we consider it a bug, so [please file an
 issue][3].
 
-[3]: https://github.com/rust-lang/cargo/issues
+[3]: https://github.com/rust-lang/baler/issues
 
 # Why do binaries have `Cargo.lock` in version control, but not libraries?
 
@@ -149,7 +149,7 @@ capital letters before lowercase letters, ensuring files like `Makefile` and
 the fact that the file is in the [TOML configuration
 format](https://github.com/toml-lang/toml).
 
-Cargo does not allow other names such as `cargo.toml` or `Cargofile` to
+Cargo does not allow other names such as `baler.toml` or `Cargofile` to
 emphasize the ease of how a Cargo repository can be identified. An option of
 many possible names has historically led to confusion where one case was handled
 but others were accidentally forgotten.
@@ -170,8 +170,8 @@ result, if Cargo attempts to touch the network, then it's because it needs to
 fetch a required resource.
 
 Cargo is also quite aggressive about caching information to minimize the amount
-of network activity. It will guarantee, for example, that if `cargo build` (or
-an equivalent) is run to completion then the next `cargo build` is guaranteed to
+of network activity. It will guarantee, for example, that if `baler build` (or
+an equivalent) is run to completion then the next `baler build` is guaranteed to
 not touch the network so long as `Cargo.toml` has not been modified in the
 meantime. This avoidance of the network boils down to a `Cargo.lock` existing
 and a populated cache of the crates reflected in the lock file. If either of

@@ -1,7 +1,7 @@
-use cargo::core::Workspace;
-use cargo::ops;
-use cargo::util::{CliResult, Config};
-use cargo::util::important_paths::find_root_manifest_for_wd;
+use baler::core::Workspace;
+use baler::ops;
+use baler::util::{CliResult, Config};
+use baler::util::important_paths::find_root_manifest_for_wd;
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -22,7 +22,7 @@ pub const USAGE: &'static str = "
 Assemble the local package into a distributable tarball
 
 Usage:
-    cargo package [options]
+    baler package [options]
 
 Options:
     -h, --help              Print this message

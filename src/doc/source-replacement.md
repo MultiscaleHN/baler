@@ -2,7 +2,7 @@
 
 Cargo supports the ability to **replace one source with another** to express
 strategies along the lines of mirrors or vendoring dependencies. Configuration
-is currently done through the [`.cargo/config` configuration][config] mechanism,
+is currently done through the [`.baler/config` configuration][config] mechanism,
 like so:
 
 [config]: config.html
@@ -15,7 +15,7 @@ like so:
 # Under the `source` table are a number of other tables whose keys are a
 # name for the relevant source. For example this section defines a new
 # source, called `my-awesome-source`, which comes from a directory
-# located at `vendor` relative to the directory containing this `.cargo/config`
+# located at `vendor` relative to the directory containing this `.baler/config`
 # file
 [source.my-awesome-source]
 directory = "vendor"
@@ -53,7 +53,7 @@ private registry support is planned for a future version of Cargo.
 
 ## Configuration
 
-Configuration of replacement sources is done through [`.cargo/config`][config]
+Configuration of replacement sources is done through [`.baler/config`][config]
 and the full set of available keys are:
 
 ```toml
@@ -96,10 +96,10 @@ are downloaded ahead of time, typically sync'd with a `Cargo.lock`, and are
 made up of a set of `*.crate` files and an index like the normal registry is.
 
 The primary way to manage and crate local registry sources is through the
-[`cargo-local-registry`][cargo-local-registry] subcommand, available on
-crates.io and can be installed with `cargo install cargo-local-registry`.
+[`baler-local-registry`][baler-local-registry] subcommand, available on
+crates.io and can be installed with `baler install baler-local-registry`.
 
-[cargo-local-registry]: https://crates.io/crates/cargo-local-registry
+[baler-local-registry]: https://crates.io/crates/baler-local-registry
 
 Local registries are contained within one directory and contain a number of
 `*.crate` files downloaded from crates.io as well as an `index` directory with
@@ -111,10 +111,10 @@ the crates that are present).
 A "directory source" is similar to a local registry source where it contains a
 number of crates available on the local filesystem, suitable for vendoring
 dependencies. Also like local registries, directory sources can primarily be
-managed by an external subcommand, [`cargo-vendor`][cargo-vendor], which can be
-installed with `cargo install cargo-vendor`.
+managed by an external subcommand, [`baler-vendor`][baler-vendor], which can be
+installed with `baler install baler-vendor`.
 
-[cargo-vendor]: https://crates.io/crates/cargo-vendor
+[baler-vendor]: https://crates.io/crates/baler-vendor
 
 Directory sources are distinct from local registries though in that they contain
 the unpacked version of `*.crate` files, making it more suitable in some

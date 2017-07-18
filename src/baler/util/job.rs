@@ -1,11 +1,11 @@
 //! Job management (mostly for windows)
 //!
-//! Most of the time when you're running cargo you expect Ctrl-C to actually
+//! Most of the time when you're running baler you expect Ctrl-C to actually
 //! terminate the entire tree of processes in play, not just the one at the top
 //! (cago). This currently works "by default" on Unix platforms because Ctrl-C
 //! actually sends a signal to the *process group* rather than the parent
 //! process, so everything will get torn down. On Windows, however, this does
-//! not happen and Ctrl-C just kills cargo.
+//! not happen and Ctrl-C just kills baler.
 //!
 //! To achieve the same semantics on Windows we use Job Objects to ensure that
 //! all processes die at the same time. Job objects have a mode of operation
@@ -30,8 +30,8 @@ mod imp {
 
     pub unsafe fn setup() -> Option<()> {
         // There's a test case for the behavior of
-        // when-cargo-is-killed-subprocesses-are-also-killed, but that requires
-        // one cargo spawned to become its own session leader, so we do that
+        // when-baler-is-killed-subprocesses-are-also-killed, but that requires
+        // one baler spawned to become its own session leader, so we do that
         // here.
         if env::var("__CARGO_TEST_SETSID_PLEASE_DONT_USE_ELSEWHERE").is_ok() {
             libc::setsid();

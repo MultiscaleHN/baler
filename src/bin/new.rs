@@ -1,7 +1,7 @@
 use std::env;
 
-use cargo::ops;
-use cargo::util::{CliResult, Config};
+use baler::ops;
+use baler::util::{CliResult, Config};
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -18,11 +18,11 @@ pub struct Options {
 }
 
 pub const USAGE: &'static str = "
-Create a new cargo package at <path>
+Create a new baler package at <path>
 
 Usage:
-    cargo new [options] <path>
-    cargo new -h | --help
+    baler new [options] <path>
+    baler new -h | --help
 
 Options:
     -h, --help          Print this message
@@ -41,7 +41,7 @@ Options:
 ";
 
 pub fn execute(options: Options, config: &Config) -> CliResult {
-    debug!("executing; cmd=cargo-new; args={:?}", env::args().collect::<Vec<_>>());
+    debug!("executing; cmd=baler-new; args={:?}", env::args().collect::<Vec<_>>());
     config.configure(options.flag_verbose,
                      options.flag_quiet,
                      &options.flag_color,

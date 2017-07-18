@@ -1,7 +1,7 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::{project, execs};
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 #[test]
@@ -16,7 +16,7 @@ fn parses_env() {
         .file("src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("doc").env("RUSTDOCFLAGS", "--cfg=foo").arg("-v"),
+    assert_that(p.baler("doc").env("RUSTDOCFLAGS", "--cfg=foo").arg("-v"),
                 execs().with_status(0)
                        .with_stderr_contains("\
 [RUNNING] `rustdoc [..] --cfg=foo[..]`
@@ -33,13 +33,13 @@ fn parses_config() {
             authors = []
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [build]
             rustdocflags = ["--cfg", "foo"]
         "#);
     p.build();
 
-    assert_that(p.cargo("doc").arg("-v"),
+    assert_that(p.baler("doc").arg("-v"),
                 execs().with_status(0)
                        .with_stderr_contains("\
 [RUNNING] `rustdoc [..] --cfg foo[..]`
@@ -58,7 +58,7 @@ fn bad_flags() {
         .file("src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("doc").env("RUSTDOCFLAGS", "--bogus"),
+    assert_that(p.baler("doc").env("RUSTDOCFLAGS", "--bogus"),
                 execs().with_status(101));
 }
 
@@ -74,13 +74,13 @@ fn rerun() {
         .file("src/lib.rs", "");
     p.build();
 
-    assert_that(p.cargo("doc").env("RUSTDOCFLAGS", "--cfg=foo"),
+    assert_that(p.baler("doc").env("RUSTDOCFLAGS", "--cfg=foo"),
                 execs().with_status(0));
-    assert_that(p.cargo("doc").env("RUSTDOCFLAGS", "--cfg=foo"),
+    assert_that(p.baler("doc").env("RUSTDOCFLAGS", "--cfg=foo"),
                 execs().with_status(0).with_stderr("\
 [FINISHED] dev [unoptimized + debuginfo] target(s) in [..]
 "));
-    assert_that(p.cargo("doc").env("RUSTDOCFLAGS", "--cfg=bar"),
+    assert_that(p.baler("doc").env("RUSTDOCFLAGS", "--cfg=bar"),
                 execs().with_status(0).with_stderr("\
 [DOCUMENTING] foo v0.0.1 ([..])
 [FINISHED] dev [unoptimized + debuginfo] target(s) in [..]

@@ -88,16 +88,16 @@ impl GitRemote {
         db.rev_for(reference)
     }
 
-    pub fn checkout(&self, into: &Path, cargo_config: &Config) -> CargoResult<GitDatabase> {
+    pub fn checkout(&self, into: &Path, baler_config: &Config) -> CargoResult<GitDatabase> {
         let repo = match git2::Repository::open(into) {
             Ok(repo) => {
-                self.fetch_into(&repo, cargo_config).chain_err(|| {
+                self.fetch_into(&repo, baler_config).chain_err(|| {
                     format!("failed to fetch into {}", into.display())
                 })?;
                 repo
             }
             Err(..) => {
-                self.clone_into(into, cargo_config).chain_err(|| {
+                self.clone_into(into, baler_config).chain_err(|| {
                     format!("failed to clone into: {}", into.display())
                 })?
             }
@@ -119,21 +119,21 @@ impl GitRemote {
         })
     }
 
-    fn fetch_into(&self, dst: &git2::Repository, cargo_config: &Config) -> CargoResult<()> {
+    fn fetch_into(&self, dst: &git2::Repository, baler_config: &Config) -> CargoResult<()> {
         // Create a local anonymous remote in the repository to fetch the url
         let url = self.url.to_string();
         let refspec = "refs/heads/*:refs/heads/*";
-        fetch(dst, &url, refspec, cargo_config)
+        fetch(dst, &url, refspec, baler_config)
     }
 
-    fn clone_into(&self, dst: &Path, cargo_config: &Config) -> CargoResult<git2::Repository> {
+    fn clone_into(&self, dst: &Path, baler_config: &Config) -> CargoResult<git2::Repository> {
         let url = self.url.to_string();
         if fs::metadata(&dst).is_ok() {
             fs::remove_dir_all(dst)?;
         }
         fs::create_dir_all(dst)?;
         let repo = git2::Repository::init_bare(dst)?;
-        fetch(&repo, &url, "refs/heads/*:refs/heads/*", cargo_config)?;
+        fetch(&repo, &url, "refs/heads/*:refs/heads/*", baler_config)?;
         Ok(repo)
     }
 }
@@ -143,13 +143,13 @@ impl GitDatabase {
         &self.path
     }
 
-    pub fn copy_to(&self, rev: GitRevision, dest: &Path, cargo_config: &Config)
+    pub fn copy_to(&self, rev: GitRevision, dest: &Path, baler_config: &Config)
                    -> CargoResult<GitCheckout> {
         let checkout = match git2::Repository::open(dest) {
             Ok(repo) => {
                 let checkout = GitCheckout::new(dest, self, rev, repo);
                 if !checkout.is_fresh() {
-                    checkout.fetch(cargo_config)?;
+                    checkout.fetch(baler_config)?;
                     checkout.reset()?;
                     assert!(checkout.is_fresh());
                 }
@@ -157,7 +157,7 @@ impl GitDatabase {
             }
             Err(..) => GitCheckout::clone_into(dest, self, rev)?,
         };
-        checkout.update_submodules(cargo_config)?;
+        checkout.update_submodules(baler_config)?;
         Ok(checkout)
     }
 
@@ -256,18 +256,18 @@ impl<'a> GitCheckout<'a> {
         match self.repo.revparse_single("HEAD") {
             Ok(ref head) if head.id() == self.revision.0 => {
                 // See comments in reset() for why we check this
-                fs::metadata(self.location.join(".cargo-ok")).is_ok()
+                fs::metadata(self.location.join(".baler-ok")).is_ok()
             }
             _ => false,
         }
     }
 
-    fn fetch(&self, cargo_config: &Config) -> CargoResult<()> {
+    fn fetch(&self, baler_config: &Config) -> CargoResult<()> {
         info!("fetch {}", self.repo.path().display());
         let url = self.database.path.to_url()?;
         let url = url.to_string();
         let refspec = "refs/heads/*:refs/heads/*";
-        fetch(&self.repo, &url, refspec, cargo_config)?;
+        fetch(&self.repo, &url, refspec, baler_config)?;
         Ok(())
     }
 
@@ -276,11 +276,11 @@ impl<'a> GitCheckout<'a> {
         // of a signal) Cargo needs to be sure to try to check out this repo
         // again on the next go-round.
         //
-        // To enable this we have a dummy file in our checkout, .cargo-ok, which
+        // To enable this we have a dummy file in our checkout, .baler-ok, which
         // if present means that the repo has been successfully reset and is
         // ready to go. Hence if we start to do a reset, we make sure this file
         // *doesn't* exist, and then once we're done we create the file.
-        let ok_file = self.location.join(".cargo-ok");
+        let ok_file = self.location.join(".baler-ok");
         let _ = fs::remove_file(&ok_file);
         info!("reset {} to {}", self.repo.path().display(), self.revision);
         let object = self.repo.find_object(self.revision.0, None)?;
@@ -289,14 +289,14 @@ impl<'a> GitCheckout<'a> {
         Ok(())
     }
 
-    fn update_submodules(&self, cargo_config: &Config) -> CargoResult<()> {
-        return update_submodules(&self.repo, cargo_config);
+    fn update_submodules(&self, baler_config: &Config) -> CargoResult<()> {
+        return update_submodules(&self.repo, baler_config);
 
-        fn update_submodules(repo: &git2::Repository, cargo_config: &Config) -> CargoResult<()> {
+        fn update_submodules(repo: &git2::Repository, baler_config: &Config) -> CargoResult<()> {
             info!("update submodules for: {:?}", repo.workdir().unwrap());
 
             for mut child in repo.submodules()?.into_iter() {
-                update_submodule(repo, &mut child, cargo_config)
+                update_submodule(repo, &mut child, baler_config)
                     .map_err(CargoError::into_internal)
                     .chain_err(|| {
                         format!("failed to update submodule `{}`",
@@ -308,7 +308,7 @@ impl<'a> GitCheckout<'a> {
 
         fn update_submodule(parent: &git2::Repository,
                             child: &mut git2::Submodule,
-                            cargo_config: &Config) -> CargoResult<()> {
+                            baler_config: &Config) -> CargoResult<()> {
             child.init(false)?;
             let url = child.url().ok_or_else(|| {
                 internal("non-utf8 url for submodule")
@@ -345,14 +345,14 @@ impl<'a> GitCheckout<'a> {
 
             // Fetch data from origin and reset to the head commit
             let refspec = "refs/heads/*:refs/heads/*";
-            fetch(&repo, url, refspec, cargo_config).chain_err(|| {
+            fetch(&repo, url, refspec, baler_config).chain_err(|| {
                 internal(format!("failed to fetch submodule `{}` from {}",
                                  child.name().unwrap_or(""), url))
             })?;
 
             repo.find_object(head, None)
                 .and_then(|obj| { repo.reset(&obj, git2::ResetType::Hard, None)})?;
-            update_submodules(&repo, cargo_config)
+            update_submodules(&repo, baler_config)
         }
     }
 }

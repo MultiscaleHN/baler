@@ -1,17 +1,17 @@
-extern crate cargotest;
-extern crate cargo;
+extern crate balertest;
+extern crate baler;
 extern crate hamcrest;
 
 use std::str;
 
-use cargo::util::process;
-use cargotest::is_nightly;
-use cargotest::support::paths::CargoPathExt;
-use cargotest::support::{project, execs, basic_bin_manifest, basic_lib_manifest};
+use baler::util::process;
+use balertest::is_nightly;
+use balertest::support::paths::CargoPathExt;
+use balertest::support::{project, execs, basic_bin_manifest, basic_lib_manifest};
 use hamcrest::{assert_that, existing_file};
 
 #[test]
-fn cargo_bench_simple() {
+fn baler_bench_simple() {
     if !is_nightly() { return }
 
     let p = project("foo")
@@ -33,13 +33,13 @@ fn cargo_bench_simple() {
                 assert_eq!(hello(), "hello")
             }"#);
 
-    assert_that(p.cargo_process("build"), execs());
+    assert_that(p.baler_process("build"), execs());
     assert_that(&p.bin("foo"), existing_file());
 
     assert_that(process(&p.bin("foo")),
                 execs().with_stdout("hello\n"));
 
-    assert_that(p.cargo("bench"),
+    assert_that(p.baler("bench"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.5.0 ({})
 [FINISHED] release [optimized] target(s) in [..]
@@ -72,7 +72,7 @@ fn bench_bench_implicit() {
             extern crate test;
             #[bench] fn run2(_ben: &mut test::Bencher) { }"#);
 
-    assert_that(prj.cargo_process("bench").arg("--benches"),
+    assert_that(prj.baler_process("bench").arg("--benches"),
         execs().with_status(0)
                .with_stderr(format!("\
 [COMPILING] foo v0.0.1 ({dir})
@@ -107,7 +107,7 @@ fn bench_bin_implicit() {
             extern crate test;
             #[bench] fn run2(_ben: &mut test::Bencher) { }"#);
 
-    assert_that(prj.cargo_process("bench").arg("--bins"),
+    assert_that(prj.baler_process("bench").arg("--bins"),
         execs().with_status(0)
                .with_stderr(format!("\
 [COMPILING] foo v0.0.1 ({dir})
@@ -137,7 +137,7 @@ fn bench_tarname() {
             extern crate test;
             #[bench] fn run2(_ben: &mut test::Bencher) { }"#);
 
-    assert_that(prj.cargo_process("bench").arg("--bench").arg("bin2"),
+    assert_that(prj.baler_process("bench").arg("--bench").arg("bin2"),
         execs().with_status(0)
                .with_stderr(format!("\
 [COMPILING] foo v0.0.1 ({dir})
@@ -148,7 +148,7 @@ fn bench_tarname() {
 }
 
 #[test]
-fn cargo_bench_verbose() {
+fn baler_bench_verbose() {
     if !is_nightly() { return }
 
     let p = project("foo")
@@ -160,7 +160,7 @@ fn cargo_bench_verbose() {
             #[bench] fn bench_hello(_b: &mut test::Bencher) {}
         "#);
 
-    assert_that(p.cargo_process("bench").arg("-v").arg("hello"),
+    assert_that(p.baler_process("bench").arg("-v").arg("hello"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.5.0 ({url})
 [RUNNING] `rustc [..] src[/]main.rs [..]`
@@ -200,7 +200,7 @@ fn many_similar_names() {
             #[bench] fn bench_bench(_b: &mut test::Bencher) { foo::foo() }
         "#);
 
-    let output = p.cargo_process("bench").exec_with_output().unwrap();
+    let output = p.baler_process("bench").exec_with_output().unwrap();
     let output = str::from_utf8(&output.stdout).unwrap();
     assert!(output.contains("test bin_bench"), "bin_bench missing\n{}", output);
     assert!(output.contains("test lib_bench"), "lib_bench missing\n{}", output);
@@ -208,7 +208,7 @@ fn many_similar_names() {
 }
 
 #[test]
-fn cargo_bench_failing_test() {
+fn baler_bench_failing_test() {
     if !is_nightly() { return }
 
     let p = project("foo")
@@ -229,13 +229,13 @@ fn cargo_bench_failing_test() {
                 assert_eq!(hello(), "nope")
             }"#);
 
-    assert_that(p.cargo_process("build"), execs());
+    assert_that(p.baler_process("build"), execs());
     assert_that(&p.bin("foo"), existing_file());
 
     assert_that(process(&p.bin("foo")),
                 execs().with_stdout("hello\n"));
 
-    assert_that(p.cargo("bench"),
+    assert_that(p.baler("bench"),
                 execs().with_stdout_contains("test bench_hello ... ")
                        .with_stderr_contains(format!("\
 [COMPILING] foo v0.5.0 ({})
@@ -289,7 +289,7 @@ fn bench_with_lib_dep() {
             fn bin_bench(_b: &mut test::Bencher) {}
         ");
 
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({})
 [FINISHED] release [optimized] target(s) in [..]
@@ -340,7 +340,7 @@ fn bench_with_deep_lib_dep() {
         ");
 
     p2.build();
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ([..])
@@ -382,7 +382,7 @@ fn external_bench_explicit() {
             fn external_bench(_b: &mut test::Bencher) {}
         "#);
 
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({})
 [FINISHED] release [optimized] target(s) in [..]
@@ -421,7 +421,7 @@ fn external_bench_implicit() {
             fn external_bench(_b: &mut test::Bencher) {}
         "#);
 
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({})
 [FINISHED] release [optimized] target(s) in [..]
@@ -445,9 +445,9 @@ fn dont_run_examples() {
         .file("src/lib.rs", r#"
         "#)
         .file("examples/dont-run-me-i-will-fail.rs", r#"
-            fn main() { panic!("Examples should not be run by 'cargo test'"); }
+            fn main() { panic!("Examples should not be run by 'baler test'"); }
         "#);
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_status(0));
 }
 
@@ -470,7 +470,7 @@ fn pass_through_command_line() {
             #[bench] fn bar(_b: &mut test::Bencher) {}
         ");
 
-    assert_that(p.cargo_process("bench").arg("bar"),
+    assert_that(p.baler_process("bench").arg("bar"),
                 execs().with_status(0)
                 .with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({dir})
@@ -478,17 +478,17 @@ fn pass_through_command_line() {
 [RUNNING] target[/]release[/]deps[/]foo-[..][EXE]", dir = p.url()))
                 .with_stdout_contains("test bar ... bench: [..]"));
 
-    assert_that(p.cargo("bench").arg("foo"),
+    assert_that(p.baler("bench").arg("foo"),
                 execs().with_status(0)
                        .with_stderr("[FINISHED] release [optimized] target(s) in [..]
 [RUNNING] target[/]release[/]deps[/]foo-[..][EXE]")
                        .with_stdout_contains("test foo ... bench: [..]"));
 }
 
-// Regression test for running cargo-bench twice with
+// Regression test for running baler-bench twice with
 // tests in an rlib
 #[test]
-fn cargo_bench_twice() {
+fn baler_bench_twice() {
     if !is_nightly() { return }
 
     let p = project("test_twice")
@@ -503,10 +503,10 @@ fn cargo_bench_twice() {
             fn dummy_bench(b: &mut test::Bencher) { }
             "#);
 
-    p.cargo_process("build");
+    p.baler_process("build");
 
     for _ in 0..2 {
-        assert_that(p.cargo("bench"),
+        assert_that(p.baler("bench"),
                     execs().with_status(0));
     }
 }
@@ -541,7 +541,7 @@ fn lib_bin_same_name() {
             fn bin_bench(_b: &mut test::Bencher) {}
         ");
 
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({})
 [FINISHED] release [optimized] target(s) in [..]
@@ -582,7 +582,7 @@ fn lib_with_standard_name() {
             fn bench(_b: &mut test::Bencher) { syntax::foo() }
         ");
 
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] syntax v0.0.1 ({dir})
@@ -623,7 +623,7 @@ fn lib_with_standard_name2() {
             fn bench(_b: &mut test::Bencher) { syntax::foo() }
         ");
 
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] syntax v0.0.1 ({dir})
@@ -682,7 +682,7 @@ fn bench_dylib() {
              pub fn baz() {}
         ");
 
-    assert_that(p.cargo_process("bench").arg("-v"),
+    assert_that(p.baler_process("bench").arg("-v"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] bar v0.0.1 ({dir}/bar)
@@ -697,7 +697,7 @@ fn bench_dylib() {
                        .with_stdout_contains_n("test foo ... bench: [..]", 2));
 
     p.root().move_into_the_past();
-    assert_that(p.cargo("bench").arg("-v"),
+    assert_that(p.baler("bench").arg("-v"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [FRESH] bar v0.0.1 ({dir}/bar)
@@ -728,7 +728,7 @@ fn bench_twice_with_build_cmd() {
             fn foo(_b: &mut test::Bencher) {}
         ");
 
-    assert_that(p.cargo_process("bench"),
+    assert_that(p.baler_process("bench"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] foo v0.0.1 ({dir})
@@ -736,7 +736,7 @@ fn bench_twice_with_build_cmd() {
 [RUNNING] target[/]release[/]deps[/]foo-[..][EXE]", dir = p.url()))
                        .with_stdout_contains("test foo ... bench: [..]"));
 
-    assert_that(p.cargo("bench"),
+    assert_that(p.baler("bench"),
                 execs().with_status(0)
                        .with_stderr("[FINISHED] release [optimized] target(s) in [..]
 [RUNNING] target[/]release[/]deps[/]foo-[..][EXE]")
@@ -798,7 +798,7 @@ fn bench_with_examples() {
             }
         "#);
 
-    assert_that(p.cargo_process("bench").arg("-v"),
+    assert_that(p.baler_process("bench").arg("-v"),
                 execs().with_status(0)
                        .with_stderr(&format!("\
 [COMPILING] testbench v6.6.6 ({url})
@@ -839,7 +839,7 @@ fn test_a_bench() {
             fn foo() {}
         "#);
 
-    assert_that(p.cargo_process("test"),
+    assert_that(p.baler_process("test"),
                 execs().with_status(0)
                        .with_stderr("\
 [COMPILING] foo v0.1.0 ([..])
@@ -871,7 +871,7 @@ fn test_bench_no_run() {
             fn bench_baz(_: &mut Bencher) {}
         "#);
 
-    assert_that(p.cargo_process("bench").arg("--no-run"),
+    assert_that(p.baler_process("bench").arg("--no-run"),
                 execs().with_status(0)
                        .with_stderr("\
 [COMPILING] foo v0.1.0 ([..])
@@ -906,7 +906,7 @@ fn test_bench_no_fail_fast() {
                 assert_eq!("nope", hello())
             }"#);
 
-    assert_that(p.cargo_process("bench").arg("--no-fail-fast"),
+    assert_that(p.baler_process("bench").arg("--no-fail-fast"),
                 execs().with_status(101)
                     .with_stderr_contains("\
 [RUNNING] target[/]release[/]deps[/]foo-[..][EXE]")
@@ -983,7 +983,7 @@ fn test_bench_multiple_packages() {
     baz.build();
 
 
-    assert_that(p.cargo_process("bench").arg("-p").arg("bar").arg("-p").arg("baz"),
+    assert_that(p.baler_process("bench").arg("-p").arg("bar").arg("-p").arg("baz"),
                 execs().with_status(0)
                        .with_stderr_contains("\
 [RUNNING] target[/]release[/]deps[/]bbaz-[..][EXE]")
@@ -1038,7 +1038,7 @@ fn bench_all_workspace() {
             fn bench_bar(_: &mut Bencher) -> () { () }
         "#);
 
-    assert_that(p.cargo_process("bench")
+    assert_that(p.baler_process("bench")
                  .arg("--all"),
                 execs().with_status(0)
                        .with_stderr_contains("\
@@ -1092,7 +1092,7 @@ fn bench_all_exclude() {
             }
         "#);
 
-    assert_that(p.cargo_process("bench")
+    assert_that(p.baler_process("bench")
                     .arg("--all")
                     .arg("--exclude")
                     .arg("baz"),
@@ -1147,7 +1147,7 @@ fn bench_all_virtual_manifest() {
         "#);
 
     // The order in which foo and bar are built is not guaranteed
-    assert_that(p.cargo_process("bench")
+    assert_that(p.baler_process("bench")
                  .arg("--all"),
                 execs().with_status(0)
                        .with_stderr_contains("\
@@ -1158,7 +1158,7 @@ fn bench_all_virtual_manifest() {
                        .with_stdout_contains("test bench_foo ... bench: [..]"));
 }
 
-// https://github.com/rust-lang/cargo/issues/4287
+// https://github.com/rust-lang/baler/issues/4287
 #[test]
 fn legacy_bench_name() {
     if !is_nightly() { return }
@@ -1185,7 +1185,7 @@ fn legacy_bench_name() {
             fn bench_foo(_: &mut Bencher) -> () { () }
         "#);
 
-    assert_that(p.cargo_process("bench"), execs().with_status(0).with_stderr_contains("\
+    assert_that(p.baler_process("bench"), execs().with_status(0).with_stderr_contains("\
 [WARNING] path `[..]src[/]bench.rs` was erroneously implicitly accepted for benchmark `bench`,
 please set bench.path in Cargo.toml"));
 }

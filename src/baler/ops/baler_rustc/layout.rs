@@ -93,7 +93,7 @@ impl Layout {
         // For now we don't do any more finer-grained locking on the artifact
         // directory, so just lock the entire thing for the duration of this
         // compile.
-        let lock = root.open_rw(".cargo-lock", config, "build directory")?;
+        let lock = root.open_rw(".baler-lock", config, "build directory")?;
         let root = root.into_path_unlocked();
 
         Ok(Layout {

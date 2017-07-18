@@ -14,8 +14,8 @@ use std::usize;
 use serde_json::{self, Value};
 use url::Url;
 use hamcrest as ham;
-use cargo::util::ProcessBuilder;
-use cargo::util::{CargoError, CargoErrorKind, ProcessError};
+use baler::util::ProcessBuilder;
+use baler::util::{CargoError, CargoErrorKind, ProcessError};
 
 use support::paths::CargoPathExt;
 
@@ -161,18 +161,18 @@ impl ProjectBuilder {
         return p
     }
 
-    pub fn cargo(&self, cmd: &str) -> ProcessBuilder {
+    pub fn baler(&self, cmd: &str) -> ProcessBuilder {
         assert!(self.is_build.get(),
-                "call `.build()` before calling `.cargo()`, \
-                 or use `.cargo_process()`");
-        let mut p = self.process(&cargo_exe());
+                "call `.build()` before calling `.baler()`, \
+                 or use `.baler_process()`");
+        let mut p = self.process(&baler_exe());
         p.arg(cmd);
         return p;
     }
 
-    pub fn cargo_process(&self, cmd: &str) -> ProcessBuilder {
+    pub fn baler_process(&self, cmd: &str) -> ProcessBuilder {
         self.build();
-        self.cargo(cmd)
+        self.baler(cmd)
     }
 
     pub fn file<B: AsRef<Path>>(mut self, path: B,
@@ -302,8 +302,8 @@ impl<T, E: fmt::Display> ErrMsg<T> for Result<T, E> {
     }
 }
 
-// Path to cargo executables
-pub fn cargo_dir() -> PathBuf {
+// Path to baler executables
+pub fn baler_dir() -> PathBuf {
     env::var_os("CARGO_BIN_PATH").map(PathBuf::from).or_else(|| {
         env::current_exe().ok().map(|mut path| {
             path.pop();
@@ -317,8 +317,8 @@ pub fn cargo_dir() -> PathBuf {
     })
 }
 
-pub fn cargo_exe() -> PathBuf {
-    cargo_dir().join(format!("cargo{}", env::consts::EXE_SUFFIX))
+pub fn baler_exe() -> PathBuf {
+    baler_dir().join(format!("baler{}", env::consts::EXE_SUFFIX))
 }
 
 /// Returns an absolute path in the filesystem that `path` points to. The

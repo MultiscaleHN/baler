@@ -1,19 +1,19 @@
 #[macro_use]
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
 use std::fs::{self, File};
 use std::io::prelude::*;
 
-use cargotest::support::paths::{self, CargoPathExt};
-use cargotest::support::registry::Package;
-use cargotest::support::{project, execs};
+use balertest::support::paths::{self, CargoPathExt};
+use balertest::support::registry::Package;
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 fn setup() {
     let root = paths::root();
-    t!(fs::create_dir(&root.join(".cargo")));
-    t!(t!(File::create(root.join(".cargo/config"))).write_all(br#"
+    t!(fs::create_dir(&root.join(".baler")));
+    t!(t!(File::create(root.join(".baler/config"))).write_all(br#"
         [source.crates-io]
         registry = 'https://wut'
         replace-with = 'my-awesome-local-registry'
@@ -48,7 +48,7 @@ fn simple() {
             }
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr(&format!("\
 [UNPACKING] foo v0.0.1 ([..])
 [COMPILING] foo v0.0.1
@@ -56,10 +56,10 @@ fn simple() {
 [FINISHED] [..]
 ",
         dir = p.url())));
-    assert_that(p.cargo("build"), execs().with_status(0).with_stderr("\
+    assert_that(p.baler("build"), execs().with_status(0).with_stderr("\
 [FINISHED] [..]
 "));
-    assert_that(p.cargo("test"), execs().with_status(0));
+    assert_that(p.baler("test"), execs().with_status(0));
 }
 
 #[test]
@@ -88,7 +88,7 @@ fn multiple_versions() {
             }
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr(&format!("\
 [UNPACKING] foo v0.1.0 ([..])
 [COMPILING] foo v0.1.0
@@ -102,7 +102,7 @@ fn multiple_versions() {
             .file("src/lib.rs", "pub fn foo() {}")
             .publish();
 
-    assert_that(p.cargo("update").arg("-v"),
+    assert_that(p.baler("update").arg("-v"),
                 execs().with_status(0).with_stderr("\
 [UPDATING] foo v0.1.0 -> v0.2.0
 "));
@@ -140,7 +140,7 @@ fn multiple_names() {
             }
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr(&format!("\
 [UNPACKING] [..]
 [UNPACKING] [..]
@@ -185,7 +185,7 @@ fn interdependent() {
             }
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr(&format!("\
 [UNPACKING] [..]
 [UNPACKING] [..]
@@ -246,7 +246,7 @@ fn path_dep_rewritten() {
             }
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr(&format!("\
 [UNPACKING] [..]
 [UNPACKING] [..]
@@ -272,7 +272,7 @@ fn invalid_dir_bad() {
             foo = "*"
         "#)
         .file("src/lib.rs", "")
-        .file(".cargo/config", r#"
+        .file(".baler/config", r#"
             [source.crates-io]
             registry = 'https://wut'
             replace-with = 'my-awesome-local-directory'
@@ -282,7 +282,7 @@ fn invalid_dir_bad() {
         "#);
 
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(101).with_stderr("\
 [ERROR] failed to load source for a dependency on `foo`
 
@@ -301,10 +301,10 @@ Caused by:
 fn different_directory_replacing_the_registry_is_bad() {
     setup();
 
-    // Move our test's .cargo/config to a temporary location and publish a
+    // Move our test's .baler/config to a temporary location and publish a
     // registry package we're going to use first.
-    let config = paths::root().join(".cargo");
-    let config_tmp = paths::root().join(".cargo-old");
+    let config = paths::root().join(".baler");
+    let config_tmp = paths::root().join(".baler-old");
     t!(fs::rename(&config, &config_tmp));
 
     let p = project("local")
@@ -322,7 +322,7 @@ fn different_directory_replacing_the_registry_is_bad() {
 
     // Generate a lock file against the crates.io registry
     Package::new("foo", "0.0.1").publish();
-    assert_that(p.cargo("build"), execs().with_status(0));
+    assert_that(p.baler("build"), execs().with_status(0));
 
     // Switch back to our directory source, and now that we're replacing
     // crates.io make sure that this fails because we're replacing with a
@@ -334,7 +334,7 @@ fn different_directory_replacing_the_registry_is_bad() {
             .local(true)
             .publish();
 
-    assert_that(p.cargo("build"),
+    assert_that(p.baler("build"),
                 execs().with_status(101).with_stderr("\
 [ERROR] checksum for `foo v0.0.1` changed between lock files
 
@@ -352,8 +352,8 @@ unable to verify that `foo v0.0.1` is the same as when the lockfile was generate
 #[test]
 fn crates_io_registry_url_is_optional() {
     let root = paths::root();
-    t!(fs::create_dir(&root.join(".cargo")));
-    t!(t!(File::create(root.join(".cargo/config"))).write_all(br#"
+    t!(fs::create_dir(&root.join(".baler")));
+    t!(t!(File::create(root.join(".baler/config"))).write_all(br#"
         [source.crates-io]
         replace-with = 'my-awesome-local-registry'
 
@@ -383,7 +383,7 @@ fn crates_io_registry_url_is_optional() {
             }
         "#);
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0).with_stderr(&format!("\
 [UNPACKING] foo v0.0.1 ([..])
 [COMPILING] foo v0.0.1
@@ -391,8 +391,8 @@ fn crates_io_registry_url_is_optional() {
 [FINISHED] [..]
 ",
         dir = p.url())));
-    assert_that(p.cargo("build"), execs().with_status(0).with_stderr("\
+    assert_that(p.baler("build"), execs().with_status(0).with_stderr("\
 [FINISHED] [..]
 "));
-    assert_that(p.cargo("test"), execs().with_status(0));
+    assert_that(p.baler("test"), execs().with_status(0));
 }

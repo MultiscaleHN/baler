@@ -80,7 +80,7 @@ impl<'cfg> Source for DirectorySource<'cfg> {
 
             // Ignore hidden/dot directories as they typically don't contain
             // crates and otherwise may conflict with a VCS
-            // (rust-lang/cargo#3414).
+            // (rust-lang/baler#3414).
             if let Some(s) = path.file_name().and_then(|s| s.to_str()) {
                 if s.starts_with('.') {
                     continue
@@ -117,16 +117,16 @@ impl<'cfg> Source for DirectorySource<'cfg> {
             src.update()?;
             let pkg = src.root_package()?;
 
-            let cksum_file = path.join(".cargo-checksum.json");
+            let cksum_file = path.join(".baler-checksum.json");
             let cksum = paths::read(&path.join(cksum_file)).chain_err(|| {
-                format!("failed to load checksum `.cargo-checksum.json` \
+                format!("failed to load checksum `.baler-checksum.json` \
                          of {} v{}",
                         pkg.package_id().name(),
                         pkg.package_id().version())
 
             })?;
             let cksum: Checksum = serde_json::from_str(&cksum).chain_err(|| {
-                format!("failed to decode `.cargo-checksum.json` of \
+                format!("failed to decode `.baler-checksum.json` of \
                          {} v{}",
                         pkg.package_id().name(),
                         pkg.package_id().version())

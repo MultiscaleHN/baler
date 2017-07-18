@@ -1,7 +1,7 @@
 extern crate hamcrest;
-extern crate cargotest;
+extern crate balertest;
 
-use cargotest::support::{project, execs};
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 #[test]
@@ -22,6 +22,6 @@ fn read_env_vars_for_config() {
             }
         "#);
 
-    assert_that(p.cargo_process("build").env("CARGO_BUILD_JOBS", "100"),
+    assert_that(p.baler_process("build").env("CARGO_BUILD_JOBS", "100"),
                 execs().with_status(0));
 }

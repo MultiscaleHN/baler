@@ -10,7 +10,7 @@ development. Let's take a look at how to do each of these.
 # Specifying dependencies from crates.io
 
 Cargo is configured to look for dependencies on [crates.io] by default. Only
-the name and a version string are required in this case. In [the cargo
+the name and a version string are required in this case. In [the baler
 guide](guide.html), we specified a dependency on the `time` crate:
 
 ```toml
@@ -29,9 +29,9 @@ if we had specified `"^0.1.12"`, which is called a caret requirement.
 **Caret requirements** allow SemVer compatible updates to a specified version.
 An update is allowed if the new version number does not modify the left-most
 non-zero digit in the major, minor, patch grouping. In this case, if we ran
-`cargo update -p time`, cargo would update us to version `0.1.13` if it was
+`baler update -p time`, baler would update us to version `0.1.13` if it was
 available, but would not update us to `0.2.0`. If instead we had specified the
-version string as `^1.0`, cargo would update to `1.1` but not `2.0`. `0.0.x` is
+version string as `^1.0`, baler would update to `1.1` but not `2.0`. `0.0.x` is
 not considered compatible with any other version.
 
 Here are some more examples of caret requirements and the versions that would
@@ -135,7 +135,7 @@ project:
 
 ```shell
 # inside of hello_world/
-$ cargo new hello_utils
+$ baler new hello_utils
 ```
 
 This will create a new folder `hello_utils` inside of which a `Cargo.toml` and
@@ -150,7 +150,7 @@ hello_utils = { path = "hello_utils" }
 This tells Cargo that we depend on a crate called `hello_utils` which is found
 in the `hello_utils` folder (relative to the `Cargo.toml` it’s written in).
 
-And that’s it! The next `cargo build` will automatically build `hello_utils` and
+And that’s it! The next `baler build` will automatically build `hello_utils` and
 all of its own dependencies, and others can also start using the crate as well.
 However, crates that use dependencies specified with only a path are not
 permitted on [crates.io]. If we wanted to publish our `hello_world` crate, we
@@ -195,7 +195,7 @@ section][replace-section] of `Cargo.toml` by appending this to the end:
 
 This indicates that the version of `rand` we're currently using, 0.3.14, will be
 replaced with the master branch of `rand` on GitHub. Next time when you execute
-`cargo build` Cargo will take care of checking out this repository and hooking
+`baler build` Cargo will take care of checking out this repository and hooking
 the `uuid` crate up to the new version.
 
 Note that a restriction of `[replace]`, however, is that the replaced crate must
@@ -218,7 +218,7 @@ you can remove `[replace]` and use the newly-published version.
 
 Note: The `Cargo.lock` file will list two versions of the replaced crate: one
 for the original crate, and one for the version specified in `[replace]`.
-`cargo build -v` can verify that only one version is used in the build.
+`baler build -v` can verify that only one version is used in the build.
 
 ### Overriding with local dependencies
 
@@ -251,14 +251,14 @@ $ cd ~/src
 $ git clone https://github.com/rust-lang-nursery/rand
 ```
 
-A path override is communicated to Cargo through the `.cargo/config`
+A path override is communicated to Cargo through the `.baler/config`
 configuration mechanism. If Cargo finds this configuration when building your
 package, it will use the override on your local machine instead of the source
 specified in your `Cargo.toml`.
 
-Cargo looks for a directory named `.cargo` up the directory hierarchy of
+Cargo looks for a directory named `.baler` up the directory hierarchy of
 your project. If your project is in `/path/to/project/uuid`,
-it will search for a `.cargo` in:
+it will search for a `.baler` in:
 
 * `/path/to/project/uuid`
 * `/path/to/project`
@@ -270,7 +270,7 @@ This allows you to specify your overrides in a parent directory that
 includes commonly used packages that you work on locally and share them
 with all projects.
 
-To specify overrides, create a `.cargo/config` file in some ancestor of
+To specify overrides, create a `.baler/config` file in some ancestor of
 your project’s directory (common places to put it is in the root of
 your code directory or in your home directory).
 

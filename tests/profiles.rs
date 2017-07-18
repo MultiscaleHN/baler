@@ -1,10 +1,10 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
 use std::env;
 
-use cargotest::is_nightly;
-use cargotest::support::{project, execs};
+use balertest::is_nightly;
+use balertest::support::{project, execs};
 use hamcrest::assert_that;
 
 #[test]
@@ -24,7 +24,7 @@ fn profile_overrides() {
             rpath = true
         "#)
         .file("src/lib.rs", "");
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(0).with_stderr(&format!("\
 [COMPILING] test v0.0.0 ({url})
 [RUNNING] `rustc --crate-name test src[/]lib.rs --crate-type lib \
@@ -57,7 +57,7 @@ fn opt_level_override_0() {
             opt-level = 0
         "#)
         .file("src/lib.rs", "");
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(0).with_stderr(&format!("\
 [COMPILING] test v0.0.0 ({url})
 [RUNNING] `rustc --crate-name test src[/]lib.rs --crate-type lib \
@@ -88,7 +88,7 @@ fn debug_override_1() {
             debug = 1
         "#)
         .file("src/lib.rs", "");
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(0).with_stderr(&format!("\
 [COMPILING] test v0.0.0 ({url})
 [RUNNING] `rustc --crate-name test src[/]lib.rs --crate-type lib \
@@ -118,7 +118,7 @@ fn check_opt_level_override(profile_level: &str, rustc_level: &str) {
             opt-level = {level}
         "#, level = profile_level))
         .file("src/lib.rs", "");
-    assert_that(p.cargo_process("build").arg("-v"),
+    assert_that(p.baler_process("build").arg("-v"),
                 execs().with_status(0).with_stderr(&format!("\
 [COMPILING] test v0.0.0 ({url})
 [RUNNING] `rustc --crate-name test src[/]lib.rs --crate-type lib \
@@ -187,7 +187,7 @@ fn top_level_overrides_deps() {
             crate_type = ["dylib", "rlib"]
         "#)
         .file("foo/src/lib.rs", "");
-    assert_that(p.cargo_process("build").arg("-v").arg("--release"),
+    assert_that(p.baler_process("build").arg("-v").arg("--release"),
                 execs().with_status(0).with_stderr(&format!("\
 [COMPILING] foo v0.0.0 ({url}/foo)
 [RUNNING] `rustc --crate-name foo foo[/]src[/]lib.rs \
@@ -246,7 +246,7 @@ fn profile_in_non_root_manifest_triggers_a_warning() {
         "#)
         .file("bar/src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("build").cwd(p.root().join("bar")).arg("-v"),
+    assert_that(p.baler_process("build").cwd(p.root().join("bar")).arg("-v"),
                 execs().with_status(0).with_stderr("\
 [WARNING] profiles for the non root package will be ignored, specify profiles at the workspace root:
 package:   [..]
@@ -277,7 +277,7 @@ fn profile_in_virtual_manifest_works() {
         "#)
         .file("bar/src/main.rs", "fn main() {}");
 
-    assert_that(p.cargo_process("build").cwd(p.root().join("bar")).arg("-v"),
+    assert_that(p.baler_process("build").cwd(p.root().join("bar")).arg("-v"),
                 execs().with_status(0).with_stderr("\
 [COMPILING] bar v0.1.0 ([..])
 [RUNNING] `rustc [..]`

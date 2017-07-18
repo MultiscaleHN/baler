@@ -1,7 +1,7 @@
-use cargo::core::Workspace;
-use cargo::ops;
-use cargo::util::{CliResult, Config};
-use cargo::util::important_paths::find_root_manifest_for_wd;
+use baler::core::Workspace;
+use baler::ops;
+use baler::util::{CliResult, Config};
+use baler::util::important_paths::find_root_manifest_for_wd;
 
 #[derive(Deserialize)]
 pub struct Options {
@@ -17,7 +17,7 @@ pub const USAGE: &'static str = "
 Fetch dependencies of a package from the network.
 
 Usage:
-    cargo fetch [options]
+    baler fetch [options]
 
 Options:
     -h, --help               Print this message
@@ -30,11 +30,11 @@ Options:
 
 If a lockfile is available, this command will ensure that all of the git
 dependencies and/or registries dependencies are downloaded and locally
-available. The network is never touched after a `cargo fetch` unless
+available. The network is never touched after a `baler fetch` unless
 the lockfile changes.
 
 If the lockfile is not available, then this is the equivalent of
-`cargo generate-lockfile`. A lockfile is generated and dependencies are also
+`baler generate-lockfile`. A lockfile is generated and dependencies are also
 all updated.
 ";
 

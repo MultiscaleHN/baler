@@ -1,7 +1,7 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::support::{basic_bin_manifest, execs, project, ProjectBuilder};
+use balertest::support::{basic_bin_manifest, execs, project, ProjectBuilder};
 use hamcrest::{assert_that};
 
 fn verbose_output_for_lib(p: &ProjectBuilder) -> String {
@@ -33,7 +33,7 @@ fn build_lib_only() {
         "#)
         .file("src/lib.rs", r#" "#);
 
-    assert_that(p.cargo_process("build").arg("--lib").arg("-v"),
+    assert_that(p.baler_process("build").arg("--lib").arg("-v"),
                 execs()
                 .with_status(0)
                 .with_stderr(verbose_output_for_lib(&p)));
@@ -48,13 +48,13 @@ fn build_with_no_lib() {
             fn main() {}
         "#);
 
-    assert_that(p.cargo_process("build").arg("--lib"),
+    assert_that(p.baler_process("build").arg("--lib"),
                 execs().with_status(101)
                        .with_stderr("[ERROR] no library targets found"));
 }
 
 #[test]
-fn build_with_relative_cargo_home_path() {
+fn build_with_relative_baler_home_path() {
     let p = project("foo")
         .file("Cargo.toml", r#"
             [package]
@@ -79,7 +79,7 @@ fn build_with_relative_cargo_home_path() {
             authors = ["wycats@example.com"]
         "#);
 
-    assert_that(p.cargo_process("build").env("CARGO_HOME", "./cargo_home/"),
+    assert_that(p.baler_process("build").env("CARGO_HOME", "./baler_home/"),
                 execs()
                 .with_status(0));
 }

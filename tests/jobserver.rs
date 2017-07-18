@@ -1,13 +1,13 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
-extern crate cargo;
+extern crate baler;
 
 use std::str;
 use std::net::TcpListener;
 use std::thread;
 use std::process::Command;
 
-use cargotest::support::{project, execs, cargo_exe};
+use balertest::support::{project, execs, baler_exe};
 use hamcrest::assert_that;
 
 #[test]
@@ -57,7 +57,7 @@ fn jobserver_exists() {
         "#)
         .file("src/lib.rs", "");
 
-    assert_that(p.cargo_process("build"),
+    assert_that(p.baler_process("build"),
                 execs().with_status(0));
 }
 
@@ -144,7 +144,7 @@ all:
     });
 
     assert_that(p.process(make)
-                 .env("CARGO", cargo_exe())
+                 .env("CARGO", baler_exe())
                  .env("ADDR", addr.to_string())
                  .arg("-j2"),
                 execs().with_status(0));
@@ -173,7 +173,7 @@ all:
     p.build();
 
     assert_that(p.process(make)
-                 .env("CARGO", cargo_exe())
+                 .env("CARGO", baler_exe())
                  .arg("-j2"),
                 execs().with_status(0).with_stderr("\
 warning: a `-j` argument was passed to Cargo but Cargo is also configured \

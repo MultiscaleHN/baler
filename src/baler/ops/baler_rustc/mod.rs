@@ -477,11 +477,11 @@ fn link_targets<'a, 'cfg>(cx: &mut Context<'a, 'cfg>,
     Ok(Work::new(move |_| {
         // If we're a "root crate", e.g. the target of this compilation, then we
         // hard link our outputs out of the `deps` directory into the directory
-        // above. This means that `cargo build` will produce binaries in
+        // above. This means that `baler build` will produce binaries in
         // `target/debug` which one probably expects.
         let mut destinations = vec![];
         for &(ref src, ref link_dst, _linkable) in filenames.iter() {
-            // This may have been a `cargo rustc` command which changes the
+            // This may have been a `baler rustc` command which changes the
             // output, so the source may not actually exist.
             if !src.exists() {
                 continue

@@ -130,7 +130,7 @@ impl SourceId {
     /// ## Example
     ///
     /// ```
-    /// use cargo::core::SourceId;
+    /// use baler::core::SourceId;
     /// SourceId::from_url("git+https://github.com/alexcrichton/\
     ///                     libssh2-static-sys#80e71a3021618eb05\
     ///                     656c58fb7c5ef5f12bc747f");
@@ -203,8 +203,8 @@ impl SourceId {
 
     /// Returns the `SourceId` corresponding to the main repository.
     ///
-    /// This is the main cargo registry by default, but it can be overridden in
-    /// a `.cargo/config`.
+    /// This is the main baler registry by default, but it can be overridden in
+    /// a `.baler/config`.
     pub fn crates_io(config: &Config) -> CargoResult<SourceId> {
         let cfg = ops::registry_configuration(config)?;
         let url = if let Some(ref index) = cfg.index {

@@ -2,7 +2,7 @@
 //!
 //! This module will parse the various `source.*` TOML configuration keys into a
 //! structure usable by Cargo itself. Currently this is primarily used to map
-//! sources to one another via the `replace-with` key in `.cargo/config`.
+//! sources to one another via the `replace-with` key in `.baler/config`.
 
 use std::collections::HashMap;
 use std::path::{Path, PathBuf};
@@ -35,7 +35,7 @@ struct SourceConfig {
 
     // Name of the source that this source should be replaced with. This field
     // is a tuple of (name, path) where path is where this configuration key was
-    // defined (the literal `.cargo/config` file).
+    // defined (the literal `.baler/config` file).
     replace_with: Option<(String, PathBuf)>,
 }
 

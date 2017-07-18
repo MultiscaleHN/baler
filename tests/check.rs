@@ -1,9 +1,9 @@
-extern crate cargotest;
+extern crate balertest;
 extern crate hamcrest;
 
-use cargotest::is_nightly;
-use cargotest::support::{execs, project};
-use cargotest::support::registry::Package;
+use balertest::is_nightly;
+use balertest::support::{execs, project};
+use balertest::support::registry::Package;
 use hamcrest::assert_that;
 
 #[test]
@@ -36,7 +36,7 @@ fn check_success() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo_process("check"),
+    assert_that(foo.baler_process("check"),
                 execs().with_status(0));
 }
 
@@ -70,7 +70,7 @@ fn check_fail() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo_process("check"),
+    assert_that(foo.baler_process("check"),
                 execs().with_status(101));
 }
 
@@ -131,7 +131,7 @@ pub fn derive(_input: TokenStream) -> TokenStream {
 "#);
     bar.build();
 
-    assert_that(foo.cargo_process("check"),
+    assert_that(foo.baler_process("check"),
                 execs().with_status(0));
 }
 
@@ -167,9 +167,9 @@ fn check_build() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo("check"),
+    assert_that(foo.baler("check"),
                 execs().with_status(0));
-    assert_that(foo.cargo("build"),
+    assert_that(foo.baler("build"),
                 execs().with_status(0));
 }
 
@@ -205,9 +205,9 @@ fn build_check() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo("build"),
+    assert_that(foo.baler("build"),
                 execs().with_status(0));
-    assert_that(foo.cargo("check"),
+    assert_that(foo.baler("check"),
                 execs().with_status(0));
 }
 
@@ -227,7 +227,7 @@ fn issue_3418() {
         .file("src/lib.rs", "")
         .file("src/main.rs", "fn main() {}");
 
-    assert_that(foo.cargo_process("check").arg("-v"),
+    assert_that(foo.baler_process("check").arg("-v"),
                 execs().with_status(0)
                        .with_stderr_contains("[..] --emit=dep-info,metadata [..]"));
 }
@@ -278,11 +278,11 @@ fn issue_3419() {
                     where F: FnOnce(&mut Self) -> Result<T, Self::Error>;
                  } "#).publish();
 
-    assert_that(foo.cargo_process("check"),
+    assert_that(foo.baler_process("check"),
                 execs().with_status(0));
 }
 
-// test `cargo rustc --profile check`
+// test `baler rustc --profile check`
 #[test]
 fn rustc_check() {
     let foo = project("foo")
@@ -313,7 +313,7 @@ fn rustc_check() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo_process("rustc")
+    assert_that(foo.baler_process("rustc")
                    .arg("--profile")
                    .arg("check")
                    .arg("--")
@@ -351,7 +351,7 @@ fn rustc_check_err() {
         "#);
     bar.build();
 
-    assert_that(foo.cargo_process("rustc")
+    assert_that(foo.baler_process("rustc")
                    .arg("--profile")
                    .arg("check")
                    .arg("--")
@@ -385,7 +385,7 @@ fn check_all() {
         .file("b/src/main.rs", "fn main() {}")
         .file("b/src/lib.rs", "");
 
-    assert_that(foo.cargo_process("check").arg("--all").arg("-v"),
+    assert_that(foo.baler_process("check").arg("--all").arg("-v"),
                 execs().with_status(0)
         .with_stderr_contains("[..] --crate-name foo src[/]lib.rs [..]")
         .with_stderr_contains("[..] --crate-name foo src[/]main.rs [..]")

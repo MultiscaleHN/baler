@@ -3,9 +3,9 @@ use std::fs::File;
 use std::io::prelude::*;
 use std::process;
 
-use cargo;
-use cargo::util::important_paths::{find_root_manifest_for_wd};
-use cargo::util::{CliResult, Config};
+use baler;
+use baler::util::important_paths::{find_root_manifest_for_wd};
+use baler::util::{CliResult, Config};
 use serde_json;
 use toml;
 
@@ -23,8 +23,8 @@ pub const USAGE: &'static str = "
 Check correctness of crate manifest
 
 Usage:
-    cargo verify-project [options]
-    cargo verify-project -h | --help
+    baler verify-project [options]
+    baler verify-project -h | --help
 
 Options:
     -h, --help              Print this message
@@ -61,7 +61,7 @@ pub fn execute(args: Flags, config: &Config) -> CliResult {
 
     let mut h = HashMap::new();
     h.insert("success".to_string(), "true".to_string());
-    cargo::print_json(&h);
+    baler::print_json(&h);
     Ok(())
 }
 
