@@ -1,14 +1,14 @@
 [package]
-name = "cargotest"
+name = "balertest"
 version = "0.1.0"
-authors = ["Alex Crichton <alex@alexcrichton.com>"]
+authors = ["Nicodemus Allen-Tonar <nicodemus26@gmail.com>"]
 
 [lib]
 path = "lib.rs"
 
 [dependencies]
 bufstream = "0.1"
-cargo = { path = "../.." }
+baler = { path = "../.." }
 filetime = "0.1"
 flate2 = "0.2"
 git2 = { version = "0.6", default-features = false }
