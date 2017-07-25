@@ -53,7 +53,7 @@ pub fn execute(options: Options, config: &Config) -> CliResult {
     // remove once it has been decided --host can be safely removed
     // We may instead want to repurpose the host flag, as
     // mentioned in this issue
-    // https://github.com/rust-lang/baler/issues/4208
+    // https://github.com/rust-lang/cargo/issues/4208
 
     let msg = "The flag '--host' is no longer valid.
 

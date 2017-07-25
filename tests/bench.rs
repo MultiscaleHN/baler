@@ -1158,7 +1158,7 @@ fn bench_all_virtual_manifest() {
                        .with_stdout_contains("test bench_foo ... bench: [..]"));
 }
 
-// https://github.com/rust-lang/baler/issues/4287
+// https://github.com/rust-lang/cargo/issues/4287
 #[test]
 fn legacy_bench_name() {
     if !is_nightly() { return }

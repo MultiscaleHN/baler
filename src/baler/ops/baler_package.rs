@@ -226,7 +226,7 @@ fn tar(ws: &Workspace,
         //
         // For an instance of this in the wild, use the tar-rs 0.3.3 library to
         // unpack the selectors 0.4.0 crate on crates.io. Either that or take a
-        // look at rust-lang/baler#2326
+        // look at rust-lang/cargo#2326
         let mut header = Header::new_ustar();
         header.set_path(&path).chain_err(|| {
             format!("failed to add to archive: `{}`", relative)

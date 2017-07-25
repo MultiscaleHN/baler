@@ -99,7 +99,7 @@ All commits to Cargo are required to pass the local test suite on Windows.
 If, however, you find a Windows issue, we consider it a bug, so [please file an
 issue][3].
 
-[3]: https://github.com/rust-lang/baler/issues
+[3]: https://github.com/MultiscaleHN/baler/issues
 
 # Why do binaries have `Cargo.lock` in version control, but not libraries?
 

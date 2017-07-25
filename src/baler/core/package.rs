@@ -132,7 +132,7 @@ impl Package {
             # to registry (e.g. crates.io) dependencies\n\
             #\n\
             # If you believe there's an error in this file please file an\n\
-            # issue against the rust-lang/baler repository. If you're\n\
+            # issue against the MultiscaleHN/baler repository. If you're\n\
             # editing this file be aware that the upstream Baler.toml\n\
             # will likely look very different (and much more reasonable)\n\
             \n\

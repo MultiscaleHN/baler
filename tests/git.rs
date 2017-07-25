@@ -2065,7 +2065,7 @@ fn include_overrides_gitignore() {
 [FINISHED] dev [unoptimized + debuginfo] target(s) in [..]
 "));
 
-    // This final case models the bug from rust-lang/baler#4135: an
+    // This final case models the bug from rust-lang/cargo#4135: an
     // explicitly included file should cause a build-script re-run,
     // even if that same file is matched by `.gitignore`.
     println!("build 4: touch `src/incl.rs`; expect build script re-run");

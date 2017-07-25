@@ -954,7 +954,7 @@ impl<'a, 'cfg> Context<'a, 'cfg> {
                 // Only enable incremental compilation for sources the user can modify.
                 // For things that change infrequently, non-incremental builds yield
                 // better performance.
-                // (see also https://github.com/rust-lang/baler/issues/3972)
+                // (see also https://github.com/rust-lang/cargo/issues/3972)
                 return Ok(vec![format!("-Zincremental={}",
                                        self.layout(unit.kind).incremental().display())]);
             } else {
